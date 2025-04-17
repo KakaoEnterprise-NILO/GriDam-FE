@@ -1,13 +1,13 @@
 import './App.css'
-import Login2 from './pages/Login2'
+
 
 function App() {
 
   return (
-    <>
-     <Login2/>
-    </>
-  )
+    <div>
+        <h1>Welcome to React + Vite</h1>
+    </div>
+  );
 }
 
 export default App
