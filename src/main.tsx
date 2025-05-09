@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import './index.css' // tailwindcss 적용
 import App from './App.tsx'
 
-import Nav from './components/common/Nav.tsx' // 네비게이션 바
+import Nav from './components/common/Navbar.tsx' // 네비게이션 바
 import Home from './pages/Home.tsx' // 홈 컴포넌트
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

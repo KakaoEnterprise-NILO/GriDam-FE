@@ -1,5 +1,5 @@
 import { MagnifyingGlassIcon } from '@heroicons/react/24/solid'
-import Navbar from './Nav'
+import Navbar from './Navbar'
 
 export default function MainLayout({ children }: { children: React.ReactNode }) {
   return (
