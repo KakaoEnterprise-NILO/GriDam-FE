@@ -4,15 +4,14 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import './index.css' // tailwindcss 적용
 import App from './App.tsx'
 
-import Nav from './pages/Nav.tsx' // 네비게이션 바
-import Home_Compo from './pages/Home(compo).tsx' // 홈 컴포넌트
-import MainLayout from './pages/MainLayout.tsx' // 메인 레이아웃
+import Nav from './components/common/Nav.tsx' // 네비게이션 바
+import Home from './pages/Home.tsx' // 홈 컴포넌트
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <Router>
       <Routes>
         
-        <Route path="/Home_compo" element={<Home_Compo />} />
+        <Route path="/" element={<Home />} />
         
         {/* App.tsx  */}
         <Route path="/app" element={<App />} />

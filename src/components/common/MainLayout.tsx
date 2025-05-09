@@ -3,9 +3,9 @@ import Navbar from './Nav'
 
 export default function MainLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="min-h-screen bg-[#F7F8FC] flex">
+    <div className="min-w-screen min-h-screen bg-[#F7F8FC] flex">
       {/* Sidebar */}
-      <aside className="w-64 p-4">
+       <aside className="w-64 p-4 ml-8 flex-shrink-0">
         <Navbar />
       </aside>
 
@@ -26,7 +26,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
           {/* Profile + Login */}
           <div className="flex items-center space-x-4">
             {/* 프로필 이미지 */}
-            <div className="w-10 h-10 rounded-full overflow-hidden border border-gray-300">
+            <div className="w-13 h-13 rounded-full overflow-hidden border border-gray-300">
               <img
                 src="/logo.png"
                 alt="프로필"
