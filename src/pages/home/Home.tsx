@@ -1,5 +1,5 @@
 import MainLayout from '../../components/common/MainLayout';
-import Footer from '../../components/common/Footer';
+import Footer from '@/components/common/Footer';
 
 export default function Home() {
   return (
