@@ -1,4 +1,3 @@
-import React from "react";
 import GrayFooter from "../components/common/GrayFooter";
 import GridamLogo from "../assets/picture/gridam.svg";
 import KakaoLogo from "../assets/picture/kakao_login_logo.svg";
