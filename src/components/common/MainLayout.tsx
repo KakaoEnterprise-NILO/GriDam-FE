@@ -1,26 +1,17 @@
-import { MagnifyingGlassIcon } from '@heroicons/react/24/solid'
-import Navbar from './Sidebar'
 
-export default function MainLayout({ children }: { children: React.ReactNode }) {
+export default function WritingDiary() {
   return (
-    <div className="min-w-screen min-h-screen bg-[#F7F8FC] flex">
-      {/* Sidebar */}
-       <aside className="w-64 p-4 ml-8 flex-shrink-0">
-        <Navbar />
-      </aside>
+    <>
+      {/* 일기 작성 카드 */}
+      <div className="flex justify-center items-start mt-6">
+        <div className="bg-white w-3/5 p-6 rounded-2xl shadow-lg space-y-4">
+          {/* 제목 */}
+          <h2 className="text-lg font-bold">제목</h2>
 
-      {/* Main Area */}
-      <div className="flex-1 flex flex-col p-6">
-        {/* Top Bar: Search + Profile */}
-        <div className="ml-5 flex justify-between items-center mb-6">
-          {/* Search Input with Icon */}
-          <div className="relative w-1/2">
-            <input
-              type="text"
-              placeholder="share your feeling"
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
-            />
-            <MagnifyingGlassIcon className="w-5 h-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" />
+          {/* 작성일자 */}
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-gray-500">작성일자</span>
+            <span className="text-gray-500">2025-05-01</span>
           </div>
 
           {/* Profile + Login */}
