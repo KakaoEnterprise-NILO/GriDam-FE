@@ -1,0 +1,38 @@
+[33m2cf13dc[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mrefactor/#20-project-structure-refactoring/CCS-158[m[33m, [m[1;31morigin/refactor/#20-project-structure-refactoring/CCS-158[m[33m)[m ♻️ [refactor] 메인 레이아웃에서 검색창 분리
+[33m3635938[m[33m ([m[1;31morigin/feature/#19-writing-diary-page/CCS-155[m[33m, [m[1;31morigin/24-refactor-프로젝트-구조-개선-ccs-158[m[33m, [m[1;32mfeature/#19-writing-diary-page/CCS-155[m[33m)[m 🐛 [fix]#23 Home 파일 코드 복구
+[33m5436319[m ✨ [feature]#23 피드 미리보기 컴포넌트 추가
+[33me8f7c23[m ✨ [feature]#23 로딩 및 완료 상태 관리 컴포넌트 추가
+[33m64d8843[m ✨ [feature]#23 공개 범위 설정 컴포넌트 추가
+[33mf316c42[m ✨ [feature] 공개 범위 설정 컴포넌트 추가
+[33m5e1d30f[m Merge branch 'feature/#19-writing-diary-page/CCS-155' of https://github.com/KakaoEnterprise-NILO/GriDam-FE into feature/#19-writing-diary-page/CCS-155
+[33mf9ee853[m ✨ [feature] 일기 글/그림 작성 컴포넌트
+[33m38595b6[m[33m ([m[1;31morigin/develop[m[33m)[m 🔨 [fix]#21 - App.tsx파일 수정 #root
+[33m7b2a54a[m :hammer: [fix]#20 App.css #root width변경
+[33m7b5e307[m :hammer: [fix]#20 App.css #root width변경
+[33m2bbc119[m :hammer: [fix]#20 App.css #root width변경
+[33md6a15f7[m[33m ([m[1;31morigin/feature/#18-register-page/CCS-127[m[33m)[m ✨ [feature] 회원가입 페이지 구현
+[33m53eaf05[m[33m ([m[1;31morigin/feature/#16-login-page/CCS-128[m[33m)[m ✨ [feature] 로그인 화면 추가
+[33mabbf072[m Merge pull request #18 from KakaoEnterprise-NILO/refactor/#17-setting-router/CCS-130
+[33m160e854[m ♻️ [refactor]#17 Router 설정 main.tsx->App.tsx로 이동
+[33m18b58e1[m ✨ [feature]#13 회색 Footer 추가
+[33mefd587a[m ✨ [feature]#13 Footer 추가
+[33m9667115[m 🔧 [chore]#13 필요없는 폴더 삭제
+[33m8153521[m ✨ [feature]#13 메뉴 애니메이션 추가, 컴포넌트 위치 조정
+[33mbe75aa2[m :sparkles: [feature]#13 공통 컴포넌트 구현
+[33mf00b0a3[m[33m ([m[1;31morigin/feature/#14-Home_Page/CCS-121[m[33m)[m :wrench: [chore]#6 Tailwindcss, Shadcn/UI 환경설정
+[33m7fa9cbb[m Merge pull request #12 from KakaoEnterprise-NILO/config/#6-Tailwindcss/CCS-86
+[33mfa84e14[m Fix merge conflict in package.json, src/index.css, src/main.tsx, vite.config.ts, src/App.tsx
+[33m349a58b[m Fix merge conflict in package.json, src/index.css, src/main.tsx, vite.config.ts
+[33mcb9d489[m :wrench: [chore]#6 Tailwindcss, Shadcn/UI 환경설정
+[33me847a74[m 🔧 [chore] Shadcn/UI 패키지 추가
+[33me64bbdf[m Merge pull request #7 from KakaoEnterprise-NILO/config/#6-Tailwindcss/CCS-86
+[33m566ad94[m 🔧 Tailwind CSS 설정
+[33mf5fd594[m Merge branch 'develop' into config/#6-Tailwindcss/CCS-86
+[33m2ef448c[m :wrench: [chore]#6 Tailwindcss 설정
+[33m7b2b5bd[m :wrench: [chore]#6 Tailwindcss 설정
+[33m2ea6252[m[33m ([m[1;31morigin/main[m[33m)[m ✨ [feature]#0 리액트 초기 설정
+[33ma600cf4[m Create PULL_REQUEST_TEMPLATE.md
+[33m04bd255[m Create close-jira-issue.yml
+[33mced9748[m Create create-jira-issue.yml
+[33me2eabd1[m Create issue-form.yml
+[33m9714c53[m Initial commit
