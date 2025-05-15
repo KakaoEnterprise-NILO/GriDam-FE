@@ -5,6 +5,7 @@ import Register from "./pages/Register";
 import WritingDiary from "./components/writingdiary/WritingDiary";
 // import UploadEmotionCard from "./components/writingdiary/UploadEmotionCard";
 import StatusCard from "./components/writingdiary/StatusCard";
+import EmotionPreviewCard from "./components/writingdiary/EmotionPreviewCard";
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
         <Route path="/register" element={<Register/>} />
         <Route path="/diary/write" element={<WritingDiary/>} />
         <Route path="/diary/test" element={<StatusCard/>} />
+        <Route path="/diary/test2" element={<EmotionPreviewCard/>} />
 
       </Routes>
     </div>
