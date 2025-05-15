@@ -28,7 +28,3 @@ const WritingDiaryPage = () => {
 };
 
 export default WritingDiaryPage;
-<<<<<<< HEAD
-=======
-
->>>>>>> f6bc8e7 (✨ [feature]#23 일기 작성 페이지 구현)
