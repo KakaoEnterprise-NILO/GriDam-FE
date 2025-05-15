@@ -14,8 +14,8 @@ export default function StatusCard() {
   }, []);
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100">
-      <div className="bg-white w-96 h-130 p-6 rounded-2xl shadow-lg flex flex-col justify-center items-center space-y-4">
+    <div className="flex justify-center items-center w-[25rem] h-[30rem] bg-gray-100">
+      <div className="bg-white w-[25rem] h-[30rem] p-6 rounded-2xl shadow-lg flex flex-col justify-center items-center space-y-4">
         {isLoading ? (
           <>
             <ClipLoader color="#4f83ff" size={160} />

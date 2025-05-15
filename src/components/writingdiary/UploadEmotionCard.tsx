@@ -3,14 +3,18 @@ import "./UploadEmotionCard.css";
 import refreshIcon from "../../assets/icons/refresh_button_icon.svg";
 import downloadIcon from "../../assets/icons/download_button_icon.svg";
 
-export default function UploadEmotionCard() {
+interface UploadEmotionCardProps {
+  onPreview: () => void;
+}
+
+export default function UploadEmotionCard({ onPreview }: UploadEmotionCardProps) {
   const [feedVisibility, setFeedVisibility] = useState("공개");
   const [shareScope, setShareScope] = useState("공개");
   const [progress, setProgress] = useState(80);
 
   const progressBarRef = useRef<HTMLDivElement | null>(null);
 
-  // 진행도 바 클릭 또는 드래그 시 값 업데이트
+  /** 진행도 바 클릭 또는 드래그 시 값 업데이트 */
   const updateProgress = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!progressBarRef.current) return;
 
@@ -18,6 +22,13 @@ export default function UploadEmotionCard() {
     const offsetX = e.clientX - rect.left;
     const newProgress = Math.round((offsetX / rect.width) * 100);
     setProgress(Math.min(100, Math.max(0, newProgress)));
+  };
+
+  /** 완료 버튼 클릭 시 */
+  const handleCompleteClick = () => {
+    if (shareScope === "요약 공개") {
+      onPreview();
+    }
   };
 
   return (
@@ -126,42 +137,36 @@ export default function UploadEmotionCard() {
         >
           <div className="mt-4 space-y-4">
             <p className="text-gray-600 mb-2 text-left">요약본</p>
-            <p className="text-gray-700 text-sm mb-4">
-              오늘은 잔잔한 햇살 아래 조용한 시간을 보냈다.
-            </p>
+            <p className="text-gray-700 text-sm mb-4">오늘은 잔잔한 햇살 아래 조용한 시간을 보냈다.</p>
 
             {/* 진행도 바 */}
-            <div className="mt-2">
-              <div className="flex items-center">
-                <span className="font-bold text-blue-500">T</span>
-
+            <div className="mt-2 flex items-center">
+              <span className="font-bold text-blue-500">T</span>
+              <div
+                className="flex-1 mx-2 bg-gray-200 rounded-full h-3 relative cursor-pointer"
+                ref={progressBarRef}
+                onMouseDown={updateProgress}
+                onMouseMove={(e) => e.buttons === 1 && updateProgress(e)}
+              >
                 <div
-                  className="flex-1 mx-2 bg-gray-200 rounded-full h-3 relative cursor-pointer"
-                  ref={progressBarRef}
-                  onMouseDown={updateProgress}
-                  onMouseMove={(e) => e.buttons === 1 && updateProgress(e)}
-                >
-                  <div
-                    className="h-3 rounded-full absolute left-0 transition-all duration-300"
-                    style={{
-                      width: `${progress}%`,
-                      background: `linear-gradient(to right, #4f83ff, #4caf50)`,
-                    }}
-                  ></div>
-                </div>
-
-                <span className="font-bold text-gray-700">F</span>
+                  className="h-3 rounded-full absolute left-0 transition-all duration-300"
+                  style={{
+                    width: `${progress}%`,
+                    background: `linear-gradient(to right, #4f83ff, #4caf50)`,
+                  }}
+                ></div>
               </div>
-
-              {/* 퍼센트 표시 */}
-              <p className="text-center text-sm text-gray-600 mt-1">{progress}%</p>
+              <span className="font-bold text-gray-700">F</span>
             </div>
           </div>
         </div>
 
         {/* 완료 버튼 */}
         <div className="flex justify-center mt-4">
-          <button className="bg-blue-500 text-white py-2 px-12 rounded-lg hover:bg-blue-600">
+          <button
+            className="bg-blue-500 text-white py-2 px-12 rounded-lg hover:bg-blue-600"
+            onClick={handleCompleteClick}
+          >
             완료
           </button>
         </div>

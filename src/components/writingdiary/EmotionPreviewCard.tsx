@@ -2,7 +2,11 @@ import { useState } from "react";
 import StatusCard from "./StatusCard";
 import "./EmotionPreviewCard.css";
 
-export default function EmotionPreviewCard() {
+interface EmotionPreviewCardProps {
+  onClose: () => void;
+}
+
+export default function EmotionPreviewCard({ onClose }: EmotionPreviewCardProps) {
   const [isUploading, setIsUploading] = useState(false);
 
   const handleUpload = () => {
@@ -10,17 +14,25 @@ export default function EmotionPreviewCard() {
   };
 
   if (isUploading) {
-    return <StatusCard />;
+    return <StatusCard onClose={onClose} />;
   }
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100">
-      <div className="bg-white w-96 h-auto p-6 rounded-2xl shadow-lg space-y-4 relative">
+    <div className="fixed inset-0 z-50 flex justify-center items-center bg-black bg-opacity-50 transition-opacity duration-300">
+      <div className="bg-white w-96 h-auto p-6 rounded-2xl shadow-lg space-y-4 relative transition-transform duration-300 transform scale-95">
+        
+        {/* 닫기 버튼 */}
+        <button
+          className="absolute top-4 right-4 text-gray-500 text-lg"
+          onClick={onClose}
+        >
+          ×
+        </button>
+
         {/* 상단 타이틀 */}
         <div className="flex justify-between items-center mb-4">
           <button className="text-gray-500 text-lg">&#x2190;</button>
           <h2 className="text-lg font-bold">미리보기</h2>
-          <button className="text-gray-500 text-lg">×</button>
         </div>
 
         {/* 감정 카드 */}
@@ -34,7 +46,7 @@ export default function EmotionPreviewCard() {
 
         {/* 내용 */}
         <p className="text-gray-600 text-sm text-center mb-2">
-          오늘은 잔잔한 햇살 아래 조용한 시간을 보냈다. 바람 따라 산책하며 마음도 한결 가벼워졌다. …더보기
+          오늘은 잔잔한 햇살 아래 조용한 시간을 보냈다. 바람 따라 산책하며 마음도 한결 가벼워졌다.
         </p>
 
         {/* 해시태그 */}
