@@ -11,12 +11,12 @@ function App() {
   return (
     <div className="min-h-screen flex flex-col">
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route path="/home" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register/>} />
         <Route path="/diary/write" element={<WritingDiary/>} />
         <Route path="/diary/test" element={<StatusCard/>} />
-        <Route path="/diary/test2" element={<EmotionPreviewCard/>} />
+        <Route path="/diary/test2" element={<Home/>} />
 
       </Routes>
     </div>

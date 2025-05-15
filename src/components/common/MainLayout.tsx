@@ -1,40 +1,50 @@
+import { MagnifyingGlassIcon } from '@heroicons/react/24/solid'
+import Navbar from './Navbar'
 
-export default function WritingDiary() {
+export default function MainLayout({ children }: { children: React.ReactNode }) {
   return (
-    <>
-      {/* 일기 작성 카드 */}
-      <div className="flex justify-center items-start mt-6">
-        <div className="bg-white w-3/5 p-6 rounded-2xl shadow-lg space-y-4">
-          {/* 제목 */}
-          <h2 className="text-lg font-bold">제목</h2>
+    <div className="min-w-screen min-h-screen bg-[#F7F8FC] flex">
+      {/* Sidebar */}
+       <aside className="w-64 p-4 ml-8 flex-shrink-0">
+        <Navbar />
+      </aside>
 
-          {/* 작성일자 */}
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-gray-500">작성일자</span>
-            <span className="text-gray-500">2025-05-01</span>
+      {/* Main Area */}
+      <div className="flex-1 flex flex-col p-6">
+        {/* Top Bar: Search + Profile */}
+        <div className="ml-5 flex justify-between items-center mb-6">
+          {/* Search Input with Icon */}
+          <div className="relative w-1/2">
+            <input
+              type="text"
+              placeholder="share your feeling"
+              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
+            />
+            <MagnifyingGlassIcon className="w-5 h-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" />
           </div>
 
-          {/* 내용 작성 */}
-          <textarea
-            className="w-full h-48 p-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 resize-none"
-            placeholder="오늘은 무슨 일이 있었나요?"
-          />
-
-          {/* 이미지 추가 */}
-          <div className="flex items-center space-x-3">
-            <button className="bg-gray-200 px-4 py-2 rounded-lg text-gray-600 hover:bg-gray-300">
-              이미지 추가
-            </button>
-          </div>
-
-          {/* 작성 완료 버튼 */}
-          <div className="flex justify-end mt-4">
-            <button className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600">
-              작성 완료
+          {/* Profile + Login */}
+          <div className="flex items-center space-x-4">
+            {/* 프로필 이미지 */}
+            <div className="w-13 h-13 rounded-full overflow-hidden border border-gray-300">
+              <img
+                src="/logo.png"
+                alt="프로필"
+                className="w-full h-full object-cover"
+              />
+            </div>
+            {/* 로그인 버튼 */}
+            <button className="bg-blue-500 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-600">
+              로그인
             </button>
           </div>
         </div>
+
+        {/* Content Area */}
+        <main className="ml-5 bg-white rounded-2xl shadow p-10">
+          {children}
+        </main>
       </div>
-    </>
-  );
+    </div>
+  )
 }
