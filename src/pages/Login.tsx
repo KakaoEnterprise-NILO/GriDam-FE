@@ -1,7 +1,7 @@
 import Footer from "../components/common/Footer";
 import GridamLogo from "../assets/picture/gridam.svg";
 import KakaoLogo from "../assets/picture/kakao_login_logo.svg";
-import NaverLogo from "../assets/picture/naver_login.logo.svg";
+import NaverLogo from "../assets/picture/naver_login_logo.svg";
 
 export default function Login() {
   return (
