@@ -1,5 +1,5 @@
 import { useState } from "react";
-import api from "@/api/axios";
+import api from "@/api/api";
 import GrayFooter from "../../components/common/GrayFooter";
 import GridamLogo from "../../assets/picture/gridam.svg";
 import KakaoLogo from "../../assets/picture/kakao_login_logo.svg";
