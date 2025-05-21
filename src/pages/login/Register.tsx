@@ -1,0 +1,165 @@
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { usePhoneVerification } from "@/hooks/usePhoneVerification";
+import { useAuth } from "@/hooks/useAuth";
+import GridamLogo from "@/assets/picture/gridam.svg";
+import KakaoLogo from "@/assets/picture/login/kakao_login_logo.svg";
+import NaverLogo from "@/assets/picture/login/naver_login.logo.svg";
+import GrayFooter from "@/components/common/GrayFooter";
+
+const Register = () => {
+  const [loginId, setLoginId] = useState("");
+  const [password, setPassword] = useState("");
+  const [checkPassword, setCheckPassword] = useState("");
+  const [nickname, setNickname] = useState("");
+  const [phoneNum, setPhoneNum] = useState("");
+  const [authCode, setAuthCode] = useState("");
+
+  const navigate = useNavigate();
+  const { isLoading, isAuthSent, isVerified, message, sendCode, verifyCode } = usePhoneVerification();
+  const { signUpUser } = useAuth();
+
+  const handleSignUp = async () => {
+    if (!loginId || !password || !checkPassword || !nickname || !phoneNum) {
+      alert("모든 필드를 입력해주세요.");
+      return;
+    }
+
+    if (password !== checkPassword) {
+      alert("비밀번호가 일치하지 않습니다.");
+      return;
+    }
+
+    try {
+      const data = {
+        loginId,
+        password,
+        checkPassword,
+        nickname,
+        phoneNum,
+        auth: isVerified,
+      };
+
+      const res = await signUpUser(data);
+      if (res.success) {
+        alert("회원가입 성공! 로그인 페이지로 이동합니다.");
+        console.log("회원가입 응답:", res); // 👈 결과 콘솔 출력
+        navigate("/login");
+      } else {
+        alert("회원가입 실패: " + res.message);
+      }
+    } catch (err) {
+      alert("회원가입 중 오류 발생");
+    }
+  };
+
+  return (
+    <div className="min-w-screen min-h-screen flex flex-col justify-between items-center bg-[#F0F3FA]">
+      <div className="w-full h-56 bg-[#A8BFFF] rounded-b-2xl"></div>
+
+      <div className="bg-white w-96 p-6 rounded-2xl shadow-lg -mt-28 z-10">
+        <div className="flex flex-col items-center mb-4">
+          <img src={GridamLogo} alt="Gridam Logo" className="w-30 h-24 mb-2" />
+          <h2 className="text-lg font-bold mb-2">회원가입</h2>
+
+          <div className="flex justify-center space-x-4 mb-4">
+            <button className="bg-yellow-400 w-12 h-12 rounded-full flex items-center justify-center overflow-hidden">
+              <img src={KakaoLogo} alt="카카오 로그인" className="w-full h-full object-cover" />
+            </button>
+            <button className="bg-green-500 w-12 h-12 rounded-full flex items-center justify-center overflow-hidden">
+              <img src={NaverLogo} alt="네이버 로그인" className="w-full h-full object-cover" />
+            </button>
+          </div>
+
+          <p className="text-center text-gray-500 mb-4">또는</p>
+        </div>
+
+        <div className="space-y-3">
+          <input
+            type="text"
+            placeholder="아이디"
+            value={loginId}
+            onChange={(e) => setLoginId(e.target.value)}
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
+          />
+
+          <input
+            type="password"
+            placeholder="비밀번호"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
+          />
+
+          <input
+            type="password"
+            placeholder="비밀번호 확인"
+            value={checkPassword}
+            onChange={(e) => setCheckPassword(e.target.value)}
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
+          />
+
+          <input
+            type="text"
+            placeholder="이름"
+            value={nickname}
+            onChange={(e) => setNickname(e.target.value)}
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
+          />
+
+          <div className="flex space-x-2 mb-3">
+            <input
+              type="text"
+              placeholder="전화번호"
+              value={phoneNum}
+              onChange={(e) => setPhoneNum(e.target.value)}
+              className="w-4/5 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
+            />
+            <button
+              onClick={() => sendCode(phoneNum)}
+              disabled={isLoading || isAuthSent}
+              className={`w-1/5 py-2 rounded-lg text-white ${isLoading ? "bg-gray-400" : "bg-blue-500 hover:bg-blue-600"}`}
+            >
+              인증
+            </button>
+          </div>
+
+          {isAuthSent && (
+            <div className="flex space-x-2 mb-3">
+              <input
+                type="text"
+                placeholder="인증번호"
+                value={authCode}
+                onChange={(e) => setAuthCode(e.target.value)}
+                className="w-4/5 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
+              />
+              <button
+                onClick={() => verifyCode(phoneNum, authCode)}
+                disabled={isLoading}
+                className={`w-1/5 py-2 rounded-lg text-white ${isLoading ? "bg-gray-400" : "bg-blue-500 hover:bg-blue-600"}`}
+              >
+                확인
+              </button>
+            </div>
+          )}
+
+          {message && <p className="text-sm text-red-500 mt-2">{message}</p>}
+
+          <button
+            onClick={handleSignUp}
+            disabled={isLoading}
+            className={`w-full py-2 mt-4 rounded-lg text-white ${
+              isLoading ? "bg-gray-400" : "bg-blue-500 hover:bg-blue-600"
+            }`}
+          >
+            {isLoading ? "가입 중..." : "가입하기"}
+          </button>
+        </div>
+      </div>
+
+      <GrayFooter />
+    </div>
+  );
+};
+
+export default Register;
