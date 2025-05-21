@@ -1,12 +1,11 @@
-
 #root {
   width: 100%;
   max-width: none;
   margin: 0;
   padding: 0;
-  text-align: center;
   overflow-x: hidden;
 }
+
 
 .logo {
   height: 6em;
