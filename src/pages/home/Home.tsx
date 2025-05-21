@@ -1,12 +1,25 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import MainLayout from '../../components/common/MainLayout';
 import { useNavigate } from 'react-router-dom';
+
 
 export default function Home() {
   const navigate = useNavigate();
 
-  // 임시 로그인 상태 (실제 서비스에서는 context 또는 쿠키/JWT로 관리)
-  const [isLoggedIn, setIsLoggedIn] = useState(true); // true면 로그인된 상태
+  // 여기서는 localStorage에서 로그인 토큰 확인해서 로그인 상태 관리
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const checkToken = () => {
+      const token = localStorage.getItem('accessToken');
+      setIsLoggedIn(!!token);
+    };
+
+    checkToken();
+    window.addEventListener('storage', checkToken);
+
+    return () => window.removeEventListener('storage', checkToken);
+  }, []);
 
   return (
     <MainLayout>

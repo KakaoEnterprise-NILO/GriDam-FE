@@ -1,55 +1,95 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { usePhoneVerification } from "@/hooks/usePhoneVerification";
 import { useAuth } from "@/hooks/useAuth";
+import { usePhoneVerification } from "@/hooks/usePhoneVerification";
+import PhoneVerification from "@/components/auth/PhoneVerification";
 import GridamLogo from "@/assets/picture/gridam.svg";
 import KakaoLogo from "@/assets/picture/login/kakao_login_logo.svg";
 import NaverLogo from "@/assets/picture/login/naver_login.logo.svg";
 import GrayFooter from "@/components/common/GrayFooter";
 
+interface FormData {
+  loginId: string;
+  password: string;
+  checkPassword: string;
+  nickname: string;
+  phoneNum: string;
+  authCode: string;
+}
+
 const Register = () => {
-  const [loginId, setLoginId] = useState("");
-  const [password, setPassword] = useState("");
-  const [checkPassword, setCheckPassword] = useState("");
-  const [nickname, setNickname] = useState("");
-  const [phoneNum, setPhoneNum] = useState("");
-  const [authCode, setAuthCode] = useState("");
+  const [formData, setFormData] = useState<FormData>({
+    loginId: "",
+    password: "",
+    checkPassword: "",
+    nickname: "",
+    phoneNum: "",
+    authCode: "",
+  });
+
+  const [errorMsg, setErrorMsg] = useState<string>("");
 
   const navigate = useNavigate();
   const { isLoading, isAuthSent, isVerified, message, sendCode, verifyCode } = usePhoneVerification();
   const { signUpUser } = useAuth();
 
-  const handleSignUp = async () => {
-    if (!loginId || !password || !checkPassword || !nickname || !phoneNum) {
-      alert("모든 필드를 입력해주세요.");
-      return;
+  // 폼 데이터 변경 핸들러
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  // 폼 유효성 검사 함수
+  const validateForm = (): boolean => {
+    const { loginId, password, checkPassword, nickname, phoneNum } = formData;
+
+    if (!loginId.trim() || !password.trim() || !checkPassword.trim() || !nickname.trim() || !phoneNum.trim()) {
+      setErrorMsg("모든 필드를 입력해주세요.");
+      return false;
     }
 
     if (password !== checkPassword) {
-      alert("비밀번호가 일치하지 않습니다.");
-      return;
+      setErrorMsg("비밀번호가 일치하지 않습니다.");
+      return false;
     }
 
-    try {
-      const data = {
-        loginId,
-        password,
-        checkPassword,
-        nickname,
-        phoneNum,
-        auth: isVerified,
-      };
+    // 임시로 인증 체크 무시
+    // if (!isVerified) {
+    //   setErrorMsg("전화번호 인증을 완료해주세요.");
+    //   return false;
+    // }
 
-      const res = await signUpUser(data);
+    setErrorMsg(""); // 유효성 검사 통과 시 에러 초기화
+    return true;
+  };
+
+  // 회원가입 핸들러
+  const handleSignUp = async () => {
+    if (!validateForm()) return;
+
+    setErrorMsg(""); // 시도 전 에러 초기화
+
+    try {
+      const res = await signUpUser({
+        loginId: formData.loginId,
+        password: formData.password,
+        checkPassword: formData.checkPassword,
+        nickname: formData.nickname,
+        phoneNum: formData.phoneNum,
+        auth: isVerified,
+      });
+
       if (res.success) {
         alert("회원가입 성공! 로그인 페이지로 이동합니다.");
-        console.log("회원가입 응답:", res); // 👈 결과 콘솔 출력
         navigate("/login");
       } else {
-        alert("회원가입 실패: " + res.message);
+        setErrorMsg(res.message || "회원가입 실패가 발생했습니다.");
       }
-    } catch (err) {
-      alert("회원가입 중 오류 발생");
+    } catch (err: any) {
+      setErrorMsg(err.message || "회원가입 중 오류가 발생했습니다.");
     }
   };
 
@@ -77,73 +117,59 @@ const Register = () => {
         <div className="space-y-3">
           <input
             type="text"
+            name="loginId"
             placeholder="아이디"
-            value={loginId}
-            onChange={(e) => setLoginId(e.target.value)}
+            value={formData.loginId}
+            onChange={handleChange}
             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
           />
 
           <input
             type="password"
+            name="password"
             placeholder="비밀번호"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            value={formData.password}
+            onChange={handleChange}
             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
           />
 
           <input
             type="password"
+            name="checkPassword"
             placeholder="비밀번호 확인"
-            value={checkPassword}
-            onChange={(e) => setCheckPassword(e.target.value)}
+            value={formData.checkPassword}
+            onChange={handleChange}
             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
           />
 
           <input
             type="text"
+            name="nickname"
             placeholder="이름"
-            value={nickname}
-            onChange={(e) => setNickname(e.target.value)}
+            value={formData.nickname}
+            onChange={handleChange}
             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
           />
 
-          <div className="flex space-x-2 mb-3">
-            <input
-              type="text"
-              placeholder="전화번호"
-              value={phoneNum}
-              onChange={(e) => setPhoneNum(e.target.value)}
-              className="w-4/5 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
-            />
-            <button
-              onClick={() => sendCode(phoneNum)}
-              disabled={isLoading || isAuthSent}
-              className={`w-1/5 py-2 rounded-lg text-white ${isLoading ? "bg-gray-400" : "bg-blue-500 hover:bg-blue-600"}`}
-            >
-              인증
-            </button>
-          </div>
+          {/* 분리된 PhoneVerification 컴포넌트 */}
+          <PhoneVerification
+            phoneNum={formData.phoneNum}
+            authCode={formData.authCode}
+            onPhoneNumChange={handleChange}
+            onAuthCodeChange={handleChange}
+            isLoading={isLoading}
+            isAuthSent={isAuthSent}
+            message={message}
+            sendCode={sendCode}
+            verifyCode={verifyCode}
+          />
 
-          {isAuthSent && (
-            <div className="flex space-x-2 mb-3">
-              <input
-                type="text"
-                placeholder="인증번호"
-                value={authCode}
-                onChange={(e) => setAuthCode(e.target.value)}
-                className="w-4/5 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
-              />
-              <button
-                onClick={() => verifyCode(phoneNum, authCode)}
-                disabled={isLoading}
-                className={`w-1/5 py-2 rounded-lg text-white ${isLoading ? "bg-gray-400" : "bg-blue-500 hover:bg-blue-600"}`}
-              >
-                확인
-              </button>
-            </div>
+          {/* 에러 메시지 노출 */}
+          {errorMsg && (
+            <p className="text-red-600 text-sm mt-2 font-semibold">
+              {errorMsg}
+            </p>
           )}
-
-          {message && <p className="text-sm text-red-500 mt-2">{message}</p>}
 
           <button
             onClick={handleSignUp}
