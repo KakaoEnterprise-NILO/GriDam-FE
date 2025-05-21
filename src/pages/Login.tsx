@@ -1,6 +1,6 @@
 import React from "react";
 import Footer from "../components/common/Footer";
-import GridamLogo from "../assets/picture/gridam.svg";
+import GridamLogo from "@/assets/picture/login/gridam.svg";
 
 export default function Login() {
   return (

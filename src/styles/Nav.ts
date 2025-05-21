@@ -6,7 +6,7 @@ export type SidebarItem = {
   }
   
   export const sidebarItems: SidebarItem[] = [
-    { label: '홈', icon: 'home', href:'/' },    
+    { label: '홈', icon: 'home', href:'/', active:true },    
     { label: '일기 작성', icon: 'write',href:'/..' },
     { label: '프로필', icon: 'profile',href:'/..' },
     { label: '친구 목록', icon: 'friends',href:'/..' },
