@@ -1,16 +1,9 @@
-<<<<<<< Updated upstream:src/pages/Login.tsx
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Footer from "../components/common/Footer";
 import GridamLogo from "../assets/picture/gridam.svg";
 import KakaoLogo from "../assets/picture/kakao_login_logo.svg";
 import NaverLogo from "../assets/picture/naver_login.logo.svg";
-=======
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import Footer from "../../components/common/Footer";
-import GridamLogo from "../../assets/picture/gridam.svg";
-import KakaoLogo from "../../assets/picture/kakao_login_logo.svg";
-import NaverLogo from "../../assets/picture/naver_login.logo.svg";
->>>>>>> Stashed changes:src/pages/login/Login.tsx
 
 export default function Login() {
   const [isRemembered, setIsRemembered] = useState(false);
