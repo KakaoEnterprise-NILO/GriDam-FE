@@ -11,14 +11,17 @@ const api = axios.create({
 });
 
 
-// // ✅ 요청 시 accessToken 자동 첨부
-// api.interceptors.request.use((config) => {
-//   const token = localStorage.getItem("accessToken");
-//   if (token) {
-//     config.headers.Authorization = `Bearer ${token}`;
-//   }
-//   return config;
-// });
+// ✅ 요청 보낼 때 자동으로 accessToken 헤더에 넣기
+api.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem('accessToken');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
 
 // // ✅ 응답 인터셉터: accessToken 만료 시 refreshToken으로 갱신
 // api.interceptors.response.use(
