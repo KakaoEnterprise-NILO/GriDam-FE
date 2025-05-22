@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 import Footer from "@/components/common/Footer";
 import GridamLogo from "@/assets/picture/gridam.svg";
@@ -17,7 +18,6 @@ export default function Login() {
   const { loginUser } = useAuth();
 
   const toggleRememberMe = () => setIsRemembered((prev) => !prev);
-
   const handleNavigateRegister = () => navigate("/register");
 
   const handleLoginClick = async () => {
@@ -33,7 +33,6 @@ export default function Login() {
     } catch (error: any) {
       if (error.response) {
         const serverMessage = error.response.data.message || "";
-
         if (serverMessage === "서버 에러, 관리자에게 문의 바랍니다.") {
           setErrorMsg("아이디가 맞지 않습니다.");
         } else {
@@ -42,6 +41,22 @@ export default function Login() {
       } else {
         setErrorMsg("서버와 연결할 수 없습니다.");
       }
+    }
+  };
+
+
+  //social Login 함수
+  const handleSocialLogin = async (provider: "kakao" | "naver") => {
+    try {
+      const response = await axios.get(`/api/auth/login/uri/${provider}`);
+      console.log('로그인 URI:', response.data);
+      window.location.href = response.data; // 이걸로 로그인 페이지로 이동
+      // const response = await axios.get(`/api/auth/login/uri/${provider}`);
+      // const loginUri = response.data;
+      // window.location.href = loginUri; // 소셜 로그인 페이지로 이동
+    } catch (error) {
+      console.error(`${provider} 로그인 오류`, error);
+      setErrorMsg("소셜 로그인 중 오류가 발생했습니다.");
     }
   };
 
@@ -59,6 +74,7 @@ export default function Login() {
           errorMsg={errorMsg}
           onLogin={handleLoginClick}
           onNavigateRegister={handleNavigateRegister}
+          onSocialClick={handleSocialLogin}
         />
       </main>
       <Footer />
@@ -84,6 +100,7 @@ interface LoginBoxProps {
   errorMsg: string;
   onLogin: () => void;
   onNavigateRegister: () => void;
+  onSocialClick: (provider: "kakao" | "naver") => void;
 }
 
 function LoginBox({
@@ -96,12 +113,13 @@ function LoginBox({
   errorMsg,
   onLogin,
   onNavigateRegister,
+  onSocialClick,
 }: LoginBoxProps) {
   return (
     <section className="bg-white w-[480px] h-[580px] px-20 py-6 rounded-2xl shadow-lg mb-4">
       <h2 className="text-center text-2xl font-bold mb-4">로그인</h2>
 
-      <SocialLoginButtons />
+      <SocialLoginButtons onSocialClick={onSocialClick} />
 
       <p className="text-center text-gray-500 mb-4">or</p>
 
@@ -154,17 +172,27 @@ function LoginBox({
   );
 }
 
-function SocialLoginButtons() {
+interface SocialLoginButtonsProps {
+  onSocialClick: (provider: "kakao" | "naver") => void;
+}
+
+function SocialLoginButtons({ onSocialClick }: SocialLoginButtonsProps) {
   return (
     <div className="flex justify-center space-x-5 mb-4">
-      <button className="bg-yellow-400 w-16 h-16 rounded-full flex items-center justify-center overflow-hidden">
+      <button
+        onClick={() => onSocialClick("kakao")}
+        className="bg-yellow-400 w-16 h-16 rounded-full flex items-center justify-center overflow-hidden"
+      >
         <img
           src={KakaoLogo}
           alt="카카오 로그인"
           className="w-full h-full object-cover"
         />
       </button>
-      <button className="bg-green-500 w-16 h-16 rounded-full flex items-center justify-center overflow-hidden">
+      <button
+        onClick={() => onSocialClick("naver")}
+        className="bg-green-500 w-16 h-16 rounded-full flex items-center justify-center overflow-hidden"
+      >
         <img
           src={NaverLogo}
           alt="네이버 로그인"
