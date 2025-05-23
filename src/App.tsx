@@ -3,8 +3,9 @@ import Home from "./pages/home/Home";
 import Login from "./pages/login/Login";
 import Register from "./pages/login/Register";
 // import UploadEmotionCard from "./components/writingdiary/UploadEmotionCard";
-import StatusCard from "./components/writingdiary/StatusCard";
 import WritingDiaryPage from "./pages/diary/WritingDiaryPage";
+import RecommendedCard from "./components/writingdiary/RecommendationCard";
+
 
 function App() {
   return (
@@ -14,7 +15,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register/>} />
         <Route path="/diary/write" element={<WritingDiaryPage/>} />
-        <Route path="/diary/test" element={<StatusCard/>} />
+        <Route path="/diary/test" element={<RecommendedCard/>} />
         <Route path="/diary/test2" element={<Home/>} />
 
       </Routes>

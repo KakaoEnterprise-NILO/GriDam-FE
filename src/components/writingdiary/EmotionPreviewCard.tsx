@@ -1,5 +1,6 @@
 import { useState } from "react";
 import StatusCard from "./StatusCard";
+import RecommendedCard from "../writingdiary/RecommendationCard";
 import "./EmotionPreviewCard.css";
 
 interface EmotionPreviewCardProps {
@@ -7,20 +8,27 @@ interface EmotionPreviewCardProps {
 }
 
 export default function EmotionPreviewCard({ onClose }: EmotionPreviewCardProps) {
-  const [isUploading, setIsUploading] = useState(false);
+  const [step, setStep] = useState<"preview" | "uploading" | "recommendation">("preview");
 
   const handleUpload = () => {
-    setIsUploading(true);
+    setStep("uploading");
   };
 
-  if (isUploading) {
-    return <StatusCard onClose={onClose} />;
+  const handleStatusClose = () => {
+    setStep("recommendation");
+  };
+
+  if (step === "uploading") {
+    return <StatusCard onComplete={handleStatusClose} />;
+  }
+
+  if (step === "recommendation") {
+    return <RecommendedCard />;
   }
 
   return (
     <div className="fixed inset-0 z-50 flex justify-center items-center bg-black bg-opacity-50 transition-opacity duration-300">
       <div className="bg-white w-96 h-auto p-6 rounded-2xl shadow-lg space-y-4 relative transition-transform duration-300 transform scale-95">
-        
         {/* 닫기 버튼 */}
         <button
           className="absolute top-4 right-4 text-gray-500 text-lg"
