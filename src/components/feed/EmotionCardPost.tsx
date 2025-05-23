@@ -24,7 +24,7 @@ export default function EmotionCardPost() {
   };
 
   const handleViewAllComments = () => {
-    navigate("/post/1"); // 실제 게시물 ID로 교체
+    navigate("/friend/list/feed/entire/1"); // 실제 게시물 ID로 교체
   };
 
   return (

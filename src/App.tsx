@@ -10,8 +10,8 @@ import NaverCallback from './pages/login/NaverCallback';
 
 import WritingDiary from "./components/writingdiary/WritingDiary";
 import StatusCard from "./components/writingdiary/StatusCard";
-import EmotionCardPost2 from "./components/feed/EmotionCardPost2";
 import FriendList from './pages/friendlist/FriendList';
+import EmotionCardPost2 from "./components/feed/EmotionCardPost2";
 
 
 
@@ -31,6 +31,7 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/diary/write" element={<WritingDiary/>} />
         <Route path="/friend/list/feed" element={<FriendList/>} />
+        <Route path="/friend/list/feed/entire/:id" element={<EmotionCardPost2/>} />
         <Route path="/diary/test" element={<StatusCard/>} />
         <Route path="/diary/test2" element={<EmotionCardPost2/>} />
 
