@@ -10,7 +10,10 @@ import NaverCallback from './pages/login/NaverCallback';
 
 import WritingDiary from "./components/writingdiary/WritingDiary";
 import StatusCard from "./components/writingdiary/StatusCard";
-import Topbar from "./components/common/Topbar";
+import EmotionCardPost2 from "./components/feed/EmotionCardPost2";
+import FriendList from './pages/friendlist/FriendList';
+
+
 
 function App() {
   return (
@@ -19,17 +22,17 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/HomeMyDiary" element={<HomeMyDiary />} />
 
-        <Route path="/login" element={<Login />} />
+        <Route path="/login" element={<Login />} /> 
         
         <Route path="/login/oauth/kakao/callback" element={<KakaoCallback />} />
         <Route path="/login/oauth/naver/callback" element={<NaverCallback />} />
        
         <Route path="/calendar" element={<Calendar />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/register" element={<Register/>} />
         <Route path="/diary/write" element={<WritingDiary/>} />
+        <Route path="/friend/list/feed" element={<FriendList/>} />
         <Route path="/diary/test" element={<StatusCard/>} />
-        <Route path="/diary/test2" element={<Topbar/>} />
+        <Route path="/diary/test2" element={<EmotionCardPost2/>} />
 
       </Routes>
     </div>
