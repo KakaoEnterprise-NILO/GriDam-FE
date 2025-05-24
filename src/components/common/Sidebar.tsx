@@ -1,6 +1,4 @@
-import { useLocation, Link } from 'react-router-dom';
-import { sidebarItems } from '../../styles/Nav';
-// import { sidebarItems } from '../../styles/sidebarItem';
+import { sidebarItems } from '../../styles/SidebarItem';
 import { cn } from '@/lib/utils';
 import { Home, PlusCircle, User, Users, Calendar, Bell, Settings } from 'lucide-react';
 
@@ -14,28 +12,30 @@ const iconMap = {
   settings: Settings,
 };
 
-export default function Sidebar() {
-  const location = useLocation();
+interface SidebarProps {
+  activePage: string;
+}
 
+export default function Sidebar({ activePage }: SidebarProps) {
   return (
-    <aside className="w-64 h-200 bg-white rounded-2xl shadow-lg p-6 flex flex-col justify-between overflow-hidden">
+    <aside className="w-64 h-[760px] bg-white rounded-2xl shadow-lg p-6 flex flex-col justify-between">
+      {/* 상단 로고 및 메뉴 */}
       <div>
-        {/* Logo */}
+        {/* Logo Section */}
         <div className="flex items-center gap-3 mb-10">
           <img src="/logo.png" alt="Logo" className="w-10 h-10" />
           <span className="text-xl font-bold text-gray-800">GriDam</span>
         </div>
 
-        {/* Menu */}
+        {/* Menu List */}
         <ul className="space-y-3">
           {sidebarItems.map((item) => {
             const Icon = iconMap[item.icon];
-            const isActive = location.pathname === item.href;
+            const isActive = item.key === activePage;
 
             return (
               <li key={item.label}>
-                <Link
-                  to={item.href}
+                <button
                   className={cn(
                     'w-full flex items-center gap-3 px-4 py-3 rounded-xl transition',
                     isActive
@@ -43,17 +43,25 @@ export default function Sidebar() {
                       : 'text-gray-500 hover:text-blue-600 hover:bg-gray-100'
                   )}
                 >
-                  <Icon size={20} className="shrink-0" />
-                  <span className="text-sm font-medium">{item.label}</span>
-                </Link>
+                  <Icon
+                    size={20}
+                    className={cn(
+                      'shrink-0',
+                      isActive ? 'text-blue-600' : 'text-gray-500'
+                    )}
+                  />
+                  <span className={`text-sm font-medium ${isActive ? 'text-blue-600' : 'text-gray-500'}`}>
+                    {item.label}
+                  </span>
+                </button>
               </li>
             );
           })}
         </ul>
       </div>
 
-      {/* Settings */}
-      <div className="mt-10">
+      {/* 하단 설정 */}
+      <div className="mt-auto mb-4">
         <button className="w-full flex items-center gap-3 px-4 py-3 text-gray-400 hover:text-blue-600 hover:bg-gray-100 rounded-xl transition">
           <Settings size={20} />
           <span className="text-sm font-medium">설정</span>

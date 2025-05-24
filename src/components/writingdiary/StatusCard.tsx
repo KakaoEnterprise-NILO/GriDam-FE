@@ -1,8 +1,13 @@
 import { useEffect, useState } from "react";
 import { ClipLoader } from "react-spinners";
 import checkIcon from "../../assets/icons/check_circle_icon.svg";
+import { IoClose } from "react-icons/io5";
 
-export default function StatusCard() {
+interface StatusCardProps {
+  onComplete: () => void;
+}
+
+export default function StatusCard({ onComplete }: StatusCardProps) {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -14,8 +19,16 @@ export default function StatusCard() {
   }, []);
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100">
-      <div className="bg-white w-96 h-130 p-6 rounded-2xl shadow-lg flex flex-col justify-center items-center space-y-4">
+    <div className="flex justify-center items-center w-[25rem] h-[30rem] bg-gray-100">
+      <div className="relative bg-white w-[25rem] h-[30rem] p-6 rounded-2xl shadow-lg flex flex-col justify-center items-center space-y-4">
+        {/* X 버튼 */}
+        <button
+          onClick={onComplete}
+          className="absolute top-3 right-3 z-10 text-gray-400 hover:text-black transition"
+        >
+          <IoClose size={24} />
+        </button>
+
         {isLoading ? (
           <>
             <ClipLoader color="#4f83ff" size={160} />
@@ -23,7 +36,7 @@ export default function StatusCard() {
           </>
         ) : (
           <>
-            <img src={checkIcon} alt="완료" className="w-50 h-50" />
+            <img src={checkIcon} alt="완료" className="w-20 h-20" />
             <p className="text-gray-700">감정카드가 게시되었습니다.</p>
           </>
         )}

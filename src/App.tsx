@@ -16,9 +16,7 @@ function App() {
   return (
     <div className="min-h-screen flex flex-col">
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/HomeMyDiary" element={<HomeMyDiary />} />
-
+        <Route path="/home" element={<Home />} />
         <Route path="/login" element={<Login />} />
         
         <Route path="/login/oauth/kakao/callback" element={<KakaoCallback />} />
@@ -29,7 +27,7 @@ function App() {
         <Route path="/register" element={<Register/>} />
         <Route path="/diary/write" element={<WritingDiary/>} />
         <Route path="/diary/test" element={<StatusCard/>} />
-        <Route path="/diary/test2" element={<Topbar/>} />
+        <Route path="/diary/test2" element={<Home/>} />
 
       </Routes>
     </div>
