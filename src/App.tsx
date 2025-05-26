@@ -9,10 +9,11 @@ import KakaoCallback from './pages/login/KakaoCallBack';
 import NaverCallback from './pages/login/NaverCallback';
 
 import WritingDiaryPage from "./pages/diary/WritingDiaryPage";
-import StatusCard from "./components/writingdiary/StatusCard";
 import Calendar from "./pages/calendar/Calendar";
 import FriendList from './pages/friendlist/FriendList';
 import EmotionCardPost2 from "./components/feed/EmotionCardPost2";
+import MyProfile from "./pages/profile/MyProfile";
+import FriendProfile from "./pages/profile/FriendProfile copy";
 
 
 
@@ -22,19 +23,16 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/home" element={<Home />} />
-        <Route path="/login" element={<Login />} />
-
-        <Route path="/login" element={<Login />} /> 
-        
+        <Route path="/login" element={<Login />} />        
         <Route path="/login/oauth/kakao/callback" element={<KakaoCallback />} />
         <Route path="/login/oauth/naver/callback" element={<NaverCallback />} />
        
         <Route path="/calendar" element={<Calendar />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/register" element={<Register/>} />
         <Route path="/diary/write" element={<WritingDiaryPage/>} />
-        <Route path="/diary/test" element={<StatusCard/>} />
-        <Route path="/friend/list/feed" element={<FriendList/>} />
+        <Route path="/profile" element={<MyProfile/>} />
+        <Route path="/profile/friend" element={<FriendProfile/>} />
+        <Route path="/friends/feed" element={<FriendList/>} />
         <Route path="/friend/list/feed/entire/:id" element={<EmotionCardPost2/>} />
 
 

@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from "react";
-import Sidebar from "../../components/common/Navbar";
+import Sidebar from "../../components/common/Sidebar";
 import TopBar from "../../components/common/Topbar";
 import EmotionCardPost from "../../components/feed/EmotionCardPost";
 
