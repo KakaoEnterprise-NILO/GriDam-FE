@@ -15,6 +15,7 @@ import EmotionCardPost2 from "./components/feed/EmotionCardPost2";
 import MyProfile from "./pages/profile/MyProfile";
 import FriendProfile from "./pages/profile/FriendProfile";
 import FriendList from "./pages/profile/FriendList";
+import NotificationPage from "./pages/alarm/NotificationPage";
 
 
 
@@ -36,6 +37,8 @@ function App() {
         <Route path="/profile/friend/list" element={<FriendList/>} />
         <Route path="/friends/feed" element={<FeedList/>} />
         <Route path="/friend/list/feed/entire/:id" element={<EmotionCardPost2/>} />
+        <Route path="/alarm" element={<NotificationPage/>} />
+
 
 
       </Routes>
