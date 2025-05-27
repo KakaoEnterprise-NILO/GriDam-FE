@@ -6,6 +6,7 @@ import DiaryPopup from '../../components/calendar/DayDiaryPopup'
 import { getCalendarDays } from '../../utils/getCalendarDays'
 import { ChevronRight } from 'lucide-react'
 import { useDiaryStore } from '@/store/diaryStore'
+import { BarChart3 } from 'lucide-react'
 
 export default function Calendar() {
   const [isPopupOpen, setIsPopupOpen] = useState(false)
@@ -56,9 +57,10 @@ const getBorderColor = (bgColor: string | undefined) => {
           </button>
           <button
             onClick={() => setIsStatsOpen(true)}
-            className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-full text-sm font-bold"
+            className="flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-full text-sm font-bold shadow-md transition-all duration-200"
           >
-            통계보기
+            <BarChart3 className="w-4 h-4" />
+            통계
           </button>
         </div>
 
