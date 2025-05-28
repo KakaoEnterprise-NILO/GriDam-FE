@@ -49,7 +49,7 @@ const getBorderColor = (bgColor: string | undefined) => {
 
   return (
     <MainLayout>
-      <div className="w-full max-w-screen-xl mx-auto px-4 md:px-8 lg:px-12 py-6">
+      <div className="w-full bg-white rounded-2xl shadow max-w-screen-xl mx-auto px-4 md:px-8 lg:px-12 py-6">
         {/* 상단 */}
         <div className="flex justify-between items-center mb-4">
           <button onClick={() => setIsPopupOpen(true)} className="flex items-center text-xl font-bold">
