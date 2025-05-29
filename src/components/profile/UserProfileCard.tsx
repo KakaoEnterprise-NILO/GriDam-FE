@@ -1,68 +1,92 @@
-import { useState } from "react";
-import { Users2 } from "lucide-react";
-import { FaUserCircle } from "react-icons/fa";
+"use client"
+
+import { Card, CardContent } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Edit, Heart, User } from "lucide-react"
 
 interface UserProfileCardProps {
-  username: string;
-  bio: string;
-  followers: number;
-  following: number;
-  isMyProfile?: boolean;
+  username: string
+  introduction: string
+  followers: number
+  following: number
+  profileImgUrl: string
+  isMyProfile?: boolean
+  onEditProfile?: () => void
+  onFollowingClick?: () => void
+  onFollowersClick?: () => void
 }
 
 export default function UserProfileCard({
   username,
-  bio,
+  introduction,
   followers,
   following,
+  profileImgUrl,
   isMyProfile = false,
+  onEditProfile,
+  onFollowingClick,
+  onFollowersClick,
 }: UserProfileCardProps) {
-  const [isFollowing, setIsFollowing] = useState(false);
-
-  const handleFollowToggle = () => {
-    setIsFollowing((prev) => !prev);
-  };
-
   return (
-    <div className="w-72 mx-auto p-6 bg-[#F5F7FA] rounded-xl shadow-none flex flex-col items-center space-y-4">
-      {/* 프로필 아이콘 */}
-      <FaUserCircle size={180} className="text-gray-500" />
+    <Card className="w-full border-0 shadow-lg">
+      <CardContent className="p-6">
+        {/* 배경 이미지 */}
+        <div className="h-32 bg-gradient-to-r from-blue-400 to-purple-500 rounded-lg mb-4 relative">
+          <div className="absolute inset-0 bg-black/10 rounded-lg" />
+        </div>
 
-      {/* 유저 이름 */}
-      <h2 className="text-xl font-semibold text-gray-800">{username}</h2>
+        {/* 프로필 이미지 */}
+        <div className="flex justify-center -mt-16 mb-4">
+          <Avatar className="h-32 w-32 border-4 border-white shadow-lg">
+            <AvatarImage src={profileImgUrl || "/placeholder.svg"} alt={username} />
+            <AvatarFallback className="text-2xl">
+              {username.charAt(0).toUpperCase()}
+            </AvatarFallback>
+          </Avatar>
+        </div>
 
-      {/* 버튼 */}
-      {isMyProfile ? (
-        <button
-          className="w-[12rem] text-base font-bold text-black bg-gray-100 border border-gray-300 rounded-xl hover:bg-gray-200 transition py-2"
-        >
-          프로필 수정
-        </button>
-      ) : (
-        <button
-          onClick={handleFollowToggle}
-          className={`w-[12rem] py-2 rounded-xl text-sm font-bold transition
-            ${
-              isFollowing
-                ? "bg-gray-100 text-black border border-gray-300"
-                : "bg-[#6E8DFB] text-white"
-            }
-          `}
-        >
-          {isFollowing ? "팔로우 취소" : "팔로우"}
-        </button>
-      )}
+        {/* 사용자 정보 */}
+        <div className="text-center space-y-2 mb-6">
+          <h2 className="text-2xl font-bold text-gray-900">{username}</h2>
+          <p className="text-gray-600">{introduction || "자기소개가 없습니다."}</p>
+        </div>
 
-      {/* 소개 */}
-      <p className="text-gray-600 text-sm text-left w-full">{bio}</p>
+        {/* 통계 */}
+        <div className="flex w-full gap-4 mb-6">
+          <button
+            onClick={onFollowersClick}
+            className="flex-1 bg-blue-50 rounded-xl p-4 text-center border hover:bg-blue-100 transition-colors cursor-pointer"
+          >
+            <div className="flex items-center justify-center gap-1 mb-1">
+              <Heart className="w-4 h-4 text-blue-500" />
+              <p className="text-xl font-bold text-blue-600">{followers}</p>
+            </div>
+            <p className="text-xs text-gray-600">팔로워</p>
+          </button>
+          <button
+            onClick={onFollowingClick}
+            className="flex-1 bg-pink-50 rounded-xl p-4 text-center border hover:bg-pink-100 transition-colors cursor-pointer"
+          >
+            <div className="flex items-center justify-center gap-1 mb-1">
+              <User className="w-4 h-4 text-purple-500" />
+              <p className="text-xl font-bold text-purple-600">{following}</p>
+            </div>
+            <p className="text-xs text-gray-600">팔로잉</p>
+          </button>
+        </div>
 
-      {/* 팔로워/팔로잉 */}
-      <div className="flex items-center space-x-2 text-sm text-gray-700">
-        <Users2 className="w-4 h-4" />
-        <span>{followers} followers</span>
-        <span>·</span>
-        <span>{following} following</span>
-      </div>
-    </div>
-  );
+        {/* 프로필 편집 버튼 */}
+        {isMyProfile && (
+          <Button
+            onClick={onEditProfile}
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+          >
+            <Edit className="h-4 w-4 mr-2" />
+            프로필 편집
+          </Button>
+        )}
+      </CardContent>
+    </Card>
+  )
 }

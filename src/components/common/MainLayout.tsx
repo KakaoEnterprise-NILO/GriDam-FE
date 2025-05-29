@@ -15,7 +15,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
           <Topbar />
 
           {/* Content */}
-          <main className="ml-5 bg-white rounded-2xl shadow p-10">{children}</main>
+          <main className="ml-5 bg-[#F7F8FC] rounded-2xl p-10">{children}</main>
         </div>
       </div>
 

@@ -57,10 +57,10 @@ const Register = () => {
     }
 
     //임시로 인증 체크 무시
-    if (!isVerified) {
-      setErrorMsg("전화번호 인증을 완료해주세요.");
-      return false;
-    }
+    // if (!isVerified) {
+    //   setErrorMsg("전화번호 인증을 완료해주세요.");
+    //   return false;
+    // }
 
     setErrorMsg(""); // 유효성 검사 통과 시 에러 초기화
     return true;
@@ -68,7 +68,8 @@ const Register = () => {
 
   // 회원가입 핸들러
   const handleSignUp = async () => {
-    if (!validateForm()) return;
+    //일단 인증 무시
+    // if (!validateForm()) return;
 
     setErrorMsg(""); // 시도 전 에러 초기화
 
