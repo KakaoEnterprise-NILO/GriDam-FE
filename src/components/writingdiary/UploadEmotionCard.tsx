@@ -32,7 +32,7 @@ export default function UploadEmotionCard({ onPreview }: UploadEmotionCardProps)
   };
 
   return (
-    <div className="flex justify-center items-start min-h-screen bg-gray-100 p-0">
+    <div className="flex justify-center items-start min-h-screen p-0">
       <div className="bg-white w-[600px] p-8 rounded-2xl shadow-lg flex flex-col space-y-4 transition-all duration-500 relative">
 
         {/* 재생성 및 다운로드 버튼 */}
