@@ -1,125 +1,28 @@
-import { useRef, useState } from "react";
-import addPictureIcon from '../../assets/picture/add_picture_icon.svg';
+import { useDiaryForm } from "../../hooks/useDiaryForm";
+import { useImageUpload } from "../../hooks/useImageUpload";
+import addPictureIcon from "../../assets/picture/add_picture_icon.svg";
 
 export default function WritingDiary({ onComplete }: { onComplete: () => void }) {
-  const currentDate = new Date().toISOString().split('T')[0];
-  const fileInputRef = useRef(null);
-  const [previewImage, setPreviewImage] = useState(null);
-  const [imageHeight, setImageHeight] = useState(0);
-  const [isCompleted, setIsCompleted] = useState(false);
-  const [selectedFile, setSelectedFile] = useState<File | null>(null); // ✅ 실제 파일 저장
+  const currentDate = new Date().toISOString().split("T")[0];
+  const token = localStorage.getItem("accessToken") || "";
 
-  const heightIncreaseRatio = 0.1;
+  const {
+    fileInputRef,
+    selectedFile,
+    previewImage,
+    imageHeight,
+    handleImageChange,
+    handleImageClick,
+    uploadImage,
+  } = useImageUpload(token);
 
-  const handleImageChange = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      setSelectedFile(file); // ✅ 파일 저장
+  const { isCompleted, setIsCompleted, handleCompleteClick } = useDiaryForm(onComplete);
 
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        setPreviewImage(e.target.result);
-
-        const img = new Image();
-        img.src = e.target.result as string;
-        img.onload = () => {
-          const adjustedHeight = img.height * heightIncreaseRatio;
-          setImageHeight(adjustedHeight);
-        };
-      };
-      reader.readAsDataURL(file);
-    }
+  const onSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
+    const uploadResult = await uploadImage(); // 서버에 이미지 업로드
+    await handleCompleteClick(selectedFile, token); // 일기 작성 요청
   };
-
-  const handleImageClick = () => {
-    if (!isCompleted) {
-      fileInputRef.current.click();
-    }
-  };
-
-  const handleCompleteClick = async (e) => {
-  e.stopPropagation();
-  setIsCompleted(true);
-
-  const token = localStorage.getItem("accessToken");
-  let imageFileToSend = selectedFile;
-
-  // ✅ 1. 이미지 업로드 (선택적)
-  if (selectedFile) {
-    try {
-      console.log("[이미지 업로드] 시작");
-      const formData = new FormData();
-      formData.append("file", selectedFile);
-
-      const response = await fetch("/api/image/upload", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        body: formData,
-      });
-
-      if (!response.ok) {
-        console.error("[이미지 업로드] 실패 ❌", response.status);
-        return;
-      }
-
-      const data = await response.json();
-      console.log("[이미지 업로드] 성공 ✅");
-      console.log("[서버 응답 데이터]", data);
-
-      // ⚠️ 백엔드가 반환한 파일 경로가 필요한 경우, imageFileToSend를 교체
-      // imageFileToSend = data.result.imageUrl; // 서버에서 S3 URL 반환하는 경우
-
-    } catch (err) {
-      console.error("[이미지 업로드] 예외 발생 ❌", err);
-      return;
-    }
-  }
-
-  // ✅ 2. 일기 작성 요청 (/api/diary)
-  try {
-    console.log("[일기 작성] 요청 시작");
-    const diaryForm = new FormData();
-
-    if (imageFileToSend) {
-      diaryForm.append("image", imageFileToSend);
-    }
-
-    // ✏️ 제목과 내용은 DOM에서 가져오거나 상태로 관리
-    const title = (document.querySelector("input[placeholder='제목']") as HTMLInputElement)?.value || "";
-    const content = (document.querySelector("textarea") as HTMLTextAreaElement)?.value || "";
-
-    const requestObj = {
-      title,
-      content,
-    };
-    diaryForm.append("request", new Blob([JSON.stringify(requestObj)], { type: "application/json" }));
-
-    const diaryResponse = await fetch("/api/diary", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-      body: diaryForm,
-    });
-
-    if (!diaryResponse.ok) {
-      console.error("[일기 작성] 실패 ❌", diaryResponse.status);
-      return;
-    }
-
-    const diaryResult = await diaryResponse.json();
-    console.log("[일기 작성] 성공 ✅");
-    console.log("[응답 데이터]", diaryResult);
-
-  } catch (error) {
-    console.error("[일기 작성] 예외 발생 ❌", error);
-  }
-
-  onComplete();
-};
-
 
   const resetCompletion = () => {
     setIsCompleted(false);
@@ -134,7 +37,7 @@ export default function WritingDiary({ onComplete }: { onComplete: () => void })
       }}
       onClick={resetCompletion}
     >
-      {/* 제목 */}
+      {/* 제목 입력 */}
       <div>
         <input
           type="text"
@@ -152,7 +55,7 @@ export default function WritingDiary({ onComplete }: { onComplete: () => void })
       </div>
       <hr className="border-t border-gray-200" />
 
-      {/* 내용 작성 */}
+      {/* 내용 */}
       <div className="relative flex-1">
         <textarea
           className="w-full h-full p-2 bg-transparent placeholder-gray-400 resize-none"
@@ -199,7 +102,7 @@ export default function WritingDiary({ onComplete }: { onComplete: () => void })
           className={`w-full py-3 text-lg rounded-lg ${
             isCompleted ? "bg-gray-300 cursor-not-allowed" : "bg-blue-500 hover:bg-blue-600 text-white"
           }`}
-          onClick={handleCompleteClick}
+          onClick={onSubmit}
           disabled={isCompleted}
         >
           작성 완료
