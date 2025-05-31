@@ -1,56 +1,47 @@
-import { useState } from "react";
-import Sidebar from "@/components/common/Sidebar";
-import TopBar from "@/components/common/Topbar";
-import NotificationList from "@/components/alarm/NotificationCardList";
-import RecentNotificationList from "@/components/alarm/RecentNotificationList";
-import EmotionCardPost from "@/components/feed/EmotionCardPost";
+"use client"
 
+import { useState } from "react"
+import NotificationList from "@/components/alarm/NotificationCardList"
+import RecentNotificationList from "@/components/alarm/RecentNotificationList"
+import EmotionCardPost from "@/components/feed/EmotionCardPost"
+import MainLayout from "@/components/common/MainLayout"
 export default function NotificationPage() {
-  const [isBlurred, setIsBlurred] = useState(false);
+  const [isBlurred, setIsBlurred] = useState(false)
 
   return (
-    <div className="relative min-h-screen bg-[#F5F7FA] flex p-4 md:p-6 overflow-hidden">
-      {/* 블러 처리 */}
-      {isBlurred && (
-        <div className="absolute inset-0 backdrop-blur-sm bg-gray-600 bg-opacity-10 z-30 transition-opacity duration-300" />
-      )}
+    <MainLayout>
+      <div className="min-h-screen bg-gradient-to-br  via-white to-indigo-50">
+        {/* 블러 처리 */}
+        {isBlurred && (
+          <div className="absolute inset-0 backdrop-blur-sm bg-gray-600 bg-opacity-10 z-30 transition-opacity duration-300" />
+        )}
 
-      {/* Sidebar */}
-      <div
-        className={`mr-4 md:mr-8 mt-4 flex-shrink-0 z-20 transition-all duration-300 ${
-          isBlurred ? "opacity-50 pointer-events-none" : "opacity-100"
-        }`}
-      >
-        <Sidebar activePage="alerts" />
-      </div>
+        {/* 메인 콘텐츠 */}
+        <div className="max-w-7xl mx-auto px-4 py-6">
+          {/* 페이지 헤더 */}
+          <div className="mb-8">
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">알림</h1>
+            <p className="text-gray-600">새로운 소식과 최근 활동을 확인하세요</p>
+          </div>
 
-      {/* Main Content */}
-      <div
-        className={`flex-1 flex flex-col z-20 transition-all duration-300 ${
-          isBlurred ? "opacity-50 pointer-events-none" : "opacity-100"
-        }`}
-      >
-        {/* TopBar */}
-        <div className="mb-4">
-          <TopBar />
-        </div>
-
-        {/* 가운데 정렬된 본문 콘텐츠 */}
-        <div className="flex justify-center">
-          <div className="flex flex-col lg:flex-row gap-6 md:gap-8 px-4 py-4 w-full max-w-[72rem]">
+          {/* 콘텐츠 그리드 */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* 알림 영역 */}
-            <div className="flex flex-col gap-4 w-full lg:w-[28rem]">
+            <div className="lg:col-span-2 space-y-6">
               <NotificationList />
               <RecentNotificationList />
             </div>
 
-            {/* 우측: 감정 카드 (게시물) */}
-            <div className="w-full flex-1">
-              <EmotionCardPost />
-            </div>
+            {/* 우측: 감정 카드 (게시물)
+            <div className="lg:col-span-1">
+              <div className="sticky top-6">
+                <EmotionCardPost />
+              </div>
+            </div> */}
           </div>
         </div>
       </div>
-    </div>
-  );
+    </MainLayout>
+    
+  )
 }

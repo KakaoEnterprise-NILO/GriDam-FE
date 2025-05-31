@@ -7,18 +7,14 @@ import Register from "./pages/login/Register";
 import Login from "./pages/login/Login";
 import KakaoCallback from './pages/login/KakaoCallback';
 import NaverCallback from './pages/login/NaverCallback';
-
 import WritingDiaryPage from "./pages/diary/WritingDiaryPage";
 import Calendar from "./pages/calendar/Calendar";
 import FeedList from './pages/feed/FeedList';
 import EmotionCardPost2 from "./components/feed/EmotionCardPost2";
 import MyProfile from "./pages/profile/MyProfile";
 import FriendProfile from "./pages/profile/FriendProfile";
-
 import NotificationPage from "./pages/alarm/NotificationPage";
-
-import AllUsersPage from "./components/follow/AllUsersPage";
-
+import NotificationTest from "./test/TestNotification";
 
 function App() {
   return (
@@ -30,7 +26,7 @@ function App() {
         <Route path="/login/oauth/kakao/callback" element={<KakaoCallback />} />
         <Route path="/login/oauth/naver/callback" element={<NaverCallback />} />
        
-        <Route path="/alluser" element={<AllUsersPage />} />    
+           
 
         <Route path="/calendar" element={<Calendar />} />
         <Route path="/register" element={<Register />} />
@@ -42,6 +38,9 @@ function App() {
         <Route path="/friend/list/feed/entire/:id" element={<EmotionCardPost2/>} />
         <Route path="/alarm" element={<NotificationPage/>} />
 
+
+        {/* 테스트 */}
+        <Route path="/notification_test" element={<NotificationTest />} />
 
 
       </Routes>
