@@ -1,4 +1,4 @@
-import { uploadImageToServer } from "../api/image";
+import { uploadImageToServer } from "@/api/image"; // ✅ 이름 정확히 맞추기
 import { useRef,useState } from "react";
 
 export const useImageUpload = (token: string) => {
