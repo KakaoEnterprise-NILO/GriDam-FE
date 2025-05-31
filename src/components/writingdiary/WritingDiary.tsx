@@ -1,29 +1,27 @@
 import { useRef, useState } from "react";
-import axios from "axios";
 import addPictureIcon from '../../assets/picture/add_picture_icon.svg';
 
 export default function WritingDiary({ onComplete }: { onComplete: () => void }) {
   const currentDate = new Date().toISOString().split('T')[0];
   const fileInputRef = useRef(null);
   const [previewImage, setPreviewImage] = useState(null);
-  const [imageFile, setImageFile] = useState<File | null>(null);
   const [imageHeight, setImageHeight] = useState(0);
   const [isCompleted, setIsCompleted] = useState(false);
-  const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
+  const [selectedFile, setSelectedFile] = useState<File | null>(null); // ✅ 실제 파일 저장
 
   const heightIncreaseRatio = 0.1;
 
   const handleImageChange = (event) => {
     const file = event.target.files[0];
     if (file) {
-      setImageFile(file);
+      setSelectedFile(file); // ✅ 파일 저장
+
       const reader = new FileReader();
       reader.onload = (e) => {
         setPreviewImage(e.target.result);
 
         const img = new Image();
-        img.src = e.target.result;
+        img.src = e.target.result as string;
         img.onload = () => {
           const adjustedHeight = img.height * heightIncreaseRatio;
           setImageHeight(adjustedHeight);
@@ -39,52 +37,89 @@ export default function WritingDiary({ onComplete }: { onComplete: () => void })
     }
   };
 
-  const handleSubmitToAPI = async () => {
+  const handleCompleteClick = async (e) => {
+  e.stopPropagation();
+  setIsCompleted(true);
+
+  const token = localStorage.getItem("accessToken");
+  let imageFileToSend = selectedFile;
+
+  // ✅ 1. 이미지 업로드 (선택적)
+  if (selectedFile) {
     try {
+      console.log("[이미지 업로드] 시작");
       const formData = new FormData();
-      const dto = {
-        title,
-        content,
-      };
+      formData.append("file", selectedFile);
 
-      formData.append("request", new Blob([JSON.stringify(dto)], { type: "application/json" }));
-
-      if (imageFile) {
-        formData.append("image", imageFile);
-      }
-
-      // ✅ 로그 출력
-      for (const pair of formData.entries()) {
-        if (pair[1] instanceof Blob) {
-          const reader = new FileReader();
-          reader.onload = () => {
-            console.log(`[FormData] ${pair[0]} =`, reader.result);
-          };
-          reader.readAsText(pair[1]);
-        } else {
-          console.log(`[FormData] ${pair[0]} =`, pair[1]);
-        }
-      }
-
-      const response = await axios.post("/api/diaries", formData, {
+      const response = await fetch("/api/image/upload", {
+        method: "POST",
         headers: {
-          "Content-Type": "multipart/form-data",
-          "Authorization": `Bearer ${localStorage.getItem("accessToken")}`,
+          Authorization: `Bearer ${token}`,
         },
+        body: formData,
       });
 
-      console.log("🟢 작성 성공:", response.data);
-    } catch (error) {
-      console.error("🔴 작성 실패:", error);
-    }
-  };
+      if (!response.ok) {
+        console.error("[이미지 업로드] 실패 ❌", response.status);
+        return;
+      }
 
-  const handleCompleteClick = async (e) => {
-    e.stopPropagation();
-    setIsCompleted(true);
-    await handleSubmitToAPI();
-    onComplete();
-  };
+      const data = await response.json();
+      console.log("[이미지 업로드] 성공 ✅");
+      console.log("[서버 응답 데이터]", data);
+
+      // ⚠️ 백엔드가 반환한 파일 경로가 필요한 경우, imageFileToSend를 교체
+      // imageFileToSend = data.result.imageUrl; // 서버에서 S3 URL 반환하는 경우
+
+    } catch (err) {
+      console.error("[이미지 업로드] 예외 발생 ❌", err);
+      return;
+    }
+  }
+
+  // ✅ 2. 일기 작성 요청 (/api/diary)
+  try {
+    console.log("[일기 작성] 요청 시작");
+    const diaryForm = new FormData();
+
+    if (imageFileToSend) {
+      diaryForm.append("image", imageFileToSend);
+    }
+
+    // ✏️ 제목과 내용은 DOM에서 가져오거나 상태로 관리
+    const title = (document.querySelector("input[placeholder='제목']") as HTMLInputElement)?.value || "";
+    const content = (document.querySelector("textarea") as HTMLTextAreaElement)?.value || "";
+
+    const requestObj = {
+      title,
+      content,
+    };
+    diaryForm.append("request", new Blob([JSON.stringify(requestObj)], { type: "application/json" }));
+
+    const diaryResponse = await fetch("/api/diary", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      body: diaryForm,
+    });
+
+    if (!diaryResponse.ok) {
+      console.error("[일기 작성] 실패 ❌", diaryResponse.status);
+      return;
+    }
+
+    const diaryResult = await diaryResponse.json();
+    console.log("[일기 작성] 성공 ✅");
+    console.log("[응답 데이터]", diaryResult);
+
+  } catch (error) {
+    console.error("[일기 작성] 예외 발생 ❌", error);
+  }
+
+  onComplete();
+};
+
 
   const resetCompletion = () => {
     setIsCompleted(false);
@@ -103,8 +138,6 @@ export default function WritingDiary({ onComplete }: { onComplete: () => void })
       <div>
         <input
           type="text"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
           className="w-full p-2 bg-transparent text-lg font-semibold placeholder-gray-400"
           placeholder="제목"
           disabled={isCompleted}
@@ -119,15 +152,15 @@ export default function WritingDiary({ onComplete }: { onComplete: () => void })
       </div>
       <hr className="border-t border-gray-200" />
 
-      {/* 내용 입력 영역 */}
-      <div className="relative flex-1 min-h-[300px]">
+      {/* 내용 작성 */}
+      <div className="relative flex-1">
         <textarea
           className="w-full h-full p-2 bg-transparent placeholder-gray-400 resize-none"
           placeholder="오늘은 무슨 일이 있었나요?"
-          value={content}
-          onChange={(e) => setContent(e.target.value)}
           disabled={isCompleted}
         />
+
+        {/* 이미지 추가 버튼 */}
         <button
           className={`absolute bottom-2 left-2 p-2 rounded-lg text-gray-600 hover:bg-gray-300 ${
             isCompleted ? "cursor-not-allowed opacity-50" : ""
@@ -137,6 +170,8 @@ export default function WritingDiary({ onComplete }: { onComplete: () => void })
         >
           <img src={addPictureIcon} alt="사진 추가" className="w-6 h-6" />
         </button>
+
+        {/* 파일 입력 */}
         <input
           type="file"
           ref={fileInputRef}

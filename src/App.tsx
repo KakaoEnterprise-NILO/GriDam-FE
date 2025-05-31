@@ -17,7 +17,7 @@ import FriendProfile from "./pages/profile/FriendProfile";
 
 import NotificationPage from "./pages/alarm/NotificationPage";
 
-import AllUsersPage from "./components/follow/AllUsersPage";
+// import AllUsersPage from "./components/";
 
 
 function App() {
@@ -30,7 +30,6 @@ function App() {
         <Route path="/login/oauth/kakao/callback" element={<KakaoCallback />} />
         <Route path="/login/oauth/naver/callback" element={<NaverCallback />} />
        
-        <Route path="/alluser" element={<AllUsersPage />} />    
 
         <Route path="/calendar" element={<Calendar />} />
         <Route path="/register" element={<Register />} />
