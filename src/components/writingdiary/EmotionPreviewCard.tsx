@@ -2,6 +2,7 @@ import { useState } from "react";
 import StatusCard from "./StatusCard";
 import RecommendedCard from "../writingdiary/RecommendationCard";
 import "./EmotionPreviewCard.css";
+import { useFeedUpload } from "@/hooks/useFeedUpload"; // ✅ 정확한 경로와 이름으로 import
 
 interface EmotionPreviewCardProps {
   onClose: () => void;
@@ -10,14 +11,26 @@ interface EmotionPreviewCardProps {
 export default function EmotionPreviewCard({ onClose }: EmotionPreviewCardProps) {
   const [step, setStep] = useState<"preview" | "uploading" | "recommendation">("preview");
 
-  const handleUpload = () => {
+  const { upload } = useFeedUpload();
+
+  const handleUpload = async () => {
     setStep("uploading");
+
+    try {
+      const token = localStorage.getItem("accessToken") || "";
+      const result = await upload(1, "피드 내용 예시", true, token);
+      console.log("[피드 업로드 완료]", result);
+    } catch (err) {
+      console.error("[피드 업로드 실패]", err);
+    }
   };
+
 
   const handleStatusClose = () => {
     setStep("recommendation");
   };
 
+  
   if (step === "uploading") {
     return <StatusCard onComplete={handleStatusClose} />;
   }

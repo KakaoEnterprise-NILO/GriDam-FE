@@ -26,8 +26,6 @@ function App() {
         <Route path="/login" element={<Login />} />        
         <Route path="/login/oauth/kakao/callback" element={<KakaoCallback />} />
         <Route path="/login/oauth/naver/callback" element={<NaverCallback />} />
-       
-           
 
         <Route path="/calendar" element={<Calendar />} />
         <Route path="/register" element={<Register />} />
@@ -38,7 +36,6 @@ function App() {
         <Route path="/friends/feed" element={<FeedList/>} />
         <Route path="/friend/list/feed/entire/:id" element={<EmotionCardPost2/>} />
         <Route path="/alarm" element={<NotificationPage/>} />
-
         <Route path="/setting" element={<ConfigurationPage/>} />
 
 

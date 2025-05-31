@@ -1,43 +1,27 @@
-import { useRef, useState } from "react";
-import addPictureIcon from '../../assets/picture/add_picture_icon.svg';
+import { useDiaryForm } from "../../hooks/useDiaryForm";
+import { useImageUpload } from "../../hooks/useImageUpload";
+import addPictureIcon from "../../assets/picture/add_picture_icon.svg";
 
 export default function WritingDiary({ onComplete }: { onComplete: () => void }) {
-  const currentDate = new Date().toISOString().split('T')[0];
-  const fileInputRef = useRef(null);
-  const [previewImage, setPreviewImage] = useState(null);
-  const [imageHeight, setImageHeight] = useState(0);
-  const [isCompleted, setIsCompleted] = useState(false);
+  const currentDate = new Date().toISOString().split("T")[0];
+  const token = localStorage.getItem("accessToken") || "";
 
-  const heightIncreaseRatio = 0.1;
+  const {
+    fileInputRef,
+    selectedFile,
+    previewImage,
+    imageHeight,
+    handleImageChange,
+    handleImageClick,
+    uploadImage,
+  } = useImageUpload(token);
 
-  const handleImageChange = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        setPreviewImage(e.target.result);
+  const { isCompleted, setIsCompleted, handleCompleteClick } = useDiaryForm(onComplete);
 
-        const img = new Image();
-        img.src = e.target.result;
-        img.onload = () => {
-          const adjustedHeight = img.height * heightIncreaseRatio;
-          setImageHeight(adjustedHeight);
-        };
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
-  const handleImageClick = () => {
-    if (!isCompleted) {
-      fileInputRef.current.click();
-    }
-  };
-
-  const handleCompleteClick = (e) => {
-    e.stopPropagation(); // 부모 컴포넌트의 클릭 이벤트 버블링 방지
-    setIsCompleted(true);
-    onComplete();
+  const onSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
+    const uploadResult = await uploadImage(); // 서버에 이미지 업로드
+    await handleCompleteClick(selectedFile, token); // 일기 작성 요청
   };
 
   const resetCompletion = () => {
@@ -53,7 +37,7 @@ export default function WritingDiary({ onComplete }: { onComplete: () => void })
       }}
       onClick={resetCompletion}
     >
-      {/* 제목 */}
+      {/* 제목 입력 */}
       <div>
         <input
           type="text"
@@ -71,7 +55,7 @@ export default function WritingDiary({ onComplete }: { onComplete: () => void })
       </div>
       <hr className="border-t border-gray-200" />
 
-      {/* 내용 작성 */}
+      {/* 내용 */}
       <div className="relative flex-1">
         <textarea
           className="w-full h-full p-2 bg-transparent placeholder-gray-400 resize-none"
@@ -118,7 +102,7 @@ export default function WritingDiary({ onComplete }: { onComplete: () => void })
           className={`w-full py-3 text-lg rounded-lg ${
             isCompleted ? "bg-gray-300 cursor-not-allowed" : "bg-blue-500 hover:bg-blue-600 text-white"
           }`}
-          onClick={handleCompleteClick}
+          onClick={onSubmit}
           disabled={isCompleted}
         >
           작성 완료
