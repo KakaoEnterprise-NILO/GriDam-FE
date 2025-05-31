@@ -15,6 +15,7 @@ import MyProfile from "./pages/profile/MyProfile";
 import FriendProfile from "./pages/profile/FriendProfile";
 import NotificationPage from "./pages/alarm/NotificationPage";
 import NotificationTest from "./test/TestNotification";
+import ConfigurationPage from "./pages/configuration/ConfigurationPage";
 
 function App() {
   return (
@@ -37,6 +38,8 @@ function App() {
         <Route path="/friends/feed" element={<FeedList/>} />
         <Route path="/friend/list/feed/entire/:id" element={<EmotionCardPost2/>} />
         <Route path="/alarm" element={<NotificationPage/>} />
+
+        <Route path="/setting" element={<ConfigurationPage/>} />
 
 
         {/* 테스트 */}
