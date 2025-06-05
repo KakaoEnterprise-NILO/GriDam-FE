@@ -20,6 +20,7 @@ export interface Diary {
   emotion?: string;
   userUploadImage?: string;
   color?: string;
+  hashtags?: string[];
 }
 
 interface DiaryState {
@@ -39,7 +40,7 @@ const initialState: DiaryState = {
 export const fetchDiaries = createAsyncThunk('diary/fetchDiaries', async () => {
   const response = await api.get('/diary/list');
   return response.data.result.map((item: any, index: number) => ({
-    id: index,
+    id: item.id ?? index,
     title: item.title,
     content: item.content,
     date: item.date,
@@ -47,40 +48,13 @@ export const fetchDiaries = createAsyncThunk('diary/fetchDiaries', async () => {
     emotion: '',
     userUploadImage: item.imageUrl || '',
     color: '',
+    hashtags: item.hashtags || [],
   }));
 });
 
 export const fetchEmotionCards = createAsyncThunk('diary/fetchEmotionCards', async () => {
-  // 테스트용 더미 카드 데이터
-  const dummyCards: EmotionCardDataType[] = [
-    {
-      diaryId: 0,
-      color: 'bg-green-300',
-      emotion: '기쁨',
-      image: 'https://via.placeholder.com/150',
-      date: '2025-06-04',
-      hashtags: ['#행복', '#웃음'],
-      chartData: [
-        { name: '기쁨', value: 70 },
-        { name: '슬픔', value: 10 },
-        { name: '화남', value: 20 },
-      ],
-    },
-    {
-      diaryId: 1,
-      color: 'bg-red-300',
-      emotion: '슬픔',
-      image: 'https://via.placeholder.com/150',
-      date: '2025-06-03',
-      hashtags: ['#외로움', '#비'],
-      chartData: [
-        { name: '슬픔', value: 80 },
-        { name: '기쁨', value: 10 },
-        { name: '불안', value: 10 },
-      ],
-    },
-  ];
-  return dummyCards;
+  const response = await api.get('/emotion-cards');
+  return response.data.data.result;
 });
 
 const diarySlice = createSlice({
