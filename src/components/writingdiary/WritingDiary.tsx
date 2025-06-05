@@ -2,7 +2,7 @@ import { useDiaryForm } from "../../hooks/useDiaryForm";
 import { useImageUpload } from "../../hooks/useImageUpload";
 import addPictureIcon from "../../assets/picture/add_picture_icon.svg";
 
-export default function WritingDiary({ onComplete }: { onComplete: () => void }) {
+export default function WritingDiary({ onComplete }: { onComplete: (diaryId: string) => void }) {
   const currentDate = new Date().toISOString().split("T")[0];
   const token = localStorage.getItem("accessToken") || "";
 
@@ -20,10 +20,15 @@ export default function WritingDiary({ onComplete }: { onComplete: () => void })
 
   const onSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
-    const uploadResult = await uploadImage(); // 서버에 이미지 업로드
-    await handleCompleteClick(selectedFile, token); // 일기 작성 요청
-  };
+    const response = await handleCompleteClick(selectedFile, token);
+    const diaryId = response?.result?.diaryId;
 
+    if (diaryId) {
+      onComplete(diaryId); // ✅ diaryId 넘기기
+    } else {
+      console.error("❌ diaryId 누락", response);
+    }
+  };
   const resetCompletion = () => {
     setIsCompleted(false);
   };

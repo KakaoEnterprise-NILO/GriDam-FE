@@ -9,10 +9,13 @@ import EmotionPreviewCard from "@/components/writingdiary/EmotionPreviewCard"
 export default function WritingDiaryPage() {
   const [isCompleted, setIsCompleted] = useState(false)
   const [isPreviewOpen, setIsPreviewOpen] = useState(false)
+  const [diaryId, setDiaryId] = useState<string | null>(null); // ✅ diaryId 상태 추가
 
-  const handleComplete = () => {
-    setIsCompleted(true)
-  }
+
+  const handleComplete = (id: string) => {
+    setDiaryId(id); // ✅ 저장
+    setIsCompleted(true);
+  };
 
   const handlePreviewOpen = () => {
     setIsPreviewOpen(true)
@@ -49,7 +52,9 @@ export default function WritingDiaryPage() {
             isCompleted ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-10"
           }`}
         >
-          <UploadEmotionCard onPreview={handlePreviewOpen} />
+          {diaryId && (
+          <UploadEmotionCard onPreview={handlePreviewOpen} diaryId={diaryId} />
+        )}
         </div>
       </div>
 

@@ -1,8 +1,7 @@
-// src/hooks/useDiaryForm.ts
 import { useState } from "react";
 import { submitDiary } from "../api/diary";
 
-export function useDiaryForm(onComplete: () => void) {
+export function useDiaryForm(onComplete: (diaryId: string) => void) {
   const [isCompleted, setIsCompleted] = useState(false);
 
   const handleCompleteClick = async (
@@ -21,8 +20,16 @@ export function useDiaryForm(onComplete: () => void) {
       )?.value || "";
 
       const diaryResult = await submitDiary({ title, content, image }, token);
-      console.log("[일기 작성 성공 ✅]", diaryResult);
-      onComplete();
+
+      // submitDiary가 result만 리턴한다면 이 부분 단순화
+      const diaryId = diaryResult?.diaryId;
+
+      if (diaryId) {
+        console.log("📌 전달할 diaryId:", diaryId);
+        onComplete(diaryId);
+      } else {
+        console.warn("❗ diaryId가 응답에 없습니다:", diaryResult);
+      }
     } catch (err) {
       console.error("[일기 작성 실패 ❌]", err);
     }
