@@ -2,6 +2,7 @@ import { useLocation, Link } from 'react-router-dom';
 import { sidebarItems } from '../../styles/sidebarItem';
 import { cn } from '@/lib/utils';
 import { Home, PlusCircle, User, Users, Calendar, Bell, Settings } from 'lucide-react';
+import logoUrl from "@/assets/picture/gridam_no_text.svg";
 
 const iconMap = {
   home: Home,
@@ -20,10 +21,10 @@ export default function Sidebar() {
     <aside className="w-64 h-[50em] bg-white rounded-2xl shadow-lg px-6 py-8 flex flex-col justify-between">
       <div>
         {/* Logo */}
-        <div className="flex items-center gap-3 mb-12">
-          <img src="/logo.png" alt="Logo" className="w-10 h-10" />
-          <span className="text-xl font-bold text-gray-800">GriDam</span>
-        </div>
+        <Link to="/" className="flex items-center gap-3 mb-12">
+          <img src={logoUrl} alt="GriDam" className="w-16 h-14" />
+          <span className="text-2xl font-bold text-gray-800">GriDam</span>
+        </Link>
 
         {/* Menu */}
         <ul className="flex flex-col gap-2">

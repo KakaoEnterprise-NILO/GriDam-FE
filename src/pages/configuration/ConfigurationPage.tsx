@@ -1,27 +1,36 @@
 "use client"
-
+import ChangePasswordForm from "../../components/configuration/ChangePassword"
 import { useState } from "react"
 import MainLayout from "../../components/common/MainLayout"
-import { User, Bell, Lock, Phone, MessageSquare, FileText, HelpCircle } from "lucide-react"
-import { SettingsIcon } from "lucide-react"
+import {
+  User,
+  Bell,
+  Lock,
+  Phone,
+  MessageSquare,
+  FileText,
+  HelpCircle,
+  Settings,
+  Shield,
+  BookOpen,
+  ChevronRight,
+} from "lucide-react"
 
-export default function Settings() {
-  const [userInfo, setUserInfo] = useState({
-    username: "UserUser",
-    email: "user@gmail.com",
-    avatar: "/placeholder.svg?height=80&width=80",
-  })
+
+export default function SettingsPage() {
+  const [currentView, setCurrentView] = useState<"settings" | "changePassword">("settings")
+  const [activeTab, setActiveTab] = useState<"personal" | "feed" | "support">("personal")
 
   const personalInfoItems = [
-    { icon: User, label: "아이디", value: userInfo.username },
-    { icon: Lock, label: "비밀번호 변경", action: true },
+    { icon: User, label: "아이디", value: "UserUser" },
+    { icon: Lock, label: "비밀번호 변경", action: true, onClick: () => setCurrentView("changePassword") },
     { icon: Phone, label: "전화 번호", action: true },
   ]
 
   const feedManagementItems = [
     { icon: MessageSquare, label: "댓글", action: true },
     { icon: FileText, label: "이용 제한 내역", action: true },
-    { icon: SettingsIcon, label: "이용 규칙", action: true },
+    { icon: Settings, label: "이용 규칙", action: true },
   ]
 
   const supportItems = [
@@ -29,119 +38,158 @@ export default function Settings() {
     { icon: HelpCircle, label: "고객 센터", action: true },
   ]
 
+  const handlePasswordChangeSuccess = () => {
+    // 비밀번호 변경 성공 시 추가 로직 (예: 토스트 알림, 로그 등)
+    console.log("비밀번호 변경 성공")
+  }
+
+  const renderSettingsView = () => (
+    <div className="w-full max-w-3xl mx-auto">
+      {/* 헤더 */}
+      <div className="mb-6">
+        <h1 className="text-2xl font-bold text-gray-800">환경설정</h1>
+        <p className="text-gray-500 mt-1">계정 및 앱 설정을 관리하세요</p>
+      </div>
+
+      {/* 탭 네비게이션 */}
+      <div className="flex border-b mb-6">
+        <button
+          onClick={() => setActiveTab("personal")}
+          className={`px-4 py-3 font-medium text-sm transition-colors ${
+            activeTab === "personal" ? "text-blue-600 border-b-2 border-blue-600" : "text-gray-600 hover:text-gray-800"
+          }`}
+        >
+          개인 정보
+        </button>
+        <button
+          onClick={() => setActiveTab("feed")}
+          className={`px-4 py-3 font-medium text-sm transition-colors ${
+            activeTab === "feed" ? "text-blue-600 border-b-2 border-blue-600" : "text-gray-600 hover:text-gray-800"
+          }`}
+        >
+          피드 관리
+        </button>
+        <button
+          onClick={() => setActiveTab("support")}
+          className={`px-4 py-3 font-medium text-sm transition-colors ${
+            activeTab === "support" ? "text-blue-600 border-b-2 border-blue-600" : "text-gray-600 hover:text-gray-800"
+          }`}
+        >
+          지원
+        </button>
+      </div>
+
+      {/* 설정 카드 */}
+      <div className="space-y-6">
+        {/* 개인 정보 설정 */}
+        {activeTab === "personal" && (
+          <div className="bg-white rounded-2xl shadow overflow-hidden">
+            <div className="bg-gradient-to-r from-blue-500 to-blue-600 py-4 px-6">
+              <div className="flex items-center">
+                <Shield className="w-5 h-5 text-white mr-2" />
+                <h2 className="text-white font-medium">개인 정보</h2>
+              </div>
+            </div>
+            <div>
+              {personalInfoItems.map((item, index) => (
+                <div
+                  key={index}
+                  className="flex items-center justify-between py-4 px-6 border-b last:border-b-0 hover:bg-gray-50 cursor-pointer transition-colors"
+                  onClick={item.onClick}
+                >
+                  <div className="flex items-center space-x-3">
+                    <div className="bg-blue-50 p-2 rounded-lg">
+                      <item.icon className="w-5 h-5 text-blue-500" />
+                    </div>
+                    <span className="text-gray-700 font-medium">{item.label}</span>
+                  </div>
+                  {item.action ? (
+                    <ChevronRight className="w-5 h-5 text-gray-400" />
+                  ) : (
+                    <span className="text-gray-500 text-sm">{item.value}</span>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* 피드 관리 설정 */}
+        {activeTab === "feed" && (
+          <div className="bg-white rounded-2xl shadow overflow-hidden">
+            <div className="bg-gradient-to-r from-blue-500 to-blue-600 py-4 px-6">
+              <div className="flex items-center">
+                <MessageSquare className="w-5 h-5 text-white mr-2" />
+                <h2 className="text-white font-medium">피드 관리</h2>
+              </div>
+            </div>
+            <div>
+              {feedManagementItems.map((item, index) => (
+                <div
+                  key={index}
+                  className="flex items-center justify-between py-4 px-6 border-b last:border-b-0 hover:bg-gray-50 cursor-pointer transition-colors"
+                >
+                  <div className="flex items-center space-x-3">
+                    <div className="bg-blue-50 p-2 rounded-lg">
+                      <item.icon className="w-5 h-5 text-blue-500" />
+                    </div>
+                    <span className="text-gray-700 font-medium">{item.label}</span>
+                  </div>
+                  <ChevronRight className="w-5 h-5 text-gray-400" />
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* 지원 설정 */}
+        {activeTab === "support" && (
+          <div className="bg-white rounded-2xl shadow overflow-hidden">
+            <div className="bg-gradient-to-r from-blue-500 to-blue-600 py-4 px-6">
+              <div className="flex items-center">
+                <BookOpen className="w-5 h-5 text-white mr-2" />
+                <h2 className="text-white font-medium">지원</h2>
+              </div>
+            </div>
+            <div>
+              {supportItems.map((item, index) => (
+                <div
+                  key={index}
+                  className="flex items-center justify-between py-4 px-6 border-b last:border-b-0 hover:bg-gray-50 cursor-pointer transition-colors"
+                >
+                  <div className="flex items-center space-x-3">
+                    <div className="bg-blue-50 p-2 rounded-lg">
+                      <item.icon className="w-5 h-5 text-blue-500" />
+                    </div>
+                    <span className="text-gray-700 font-medium">{item.label}</span>
+                  </div>
+                  <ChevronRight className="w-5 h-5 text-gray-400" />
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* 추가 정보 카드 */}
+        <div className="bg-gradient-to-r from-blue-50 to-blue-100 rounded-2xl p-6">
+          <h3 className="text-blue-800 font-medium mb-2">도움이 필요하신가요?</h3>
+          <p className="text-blue-700 text-sm mb-4">설정에 관한 질문이 있으시면 고객 센터에 문의하세요.</p>
+          <button className="bg-white text-blue-600 hover:bg-blue-50 border border-blue-200 rounded-xl px-4 py-2 text-sm font-medium transition-colors">
+            고객 센터 방문하기
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+
   return (
     <MainLayout>
-      <div className="w-full bg-white rounded-2xl shadow max-w-screen-xl mx-auto px-4 md:px-8 lg:px-12 py-6">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* 왼쪽 프로필 섹션 */}
-          <div className="lg:col-span-1">
-            <div className="flex flex-col items-center space-y-4">
-              {/* 프로필 이미지 */}
-              <div className="w-24 h-24 bg-gray-200 rounded-2xl flex items-center justify-center overflow-hidden">
-                <img src={userInfo.avatar || "/placeholder.svg"} alt="Profile" className="w-full h-full object-cover" />
-              </div>
-
-              {/* 사용자 정보 */}
-              <div className="text-center">
-                <h2 className="text-xl font-bold text-gray-800">{userInfo.username}</h2>
-                <p className="text-gray-500 text-sm">{userInfo.email}</p>
-              </div>
-
-              {/* 공지사항 버튼 */}
-              <button className="w-full bg-blue-500 hover:bg-blue-600 text-white py-3 px-6 rounded-xl font-medium transition-colors">
-                공지사항
-              </button>
-            </div>
-
-            {/* 메뉴 리스트 */}
-            <div className="mt-8 space-y-2">
-              <div className="py-3 px-4 text-gray-700 hover:bg-gray-50 rounded-lg cursor-pointer transition-colors">
-                내 프로필
-              </div>
-              <div className="py-3 px-4 text-gray-700 hover:bg-gray-50 rounded-lg cursor-pointer transition-colors">
-                피드 관리
-              </div>
-              <div className="py-3 px-4 text-gray-700 hover:bg-gray-50 rounded-lg cursor-pointer transition-colors">
-                이용 안내
-              </div>
-            </div>
-          </div>
-
-          {/* 오른쪽 설정 섹션 */}
-          <div className="lg:col-span-2 space-y-6">
-            {/* 개인 정보 섹션 */}
-            <div>
-              <div className="bg-blue-500 text-white py-3 px-4 rounded-t-xl font-medium">개인 정보</div>
-              <div className="bg-white border border-t-0 rounded-b-xl">
-                {personalInfoItems.map((item, index) => (
-                  <div
-                    key={index}
-                    className="flex items-center justify-between py-4 px-4 border-b last:border-b-0 hover:bg-gray-50 cursor-pointer transition-colors"
-                  >
-                    <div className="flex items-center space-x-3">
-                      <item.icon className="w-5 h-5 text-gray-500" />
-                      <span className="text-gray-700">{item.label}</span>
-                    </div>
-                    {item.action && (
-                      <div className="text-gray-400">
-                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                        </svg>
-                      </div>
-                    )}
-                    {item.value && !item.action && <span className="text-gray-500 text-sm">{item.value}</span>}
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* 피드 관리 섹션 */}
-            <div>
-              <div className="bg-blue-500 text-white py-3 px-4 rounded-t-xl font-medium">피드 관리</div>
-              <div className="bg-white border border-t-0 rounded-b-xl">
-                {feedManagementItems.map((item, index) => (
-                  <div
-                    key={index}
-                    className="flex items-center justify-between py-4 px-4 border-b last:border-b-0 hover:bg-gray-50 cursor-pointer transition-colors"
-                  >
-                    <div className="flex items-center space-x-3">
-                      <item.icon className="w-5 h-5 text-gray-500" />
-                      <span className="text-gray-700">{item.label}</span>
-                    </div>
-                    <div className="text-gray-400">
-                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                      </svg>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* 피드 관리 (지원) 섹션 */}
-            <div>
-              <div className="bg-blue-500 text-white py-3 px-4 rounded-t-xl font-medium">피드 관리</div>
-              <div className="bg-white border border-t-0 rounded-b-xl">
-                {supportItems.map((item, index) => (
-                  <div
-                    key={index}
-                    className="flex items-center justify-between py-4 px-4 border-b last:border-b-0 hover:bg-gray-50 cursor-pointer transition-colors"
-                  >
-                    <div className="flex items-center space-x-3">
-                      <item.icon className="w-5 h-5 text-gray-500" />
-                      <span className="text-gray-700">{item.label}</span>
-                    </div>
-                    <div className="text-gray-400">
-                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                      </svg>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
+      <div className="px-4 py-8 bg-gray-50 min-h-screen">
+        {currentView === "settings" ? (
+          renderSettingsView()
+        ) : (
+          <ChangePasswordForm onBack={() => setCurrentView("settings")} onSuccess={handlePasswordChangeSuccess} />
+        )}
       </div>
     </MainLayout>
   )
