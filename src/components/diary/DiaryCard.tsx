@@ -1,8 +1,15 @@
-// src/components/diary/DiaryCard.tsx
 import { useState, useRef, useEffect } from 'react';
 import { MoreVertical, Trash2 } from 'lucide-react';
 import EmotionCard from './EmotionCard';
-import { useDiaryStore } from '@/store/diaryStore';
+
+type EmotionCardDataType = {
+  color: string;
+  emotion: string;
+  image: string;
+  date: string;
+  hashtags: string[];
+  chartData: { name: string; value: number }[];
+};
 
 type DiaryCardProps = {
   id: number;
@@ -10,18 +17,27 @@ type DiaryCardProps = {
   content: string;
   emotion: string;
   date: string;
-  userUploadImage: string,
+  userUploadImage: string;
   image: string;
   color: string;
+  emotionCard?: EmotionCardDataType;
 };
 
-export default function DiaryCard({ id, title, content, emotion, date, userUploadImage, image, color }: DiaryCardProps) {
+export default function DiaryCard({
+  id,
+  title,
+  content,
+  emotion,
+  date,
+  userUploadImage,
+  image,
+  color,
+  emotionCard,
+}: DiaryCardProps) {
   const [showModal, setShowModal] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
-
-  const diary = useDiaryStore((state) => state.diaries.find((d) => d.id === id)); // ✅ 감정카드용 전역 데이터
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -91,18 +107,18 @@ export default function DiaryCard({ id, title, content, emotion, date, userUploa
         </div>
       </div>
 
-      {showModal && diary && (
+      {showModal && emotionCard && (
         <EmotionCard
           front={{
-            color: diary.color,
-            emotion: diary.emotion,
-            image: diary.image,
+            color: emotionCard.color,
+            emotion: emotionCard.emotion,
+            image: emotionCard.image,
           }}
           back={{
-            color: diary.color,
-            date: diary.date,
-            hashtags: diary.hashtags,
-            chartData: diary.chartData,
+            color: emotionCard.color,
+            date: emotionCard.date,
+            hashtags: emotionCard.hashtags,
+            chartData: emotionCard.chartData,
           }}
           onClose={() => setShowModal(false)}
         />
