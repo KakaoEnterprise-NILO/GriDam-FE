@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom"
 export default function Home() {
   const navigate = useNavigate()
 
-  // 여기서는 localStorage에서 로그인 토큰 확인해서 로그인 상태 관리
+  // 로그인 상태 관리
   const [isLoggedIn, setIsLoggedIn] = useState(false)
 
   useEffect(() => {
@@ -21,6 +21,30 @@ export default function Home() {
 
     return () => window.removeEventListener("storage", checkToken)
   }, [])
+
+  const features = [
+    {
+      icon: "📝",
+      title: "감정을 기록하고 싶은 분",
+      description: "그리담은 일기를 쓰고 감정을 분석해 줍니다.",
+      color: "from-blue-50 to-indigo-50",
+      hoverColor: "hover:from-blue-100 hover:to-indigo-100",
+    },
+    {
+      icon: "😊",
+      title: "일기를 공유하고 싶은 분",
+      description: "일기를 쓰고 감정카드도 만들어 사람들과 소통할 수 있습니다.",
+      color: "from-purple-50 to-pink-50",
+      hoverColor: "hover:from-purple-100 hover:to-pink-100",
+    },
+    {
+      icon: "📘",
+      title: "감정을 관리하고 싶은 분",
+      description: "캘린더를 통해 보기 쉽게 감정 추이를 볼 수 있습니다.",
+      color: "from-green-50 to-emerald-50",
+      hoverColor: "hover:from-green-100 hover:to-emerald-100",
+    },
+  ]
 
   return (
     <MainLayout>
@@ -42,18 +66,42 @@ export default function Home() {
             <>
               <button
                 onClick={() => navigate("/login")}
-                className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 shadow transition-all duration-200 hover:shadow-lg"
+                className="group relative px-8 py-4 bg-gradient-to-r from-blue-500 to-blue-600 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300"
               >
-                로그인
+                <span className="relative z-10">로그인</span>
+                <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-blue-700 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               </button>
               <button
                 onClick={() => navigate("/register")}
-                className="bg-white text-blue-500 border border-blue-500 px-6 py-2 rounded-lg hover:bg-blue-100 shadow transition-all duration-200 hover:shadow-lg"
+                className="group relative px-8 py-4 bg-white text-blue-600 font-semibold border-2 border-blue-500 rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300 hover:bg-blue-50"
               >
                 회원가입
               </button>
             </>
           )}
+        </div>
+      </div>
+
+      {/* 기능 소개 섹션 */}
+      <div className="py-16 px-4">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-gray-800 mb-4">그리담, 이렇게 활용하세요</h2>
+            <div className="w-24 h-1 bg-gradient-to-r from-blue-500 to-purple-500 mx-auto rounded-full"></div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {features.map((feature, index) => (
+              <div
+                key={index}
+                className={`group relative bg-gradient-to-br ${feature.color} ${feature.hoverColor} p-8 rounded-2xl shadow-lg hover:shadow-2xl transform hover:-translate-y-3 transition-all duration-500 cursor-pointer border border-white/50`}
+              >
+                <div className="text-5xl mb-4">{feature.icon}</div>
+                <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
+                <p className="text-gray-600 text-sm">{feature.description}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
 
