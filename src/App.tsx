@@ -16,6 +16,7 @@ import FriendProfile from "./pages/profile/FriendProfile";
 import NotificationPage from "./pages/alarm/NotificationPage";
 import NotificationTest from "./test/TestNotification";
 import ConfigurationPage from "./pages/configuration/ConfigurationPage";
+import HomeMyDiary from "./pages/home/HomeMyDiary";
 
 function App() {
   return (
@@ -41,6 +42,7 @@ function App() {
 
         {/* 테스트 */}
         <Route path="/notification_test" element={<NotificationTest />} />
+        <Route path="/homeDiary" element={<HomeMyDiary />} />
 
 
       </Routes>
