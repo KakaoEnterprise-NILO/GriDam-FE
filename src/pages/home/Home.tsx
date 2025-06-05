@@ -27,7 +27,7 @@ export default function Home() {
     {
       icon: "📝",
       title: "감정을 기록하고 싶은 분",
-      description: "그리담 일기장은 일기를 쓰고 감정을 분석해 줍니다.",
+      description: "그리담은 일기를 쓰고 감정을 분석해 줍니다.",
       color: "from-blue-50 to-indigo-50",
       hoverColor: "hover:from-blue-100 hover:to-indigo-100",
     },
@@ -122,7 +122,7 @@ export default function Home() {
       <div className="py-16 px-4">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-800 mb-4">그리담 일기장, 이렇게 활용하세요</h2>
+            <h2 className="text-3xl font-bold text-gray-800 mb-4">그리담, 이렇게 활용하세요</h2>
             <div className="w-24 h-1 bg-gradient-to-r from-blue-500 to-purple-500 mx-auto rounded-full"></div>
           </div>
 
