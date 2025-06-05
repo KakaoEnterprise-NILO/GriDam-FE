@@ -3,6 +3,11 @@ import { useNavigate } from "react-router-dom";
 import { IoShareOutline, IoBookmarkOutline } from "react-icons/io5";
 import { FaUserCircle } from "react-icons/fa";
 import cardImage from "../../assets/picture/sample_emotion_card.png";
+import { toggleReaction } from "@/services/reactionService";
+
+interface EmotionCardPostProps {
+  feedId: number;
+}
 
 export default function EmotionCardPost() {
   const [selectedEmoji, setSelectedEmoji] = useState<string | null>(null);
@@ -10,8 +15,16 @@ export default function EmotionCardPost() {
   const [isFocused, setIsFocused] = useState(false);
   const navigate = useNavigate(); // 페이지 이동용
 
-  const emojiList = ["😄", "🥰", "😂", "😡"];
+  const emojiList = ["😄", "🥰", "😂", "😡"]; // ✅ 반드시 추가
 
+  const emojiToReaction: Record<string, string> = {
+    "😄": "좋아요",
+    "🥰": "공감해요",
+    "😂": "슬퍼요",
+    "😡": "힘내요",
+  };
+
+  
   const handleSubmit = () => {
     console.log("댓글:", comment);
     setComment("");
@@ -25,6 +38,19 @@ export default function EmotionCardPost() {
 
   const handleViewAllComments = () => {
     navigate("/friend/list/feed/entire/1"); // 실제 게시물 ID로 교체
+  };
+
+  const handleEmojiClick = async (emoji: string) => {
+    const token = localStorage.getItem("accessToken") || "";
+    const reactionType = emojiToReaction[emoji];
+    if (!reactionType || !token) return;
+
+    try {
+      await toggleReaction(feedId, reactionType, token);
+      setSelectedEmoji(emoji); // UI 반영
+    } catch (err) {
+      console.error("❌ 피드 반응 처리 실패:", err);
+    }
   };
 
   return (

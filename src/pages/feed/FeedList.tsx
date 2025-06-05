@@ -51,7 +51,7 @@ export default function FriendList() {
         <div className="flex flex-1 justify-center items-start overflow-y-auto px-6 py-6">
           <div className="w-full max-w-2xl space-y-6">
             {cards.map((id) => (
-              <EmotionCardPost key={id} />
+              <EmotionCardPost key={id} feedId={id} /> // 수정 완료
             ))}
             {/* 관찰 대상 div (무한 스크롤용) */}
             <div ref={observerRef} className="h-10" />
