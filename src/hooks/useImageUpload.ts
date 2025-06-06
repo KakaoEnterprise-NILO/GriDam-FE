@@ -38,7 +38,7 @@ export const useImageUpload = (token: string) => {
     if (!selectedFile) return null;
 
     try {
-      const res = await uploadImageAPI(selectedFile, token);
+      const res = await uploadImageToServer(selectedFile, token);
 
       if (res?.result?.imageUrl) {
         console.log("[업로드 결과 URL]", res.result.imageUrl);
