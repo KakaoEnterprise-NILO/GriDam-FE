@@ -55,7 +55,7 @@ export default function DiaryCard({ id, title, content, date, imageUrl, hashtags
   const [emotionCardData, setEmotionCardData] = useState<EmotionCardDataType | null>(null)
   const [loadingCard, setLoadingCard] = useState(false)
   const [emotion, setEmotion] = useState("")
-  const [cardImageUrl, setCardImageUrl] = useState("")
+  const [, setCardImageUrl] = useState("")
   const [loadingEmotion, setLoadingEmotion] = useState(true)
   const [imageError, setImageError] = useState(false)
   const [imageLoaded, setImageLoaded] = useState(false)
