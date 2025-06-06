@@ -63,25 +63,25 @@ export default function Calendar() {
   const [error, setError] = useState<string | null>(null)
 
   // 같은 날짜의 일기 중 가장 최신 것만 선택하는 함수
-  const getLatestDiaryPerDay = (diaryList: CalendarDiary[]) => {
-    const diaryMap = new Map<number, CalendarDiary>()
+  // const getLatestDiaryPerDay = (diaryList: CalendarDiary[]) => {
+  //   const diaryMap = new Map<number, CalendarDiary>()
 
-    diaryList.forEach((diary) => {
-      const existingDiary = diaryMap.get(diary.day)
-      if (!existingDiary) {
-        // 해당 날짜에 일기가 없으면 추가
-        diaryMap.set(diary.day, diary)
-      } else {
-        // 이미 있으면 첫 번째 것 유지 (서버에서 정렬되어 온다고 가정)
-        console.warn(`⚠️ ${diary.day}일에 중복 일기 발견:`, {
-          existing: existingDiary.title,
-          new: diary.title,
-        })
-      }
-    })
+  //   diaryList.forEach((diary) => {
+  //     const existingDiary = diaryMap.get(diary.day)
+  //     if (!existingDiary) {
+  //       // 해당 날짜에 일기가 없으면 추가
+  //       diaryMap.set(diary.day, diary)
+  //     } else {
+  //       // 이미 있으면 첫 번째 것 유지 (서버에서 정렬되어 온다고 가정)
+  //       console.warn(`⚠️ ${diary.day}일에 중복 일기 발견:`, {
+  //         existing: existingDiary.title,
+  //         new: diary.title,
+  //       })
+  //     }
+  //   })
 
-    return Array.from(diaryMap.values())
-  }
+  //   return Array.from(diaryMap.values())
+  // }
 
   // API에서 일기 목록 데이터 가져오기
   const fetchDiaryListData = async () => {
@@ -243,8 +243,8 @@ export default function Calendar() {
     console.log(`📅 날짜 클릭: ${fullDate}`)
 
     // 해당 날짜의 일기 찾기
-    const dayNum = Number.parseInt(day, 10)
-    const foundDiary = diaries.find((d) => d.day === dayNum)
+    //const dayNum = Number.parseInt(day, 10)
+    //const foundDiary = diaries.find((d) => d.day === dayNum)
 
     setSelectedDate(fullDate)
     setDiaryOpen(true)

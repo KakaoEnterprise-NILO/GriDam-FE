@@ -13,14 +13,14 @@ export default function WritingDiary({ onComplete }: { onComplete: () => void })
     imageHeight,
     handleImageChange,
     handleImageClick,
-    uploadImage,
+    //uploadImage,
   } = useImageUpload(token);
 
   const { isCompleted, setIsCompleted, handleCompleteClick } = useDiaryForm(onComplete);
 
   const onSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
-    const uploadResult = await uploadImage(); // 서버에 이미지 업로드
+    //const uploadResult = await uploadImage(); // 서버에 이미지 업로드
     await handleCompleteClick(selectedFile, token); // 일기 작성 요청
   };
 

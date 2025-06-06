@@ -33,13 +33,13 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(true)
 
   // 일기 상태
-  const [diaries, setDiaries] = useState<DiaryItem[]>([])
-  const [diaryLoading, setDiaryLoading] = useState(false)
-  const [diaryError, setDiaryError] = useState<string | null>(null)
+  const [, setDiaries] = useState<DiaryItem[]>([])
+  const [, setDiaryLoading] = useState(false)
+  const [, setDiaryError] = useState<string | null>(null)
 
   // 페이징 상태 (일기 목록용)
-  const [page, setPage] = useState(1)
-  const ITEMS_PER_PAGE = 3
+  //const [page, setPage] = useState(1)
+  //const ITEMS_PER_PAGE = 3
 
   // 토큰 체크 및 일기 목록 조회
   useEffect(() => {

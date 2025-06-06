@@ -17,7 +17,7 @@ interface NotificationCardProps {
 }
 
 export default function NotificationCard({
-  id,
+  //id,
   imageUrl,
   noticeType,
   message,
