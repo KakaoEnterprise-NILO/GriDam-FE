@@ -101,7 +101,7 @@ export default function EmotionCard({ front, back, onClose }: EmotionCardProps) 
                   outerRadius={80}
                   label
                 >
-                  {back.chartData.map((entry, index) => (
+                  {back.chartData.map((_, index) => (
                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                   ))}
                 </Pie>
