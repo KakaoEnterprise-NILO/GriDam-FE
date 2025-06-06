@@ -1,11 +1,20 @@
 {
   "compilerOptions": {
+    "target": "esnext",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "jsx": "react-jsx",
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"],
-      "@components/*": ["components/*"],
-      "@pages/*": ["pages/*"]
-    }
+      "@components/*": ["src/components/*"],
+      "@pages/*": ["src/pages/*"]
+    },
+    "module": "esnext",
+    "moduleResolution": "node",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true
   },
   
   "files": [],
@@ -13,5 +22,4 @@
     { "path": "./tsconfig.app.json" },
     { "path": "./tsconfig.node.json" }
   ]
-
 }
