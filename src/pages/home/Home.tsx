@@ -4,8 +4,7 @@ import { useState, useEffect } from "react"
 import MainLayout from "../../components/common/MainLayout"
 import { useNavigate } from "react-router-dom"
 import logoUrl from "@/assets/picture/gridam.svg"
-import DiaryCard from "../../components/diary/DiaryCard"
-import DiaryPagination from "../../components/diary/DiaryPagination"
+
 import api from "../../api/axios" // 커스텀 axios 인스턴스 사용
 
 // 일기 타입

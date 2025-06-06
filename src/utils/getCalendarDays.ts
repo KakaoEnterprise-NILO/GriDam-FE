@@ -5,7 +5,7 @@ export function getCalendarDays(year: number, month: number): string[][] {
   const lastDay = new Date(year, month, 0)
 
   let week: string[] = []
-  let dayCounter = 1
+  // let dayCounter = 1
 
   // 1일 이전 공백 채우기
   for (let i = 0; i < firstDay.getDay(); i++) {
