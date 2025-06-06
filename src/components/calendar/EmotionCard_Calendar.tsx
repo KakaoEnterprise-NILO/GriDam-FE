@@ -1,5 +1,5 @@
 // EmotionCard.tsx 수정본 (모달 부분 제거, 포탈X, 크기 조절)
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { X } from 'lucide-react'
 import { PieChart, Pie, Cell } from 'recharts'
 

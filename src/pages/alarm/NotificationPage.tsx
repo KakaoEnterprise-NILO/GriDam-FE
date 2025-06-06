@@ -3,10 +3,10 @@
 import { useState } from "react"
 import NotificationList from "@/components/alarm/NotificationCardList"
 import RecentNotificationList from "@/components/alarm/RecentNotificationList"
-import EmotionCardPost from "@/components/feed/EmotionCardPost"
+
 import MainLayout from "@/components/common/MainLayout"
 export default function NotificationPage() {
-  const [isBlurred, setIsBlurred] = useState(false)
+  const [isBlurred] = useState(false)
 
   return (
     <MainLayout>
