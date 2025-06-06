@@ -17,11 +17,12 @@ export default function UploadEmotionCard({ onPreview, diaryId }: UploadEmotionC
   const [progress, setProgress] = useState(80);
   const progressBarRef = useRef<HTMLDivElement | null>(null);
 
-  useEffect(() => {
-    console.log("📌 UploadEmotionCard에 전달된 diaryId:", diaryId);
-    let retryCount = 5;
-    const maxRetries = 60;
+  const retryCount = useRef(0);
+  const maxRetries = 5;
+  const defaultImageUrl =
+    "https://objectstorage.kr-central-2.kakaocloud.com/v1/e1aa923a4373419aace9daef92f80e91/image-storage/diary-image/nilo.gridam.domain.image.entity.Uuid@12bc7211.png";
 
+  useEffect(() => {
     const fetchImage = async () => {
       try {
         const token = localStorage.getItem("accessToken");
@@ -39,12 +40,15 @@ export default function UploadEmotionCard({ onPreview, diaryId }: UploadEmotionC
           throw new Error("Image not ready yet");
         }
       } catch (err) {
-        if (retryCount < maxRetries) {
-          retryCount++;
+        retryCount.current += 1;
+
+        if (retryCount.current < maxRetries) {
+          console.warn(`⏳ 재시도 ${retryCount.current}/${maxRetries}`);
           setTimeout(fetchImage, 5000);
         } else {
+          console.error("🛑 최대 재시도 도달. 기본 이미지로 대체:", err);
+          setImageUrl(defaultImageUrl); // 👉 기본 이미지 설정
           setLoading(false);
-          console.error("🛑 감정 카드 이미지 로딩 실패:", err);
         }
       }
     };
@@ -53,6 +57,8 @@ export default function UploadEmotionCard({ onPreview, diaryId }: UploadEmotionC
       fetchImage();
     }
   }, [diaryId]);
+
+
 
   const updateProgress = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!progressBarRef.current) return;
