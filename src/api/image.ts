@@ -1,4 +1,9 @@
-// src/api/image.ts
+type UploadImageResponse = {
+  result: {
+    imageUrl: string;
+    [key: string]: any;
+  };
+};
 
 export async function uploadImageToServer(file: File, token: string) {
   const formData = new FormData();
@@ -16,6 +21,7 @@ export async function uploadImageToServer(file: File, token: string) {
     throw new Error(`[이미지 업로드 실패] ${response.status}`);
   }
 
-  const data = await response.json();
+  const data = (await response.json()) as UploadImageResponse;
+
   return data.result; // { imageUrl: "...", ... }
 }

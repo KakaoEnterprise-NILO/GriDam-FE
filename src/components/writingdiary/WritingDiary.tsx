@@ -13,7 +13,7 @@ export default function WritingDiary({ onComplete }: { onComplete: (diaryId: str
     imageHeight,
     handleImageChange,
     handleImageClick,
-    uploadImage,
+    //uploadImage,
   } = useImageUpload(token);
 
   const { isCompleted, setIsCompleted, handleCompleteClick } = useDiaryForm(onComplete);

@@ -1,8 +1,9 @@
 {
   "compilerOptions": {
+    "jsx": "react-jsx", // ✅ 추가
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.node.tsbuildinfo",
     "target": "ES2022",
-    "lib": ["ES2023"],
+    "lib": ["ES2020", "dom", "dom.iterable"],
     "module": "ESNext",
     "skipLibCheck": true,
 
@@ -21,10 +22,12 @@
     "noUncheckedSideEffectImports": true,
 
     /* 경로 별칭 설정 */
-    "baseUrl": "./src",
+    "baseUrl": ".",  // ✅ 통일
     "paths": {
-      "@components/*": ["components/*"],
-      "@pages/*": ["pages/*"]
+      "@/*": ["src/*"],
+      "@components/*": ["src/components/*"],
+      "@pages/*": ["src/pages/*"],
+      "@api/*": ["src/api/*"] // 이 줄 추가하면 '@/api/axios'도 해결됨
     }
   },
   "include": ["src", "vite.config.ts"]
