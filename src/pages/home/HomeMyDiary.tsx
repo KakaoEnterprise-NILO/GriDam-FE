@@ -36,24 +36,26 @@ export default function HomeMyDiary() {
       setLoading(true)
       setError(null)
 
-      // 커스텀 axios 인스턴스 사용
-      const response = await api.get<ApiResponse>("/diary/list")
+      // 일기 목록 가져오기
+      const diariesResponse = await api.get<ApiResponse>("/diary/list")
 
-      if (response.data.success) {
-        setDiaries(response.data.result)
+      if (diariesResponse.data.success) {
+        setDiaries(diariesResponse.data.result)
+        console.log("일기 목록 조회 성공:", diariesResponse.data.result.length, "개")
       } else {
-        setError(response.data.message || "일기를 불러오는데 실패했습니다.")
+        setError(diariesResponse.data.message || "일기를 불러오는데 실패했습니다.")
       }
+
       setIsAuthenticated(true)
     } catch (err: any) {
-      console.error("일기 목록 조회 실패:", err)
+      console.error("데이터 조회 실패:", err)
 
       // 인증 관련 에러 처리
       if (err.response?.status === 401) {
         setIsAuthenticated(false)
         setError("로그인이 필요합니다.")
       } else {
-        setError(err.response?.data?.message || "일기를 불러오는데 실패했습니다.")
+        setError(err.response?.data?.message || "데이터를 불러오는데 실패했습니다.")
       }
     } finally {
       setLoading(false)
@@ -152,6 +154,22 @@ export default function HomeMyDiary() {
             />
           ))}
         </div>
+
+        {/* 디버깅 정보 (개발 중에만 표시) */}
+        {process.env.NODE_ENV === "development" && (
+          <div className="mt-8 p-4 bg-gray-100 rounded-lg">
+            <h3 className="font-bold mb-2">🔍 디버깅 정보</h3>
+            <p>일기 개수: {diaries.length}</p>
+            <p>현재 페이지: {page}</p>
+            <p>총 페이지: {maxPage}</p>
+            <details className="mt-2">
+              <summary className="cursor-pointer text-blue-600">일기 목록 보기</summary>
+              <pre className="mt-2 text-xs bg-white p-2 rounded overflow-auto max-h-40">
+                {JSON.stringify(diaries, null, 2)}
+              </pre>
+            </details>
+          </div>
+        )}
       </div>
     </MainLayout>
   )

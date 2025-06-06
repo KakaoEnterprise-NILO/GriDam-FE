@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useRef, useEffect } from "react"
-import { MoreVertical, Trash2, ImageIcon } from "lucide-react"
+import { MoreVertical, Trash2, ImageIcon, Clock } from "lucide-react"
 import EmotionCard from "./EmotionCard"
 import api from "../../api/axios" // 커스텀 axios 인스턴스 사용
 
@@ -11,7 +11,8 @@ type EmotionCardDataType = {
   image: string
   date: string
   hashtags: string[]
-  chartData: { name: string; value: number }[]
+  emotions: Array<{ [key: string]: number }> // API 응답 형식으로 변경
+  emotionCardId: number
 }
 
 type DiaryCardProps = {
@@ -24,17 +25,25 @@ type DiaryCardProps = {
   onDelete: (diaryId: string) => void
 }
 
+// API 응답 타입 정의 (명세서에 맞춤)
+type EmotionCardApiResponse = {
+  cardImageUrl: string
+  emotionCardId: number
+  emotion: string
+  emotions: Array<{ [key: string]: number }>
+}
+
 // 감정별 색상 매핑 - 백엔드 Emotion enum에 맞춤
 const emotionColorMap: { [key: string]: string } = {
-  행복: "#FFD700",    // HAPPY
-  슬픔: "#4169E1",    // SAD  
-  기쁨: "#FFA500",    // JOY
-  불안: "#9370DB",    // ANXIOUS
-  화남: "#DC143C",    // ANGRY
-  놀람: "#FF6347",    // SURPRISE
-  역겨움: "#696969",  // DISGUST
-  두려움: "#8B008B",  // FEAR
-  없음: "#CCCCCC",    // NONE
+  행복: "#FFD700", // HAPPY
+  슬픔: "#4169E1", // SAD
+  기쁨: "#FFA500", // JOY
+  불안: "#9370DB", // ANXIOUS
+  화남: "#DC143C", // ANGRY
+  놀람: "#FF6347", // SURPRISE
+  역겨움: "#696969", // DISGUST
+  두려움: "#8B008B", // FEAR
+  없음: "#CCCCCC", // NONE
   // 기본값
   default: "#CCCCCC",
 }
@@ -50,6 +59,7 @@ export default function DiaryCard({ id, title, content, date, imageUrl, hashtags
   const [loadingEmotion, setLoadingEmotion] = useState(true)
   const [imageError, setImageError] = useState(false)
   const [imageLoaded, setImageLoaded] = useState(false)
+  const [emotionCardExists, setEmotionCardExists] = useState<boolean | null>(null) // 감정카드 존재 여부
   const menuRef = useRef<HTMLDivElement>(null)
 
   // 컴포넌트 마운트 시 감정 정보 미리 가져오기
@@ -62,14 +72,24 @@ export default function DiaryCard({ id, title, content, date, imageUrl, hashtags
         })
 
         if (res.data.success) {
-          const { emotion, cardImageUrl } = res.data.result
+          const { emotion, cardImageUrl } = res.data.result as EmotionCardApiResponse
           setEmotion(emotion)
           setCardImageUrl(cardImageUrl)
+          setEmotionCardExists(true)
         }
-      } catch (err) {
+      } catch (err: any) {
         console.error("감정 정보 조회 실패:", err)
-        // 에러가 발생해도 기본 색상으로 표시
-        setEmotion("")
+
+        // 404 에러인 경우 감정카드가 존재하지 않음을 표시
+        if (err.response?.status === 404) {
+          setEmotionCardExists(false)
+          setEmotion("")
+          setCardImageUrl("")
+        } else {
+          // 다른 에러의 경우 null로 설정 (알 수 없는 상태)
+          setEmotionCardExists(null)
+          setEmotion("")
+        }
       } finally {
         setLoadingEmotion(false)
       }
@@ -92,52 +112,27 @@ export default function DiaryCard({ id, title, content, date, imageUrl, hashtags
     try {
       setLoadingCard(true)
 
-      // 이미 감정 정보가 있다면 바로 모달 표시
-      if (emotion && cardImageUrl) {
-        const color = emotionColorMap[emotion] || emotionColorMap.default
-
-        setEmotionCardData({
-          color,
-          emotion,
-          image: cardImageUrl,
-          date,
-          hashtags,
-          chartData: [
-            { name: "기쁨", value: 30 },
-            { name: "슬픔", value: 25 },
-            { name: "분노", value: 20 },
-            { name: "불안", value: 15 },
-            { name: "평온", value: 10 },
-          ],
-        })
-        setShowModal(true)
-        return
-      }
-
-      // 감정 정보가 없다면 다시 API 호출
       const res = await api.get(`/emotion-cards/card-image`, {
         params: { diaryId: id },
       })
 
       if (res.data.success) {
-        const { cardImageUrl, emotion } = res.data.result
+        const { cardImageUrl, emotion, emotions, emotionCardId } = res.data.result as EmotionCardApiResponse
         const color = emotionColorMap[emotion] || emotionColorMap.default
+
+        console.log("API 응답 데이터:", { cardImageUrl, emotion, emotions, emotionCardId })
 
         setEmotion(emotion)
         setCardImageUrl(cardImageUrl)
+        setEmotionCardExists(true)
         setEmotionCardData({
           color,
           emotion,
           image: cardImageUrl,
           date,
           hashtags,
-          chartData: [
-            { name: "기쁨", value: 30 },
-            { name: "슬픔", value: 25 },
-            { name: "분노", value: 20 },
-            { name: "불안", value: 15 },
-            { name: "평온", value: 10 },
-          ],
+          emotions, // 원본 API 응답 데이터를 그대로 전달
+          emotionCardId,
         })
         setShowModal(true)
       } else {
@@ -146,7 +141,10 @@ export default function DiaryCard({ id, title, content, date, imageUrl, hashtags
     } catch (err: any) {
       console.error("감정카드 조회 실패", err)
 
-      if (err.response?.status === 401) {
+      if (err.response?.status === 404) {
+        setEmotionCardExists(false)
+        alert("아직 감정카드가 생성되지 않았습니다. 잠시 후 다시 시도해주세요.")
+      } else if (err.response?.status === 401) {
         alert("로그인이 필요합니다.")
       } else {
         alert(err.response?.data?.message || err.message || "감정카드를 불러오는데 실패했습니다.")
@@ -202,7 +200,28 @@ export default function DiaryCard({ id, title, content, date, imageUrl, hashtags
     setImageLoaded(true)
   }
 
-  const color = emotionColorMap[emotion] || emotionColorMap.default
+  // 감정카드 상태에 따른 색상 결정
+  const getEmotionColor = () => {
+    if (loadingEmotion) return "#CCCCCC"
+    if (emotionCardExists === false) return "#E5E7EB" // 회색 (감정카드 없음)
+    if (emotion) return emotionColorMap[emotion] || emotionColorMap.default
+    return "#CCCCCC"
+  }
+
+  // 감정카드 버튼 텍스트 결정
+  const getEmotionButtonText = () => {
+    if (loadingCard) return "로딩 중..."
+    if (loadingEmotion) return "분석 중..."
+    if (emotionCardExists === false) return "감정 분석 중"
+    return "감정카드 보기"
+  }
+
+  // 감정카드 버튼 비활성화 여부
+  const isEmotionButtonDisabled = () => {
+    return loadingCard || loadingEmotion || emotionCardExists === false
+  }
+
+  const color = getEmotionColor()
 
   return (
     <>
@@ -235,12 +254,19 @@ export default function DiaryCard({ id, title, content, date, imageUrl, hashtags
               <h2 className="text-lg font-bold">{title}</h2>
               <p className="text-sm text-gray-500 font-semibold whitespace-nowrap">· {date}</p>
               {/* 감정 표시 */}
-              {emotion && (
+              {emotion && emotionCardExists === true && (
                 <span
                   className="text-xs px-2 py-1 rounded-full text-white font-semibold"
                   style={{ backgroundColor: color }}
                 >
                   {emotion}
+                </span>
+              )}
+              {/* 감정카드 생성 중 표시 */}
+              {emotionCardExists === false && (
+                <span className="text-xs px-2 py-1 rounded-full bg-gray-200 text-gray-600 font-semibold flex items-center gap-1">
+                  <Clock size={10} />
+                  분석 중
                 </span>
               )}
             </div>
@@ -286,7 +312,7 @@ export default function DiaryCard({ id, title, content, date, imageUrl, hashtags
 
         <div
           className="flex justify-between items-center text-white px-4 py-2 transition-colors duration-300"
-          style={{ backgroundColor: loadingEmotion ? "#CCCCCC" : color }}
+          style={{ backgroundColor: color }}
         >
           {/* 해시태그 표시 영역 */}
           {hashtags.length > 0 && (
@@ -299,11 +325,13 @@ export default function DiaryCard({ id, title, content, date, imageUrl, hashtags
             </div>
           )}
           <button
-            className="flex-shrink-0 ml-auto mr-[5%] text-sm font-semibold hover:underline disabled:opacity-50"
+            className={`flex-shrink-0 ml-auto mr-[5%] text-sm font-semibold transition-all duration-200 ${
+              isEmotionButtonDisabled() ? "opacity-50 cursor-not-allowed" : "hover:underline hover:scale-105"
+            }`}
             onClick={fetchEmotionCard}
-            disabled={loadingCard}
+            disabled={isEmotionButtonDisabled()}
           >
-            {loadingCard ? "로딩 중..." : "감정카드 보기"}
+            {getEmotionButtonText()}
           </button>
         </div>
       </div>
@@ -319,7 +347,7 @@ export default function DiaryCard({ id, title, content, date, imageUrl, hashtags
             color: emotionCardData.color,
             date: emotionCardData.date,
             hashtags: emotionCardData.hashtags,
-            chartData: emotionCardData.chartData,
+            emotions: emotionCardData.emotions, // API 응답 데이터를 그대로 전달
           }}
           onClose={() => setShowModal(false)}
         />

@@ -1,9 +1,13 @@
 "use client"
+
 import type React from "react"
 import { useEffect, useState } from "react"
 import ReactDOM from "react-dom"
-import { PieChart, Pie, Cell } from "recharts"
+import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from "recharts"
 import { X, BarChart3, Sparkles, ImageIcon, Expand } from "lucide-react"
+
+// API 응답 타입 정의
+type EmotionApiData = Array<{ [key: string]: number }>
 
 type EmotionCardProps = {
   front: {
@@ -15,12 +19,54 @@ type EmotionCardProps = {
     color: string
     date: string
     hashtags: string[]
-    chartData: { name: string; value: number }[]
+    chartData?: { name: string; value: number }[] // 기존 방식 (선택적)
+    emotions?: EmotionApiData // 새로운 API 응답 방식
   }
   onClose?: () => void
 }
 
-const COLORS = ["#6366F1", "#10B981", "#F59E0B", "#EF4444", "#8B5CF6"]
+// 감정별 차트 색상 매핑 (영어 키 추가)
+const EMOTION_CHART_COLORS: { [key: string]: string } = {
+  // 한국어
+  행복: "#FFD700",
+  기쁨: "#FFA500",
+  슬픔: "#4169E1",
+  불안: "#9370DB",
+  화남: "#DC143C",
+  놀람: "#FF6347",
+  역겨움: "#696969",
+  두려움: "#8B008B",
+  없음: "#CCCCCC",
+  // 영어 (API 응답용)
+  HAPPY: "#FFD700",
+  JOY: "#FFA500",
+  SAD: "#4169E1",
+  ANXIOUS: "#9370DB",
+  ANGRY: "#DC143C",
+  SURPRISE: "#FF6347",
+  DISGUST: "#696969",
+  FEAR: "#8B008B",
+  NONE: "#CCCCCC",
+  // 기본 색상들 (백업용)
+  default1: "#6366F1",
+  default2: "#10B981",
+  default3: "#F59E0B",
+  default4: "#EF4444",
+  default5: "#8B5CF6",
+}
+
+// 감정 이름 한국어 변환 매핑
+const EMOTION_NAME_MAP: { [key: string]: string } = {
+  HAPPY: "행복",
+  JOY: "기쁨",
+  SAD: "슬픔",
+  ANXIOUS: "불안",
+  ANGRY: "화남",
+  SURPRISE: "놀람",
+  DISGUST: "역겨움",
+  FEAR: "두려움",
+  NONE: "없음",
+}
 
 export default function EmotionCard({ front, back, onClose }: EmotionCardProps) {
   const [flipped, setFlipped] = useState(false)
@@ -52,6 +98,68 @@ export default function EmotionCard({ front, back, onClose }: EmotionCardProps) 
 
   const handleCloseFullscreen = () => {
     setShowFullscreenImage(false)
+  }
+
+  // API 응답 emotions 배열을 차트 데이터로 변환
+  const convertEmotionsToChartData = (emotions: EmotionApiData): { name: string; value: number }[] => {
+    if (!emotions || emotions.length === 0) {
+      return []
+    }
+
+    const chartData: { name: string; value: number }[] = []
+
+    // emotions 배열의 모든 객체를 순회하여 감정 데이터 추출
+    emotions.forEach((emotionObj) => {
+      Object.entries(emotionObj).forEach(([emotionKey, value]) => {
+        if (typeof value === "number" && value >= 0) {
+          // 0 이상으로 변경 (0.1도 포함)
+          // 한국어 이름으로 변환 (없으면 원래 이름 사용)
+          const displayName = EMOTION_NAME_MAP[emotionKey] || emotionKey
+
+          chartData.push({
+            name: displayName,
+            value: Math.round(value * 100), // 0.9 -> 90%, 0.1 -> 10% 변환
+          })
+        }
+      })
+    })
+
+    // 값이 큰 순서로 정렬
+    return chartData.sort((a, b) => b.value - a.value)
+  }
+
+  // 차트 데이터 결정 (API 응답 우선, 기존 방식 fallback)
+  const getChartData = () => {
+    if (back.emotions && back.emotions.length > 0) {
+      // 새로운 API 응답 방식
+      return convertEmotionsToChartData(back.emotions)
+    } else if (back.chartData && back.chartData.length > 0) {
+      // 기존 방식
+      return back.chartData
+    }
+    return []
+  }
+
+  const chartData = getChartData()
+
+  // 차트 데이터에 색상 매핑
+  const chartDataWithColors = chartData.map((item, index) => ({
+    ...item,
+    fill: EMOTION_CHART_COLORS[item.name] || EMOTION_CHART_COLORS[`default${(index % 5) + 1}`] || "#CCCCCC",
+  }))
+
+  // 커스텀 툴팁 컴포넌트
+  const CustomTooltip = ({ active, payload }: any) => {
+    if (active && payload && payload.length) {
+      const data = payload[0]
+      return (
+        <div className="bg-white p-3 rounded-lg shadow-lg border border-gray-200">
+          <p className="font-semibold text-gray-800">{data.name}</p>
+          <p className="text-sm text-gray-600">{data.value}%</p>
+        </div>
+      )
+    }
+    return null
   }
 
   // 전체화면 이미지 뷰어 컴포넌트
@@ -296,27 +404,47 @@ export default function EmotionCard({ front, back, onClose }: EmotionCardProps) 
                       감정 구성 비율
                       <div className="w-3 h-3 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full"></div>
                     </h3>
-                    <div className="flex justify-center">
-                      <PieChart width={320} height={240}>
-                        <Pie
-                          data={back.chartData}
-                          dataKey="value"
-                          nameKey="name"
-                          cx="50%"
-                          cy="50%"
-                          outerRadius={70}
-                          innerRadius={25}
-                          label={({ name, value }) => `${name} ${value}%`}
-                          labelLine={false}
-                          stroke="#ffffff"
-                          strokeWidth={2}
-                        >
-                          {back.chartData.map((entry, index) => (
-                            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                          ))}
-                        </Pie>
-                      </PieChart>
-                    </div>
+
+                    {chartDataWithColors.length > 0 ? (
+                      <div className="flex justify-center">
+                        <ResponsiveContainer width={300} height={220}>
+                          <PieChart>
+                            <Pie
+                              data={chartDataWithColors}
+                              dataKey="value"
+                              nameKey="name"
+                              cx="50%"
+                              cy="50%"
+                              outerRadius={60}
+                              innerRadius={20}
+                              stroke="#ffffff"
+                              strokeWidth={2}
+                            >
+                              {chartDataWithColors.map((entry, index) => (
+                                <Cell key={`cell-${index}`} fill={entry.fill} />
+                              ))}
+                            </Pie>
+                            <Tooltip content={<CustomTooltip />} />
+                            <Legend
+                              verticalAlign="bottom"
+                              height={36}
+                              formatter={(value, entry) => (
+                                <span style={{ color: entry.color, fontSize: "12px" }}>
+                                  {value} ({entry.payload?.value}%)
+                                </span>
+                              )}
+                            />
+                          </PieChart>
+                        </ResponsiveContainer>
+                      </div>
+                    ) : (
+                      <div className="flex items-center justify-center h-48 text-gray-400">
+                        <div className="text-center">
+                          <BarChart3 size={48} className="mx-auto mb-2 opacity-50" />
+                          <p className="text-sm">감정 분석 데이터가 없습니다</p>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
 
