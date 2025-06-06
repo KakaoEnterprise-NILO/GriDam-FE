@@ -35,7 +35,8 @@ const Register = () => {
 
   // 폼 데이터 변경 핸들러
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
+    const target = e.target as HTMLInputElement;
+    const { name, value } = target;
     setFormData((prev) => ({
       ...prev,
       [name]: value,
@@ -85,7 +86,7 @@ const Register = () => {
       });
 
       if (res.success) {
-        alert("회원가입 성공! 로그인 페이지로 이동합니다.");
+        window.alert("회원가입 성공! 로그인 페이지로 이동합니다.");
         navigate("/login");
       } else {
         setErrorMsg(res.message || "회원가입 실패가 발생했습니다.");
