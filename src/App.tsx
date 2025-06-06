@@ -12,7 +12,7 @@ import Calendar from "./pages/calendar/Calendar";
 import FeedList from './pages/feed/FeedList';
 import EmotionCardPost2 from "./components/feed/EmotionCardPost2";
 import MyProfile from "./pages/profile/MyProfile";
-import FriendProfile from "./pages/profile/FriendProfile";
+
 import NotificationPage from "./pages/alarm/NotificationPage";
 import NotificationTest from "./test/TestNotification";
 import ConfigurationPage from "./pages/configuration/ConfigurationPage";
@@ -33,7 +33,6 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/diary/write" element={<WritingDiaryPage/>} />
         <Route path="/profile" element={<MyProfile/>} />
-        <Route path="/profile/friend" element={<FriendProfile/>} />
 
         <Route path="/friends/feed" element={<FeedList/>} />
         <Route path="/friend/list/feed/entire/:id" element={<EmotionCardPost2/>} />
