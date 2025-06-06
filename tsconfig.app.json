@@ -2,9 +2,10 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
-    "moduleResolution": "bundler",
+    "moduleResolution": "node",        // bundler → node로 변경
     "noEmit": true,
-    "isolatedModules": true
+    "isolatedModules": true,
+    "allowImportingTsExtensions": true  // 필요하면 추가
   },
   "include": ["src"]
 }
