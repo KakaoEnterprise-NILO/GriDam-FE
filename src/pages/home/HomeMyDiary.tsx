@@ -155,7 +155,7 @@ export default function HomeMyDiary() {
           ))}
         </div>
 
-        {/* 디버깅 정보 (개발 중에만 표시) */}
+        디버깅 정보 (개발 중에만 표시)
         {process.env.NODE_ENV === "development" && (
           <div className="mt-8 p-4 bg-gray-100 rounded-lg">
             <h3 className="font-bold mb-2">🔍 디버깅 정보</h3>
