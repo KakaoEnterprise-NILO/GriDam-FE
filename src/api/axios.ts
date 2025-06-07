@@ -3,6 +3,7 @@ import axios, { AxiosRequestConfig } from "axios";
 
 // ✅ axios 인스턴스 생성
 const api = axios.create({
+  // 주소
   baseURL: "http://158.180.70.205:8080/api",
   headers: {
     "Content-Type": "application/json",
