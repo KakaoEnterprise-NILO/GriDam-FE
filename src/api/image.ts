@@ -9,7 +9,7 @@ export async function uploadImageToServer(file: File, token: string) {
   const formData = new FormData();
   formData.append("file", file);
 
-  const response = await fetch("/api/image/upload", {
+  const response = await fetch("https://gridam.store/api/image/upload", {
     method: "POST",
     headers: {
       Authorization: `Bearer ${token}`,

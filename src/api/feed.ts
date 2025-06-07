@@ -12,7 +12,7 @@ export async function uploadFeed(
   isPublic: boolean,
   token: string
 ) {
-  const response = await fetch(`/api/feed/upload/${emotionCardId}`, {
+  const response = await fetch(`https://gridam.store/api/feed/upload/${emotionCardId}`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
