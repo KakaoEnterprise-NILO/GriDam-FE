@@ -1,10 +1,21 @@
+import { useState } from "react";
 import { useDiaryForm } from "../../hooks/useDiaryForm";
 import { useImageUpload } from "../../hooks/useImageUpload";
 import addPictureIcon from "../../assets/picture/add_picture_icon.svg";
 
-export default function WritingDiary({ onComplete }: { onComplete: () => void }) {
+interface WritingDiaryProps {
+  onComplete: (
+    diaryId: string,
+    data: { title: string; content: string; imageFile?: File | null }
+  ) => void;
+}
+
+export default function WritingDiary({ onComplete }: WritingDiaryProps) {
   const currentDate = new Date().toISOString().split("T")[0];
   const token = localStorage.getItem("accessToken") || "";
+
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
 
   const {
     fileInputRef,
@@ -13,15 +24,13 @@ export default function WritingDiary({ onComplete }: { onComplete: () => void })
     imageHeight,
     handleImageChange,
     handleImageClick,
-    //uploadImage,
   } = useImageUpload(token);
 
   const { isCompleted, setIsCompleted, handleCompleteClick } = useDiaryForm(onComplete);
 
   const onSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
-    //const uploadResult = await uploadImage(); // 서버에 이미지 업로드
-    await handleCompleteClick(selectedFile, token); // 일기 작성 요청
+    await handleCompleteClick(selectedFile, token, title, content); // ✅ title, content 전달
   };
 
   const resetCompletion = () => {
@@ -41,6 +50,8 @@ export default function WritingDiary({ onComplete }: { onComplete: () => void })
       <div>
         <input
           type="text"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
           className="w-full p-2 bg-transparent text-lg font-semibold placeholder-gray-400"
           placeholder="제목"
           disabled={isCompleted}
@@ -60,6 +71,8 @@ export default function WritingDiary({ onComplete }: { onComplete: () => void })
         <textarea
           className="w-full h-full p-2 bg-transparent placeholder-gray-400 resize-none"
           placeholder="오늘은 무슨 일이 있었나요?"
+          value={content}
+          onChange={(e) => setContent(e.target.value)}
           disabled={isCompleted}
         />
 
