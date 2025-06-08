@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState } from "react"
+import { useState } from "react"
 import MainLayout from "@/components/common/MainLayout"
 import WritingDiary from "@/components/writingdiary/WritingDiary"
 import UploadEmotionCard from "@/components/writingdiary/UploadEmotionCard"

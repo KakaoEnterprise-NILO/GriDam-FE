@@ -12,11 +12,12 @@ import Calendar from "./pages/calendar/Calendar";
 import FeedList from './pages/feed/FeedList';
 import EmotionCardPost2 from "./components/feed/EmotionCardPost2";
 import MyProfile from "./pages/profile/MyProfile";
-import FriendProfile from "./pages/profile/FriendProfile";
+
 import NotificationPage from "./pages/alarm/NotificationPage";
 import NotificationTest from "./test/TestNotification";
 import ConfigurationPage from "./pages/configuration/ConfigurationPage";
 import HomeMyDiary from "./pages/home/HomeMyDiary";
+import EmotionCardTest from "./test/emotionCardTest";
 
 function App() {
   return (
@@ -32,18 +33,17 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/diary/write" element={<WritingDiaryPage/>} />
         <Route path="/profile" element={<MyProfile/>} />
-        <Route path="/profile/friend" element={<FriendProfile/>} />
 
         <Route path="/friends/feed" element={<FeedList/>} />
         <Route path="/friend/list/feed/entire/:id" element={<EmotionCardPost2/>} />
         <Route path="/alarm" element={<NotificationPage/>} />
         <Route path="/setting" element={<ConfigurationPage/>} />
-
+        <Route path="/homeDiary" element={<HomeMyDiary />} />
 
         {/* 테스트 */}
         <Route path="/notification_test" element={<NotificationTest />} />
-        <Route path="/homeDiary" element={<HomeMyDiary />} />
-
+        
+        <Route path="/test/emotion-cards" element={<EmotionCardTest />} />
 
       </Routes>
     </div>

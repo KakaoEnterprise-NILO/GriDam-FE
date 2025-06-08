@@ -9,8 +9,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'http://158.180.93.50:80',
-
+        target: 'http://gridam.store',
         //target: 'http://localhost:8080',
         
         changeOrigin: true,

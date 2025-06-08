@@ -5,9 +5,9 @@ import MainLayout from "@/components/common/MainLayout"
 import EmotionCardPost from "@/components/feed/EmotionCardPost"
 
 export default function FriendList() {
-  const [isBlurred, setIsBlurred] = useState(false) // 블러 처리용 상태 (추후 모달 등에 활용)
+  const [isBlurred] = useState(false) // 블러 처리용 상태 (추후 모달 등에 활용)
   const [cards, setCards] = useState<number[]>(Array.from({ length: 6 }, (_, i) => i))
-  const [page, setPage] = useState(1)
+  const [, setPage] = useState(1)
   const observerRef = useRef<null | HTMLDivElement>(null)
 
   const loadMore = useCallback(() => {

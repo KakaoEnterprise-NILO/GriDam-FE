@@ -23,7 +23,7 @@ export async function submitDiary(
     formData.append("image", image);
   }
 
-  const response = await fetch("/api/diary", {
+  const response = await fetch("https://gridam.store/api/diary", {
     method: "POST",
     headers: {
       Authorization: `Bearer ${token}`,

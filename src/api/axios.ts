@@ -3,7 +3,8 @@ import axios, { AxiosRequestConfig } from "axios";
 
 // ✅ axios 인스턴스 생성
 const api = axios.create({
-  baseURL: "/api",
+  // 주소
+  baseURL: "https://gridam.store/api",
   headers: {
     "Content-Type": "application/json",
   },

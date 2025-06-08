@@ -35,36 +35,38 @@ const Register = () => {
 
   // 폼 데이터 변경 핸들러
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
+    const target = e.target as HTMLInputElement;
+    const { name, value } = target;
     setFormData((prev) => ({
       ...prev,
       [name]: value,
     }));
   };
 
-  // 폼 유효성 검사 함수
-  const validateForm = (): boolean => {
-    const { loginId, password, checkPassword, nickname, phoneNum } = formData;
+  //이거는 없애면 안됨 휴대폰 인증하는 함수 
+  // // 폼 유효성 검사 함수
+  // const validateForm = (): boolean => {
+  //   const { loginId, password, checkPassword, nickname, phoneNum } = formData;
 
-    if (!loginId.trim() || !password.trim() || !checkPassword.trim() || !nickname.trim() || !phoneNum.trim()) {
-      setErrorMsg("모든 필드를 입력해주세요.");
-      return false;
-    }
+  //   if (!loginId.trim() || !password.trim() || !checkPassword.trim() || !nickname.trim() || !phoneNum.trim()) {
+  //     setErrorMsg("모든 필드를 입력해주세요.");
+  //     return false;
+  //   }
 
-    if (password !== checkPassword) {
-      setErrorMsg("비밀번호가 일치하지 않습니다.");
-      return false;
-    }
+  //   if (password !== checkPassword) {
+  //     setErrorMsg("비밀번호가 일치하지 않습니다.");
+  //     return false;
+  //   }
 
-    //임시로 인증 체크 무시
-    // if (!isVerified) {
-    //   setErrorMsg("전화번호 인증을 완료해주세요.");
-    //   return false;
-    // }
+  //   //임시로 인증 체크 무시
+  //   // if (!isVerified) {
+  //   //   setErrorMsg("전화번호 인증을 완료해주세요.");
+  //   //   return false;
+  //   // }
 
-    setErrorMsg(""); // 유효성 검사 통과 시 에러 초기화
-    return true;
-  };
+  //   setErrorMsg(""); // 유효성 검사 통과 시 에러 초기화
+  //   return true;
+  // };
 
   // 회원가입 핸들러
   const handleSignUp = async () => {
@@ -84,7 +86,7 @@ const Register = () => {
       });
 
       if (res.success) {
-        alert("회원가입 성공! 로그인 페이지로 이동합니다.");
+        window.alert("회원가입 성공! 로그인 페이지로 이동합니다.");
         navigate("/login");
       } else {
         setErrorMsg(res.message || "회원가입 실패가 발생했습니다.");

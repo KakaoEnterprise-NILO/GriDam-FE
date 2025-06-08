@@ -8,7 +8,9 @@ export default function EmotionFlowContainer() {
 
   return (
     <>
-      {step === "preview" && <EmotionPreviewCard onUpload={() => setStep("uploading")} />}
+      {/* {step === "preview" && <EmotionPreviewCard onUpload={() => setStep("uploading")} />} */}
+      {step === "preview" && <EmotionPreviewCard onClose={() => console.log("닫기")} />}
+      
       {step === "uploading" && <StatusCard onComplete={() => setStep("recommendation")} />}
       {step === "recommendation" && <RecommendedCard />}
     </>

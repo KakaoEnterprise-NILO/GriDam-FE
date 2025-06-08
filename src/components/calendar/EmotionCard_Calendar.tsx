@@ -1,5 +1,5 @@
 // EmotionCard.tsx 수정본 (모달 부분 제거, 포탈X, 크기 조절)
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { X } from 'lucide-react'
 import { PieChart, Pie, Cell } from 'recharts'
 
@@ -101,7 +101,7 @@ export default function EmotionCard({ front, back, onClose }: EmotionCardProps) 
                   outerRadius={80}
                   label
                 >
-                  {back.chartData.map((entry, index) => (
+                  {back.chartData.map((_, index) => (
                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                   ))}
                 </Pie>
