@@ -1,42 +1,55 @@
-// src/services/commentService.ts
-import axios from "axios";
+import api from "@/api/axios";
 
-export interface CommentPayload {
-  content: string;
-  parentCommentId?: number | null;
-}
+export const postComment = async (
+  feedId: number,
+  content: string,
+  parentCommentId?: number
+) => {
+  const payload = {
+    content,
+    ...(parentCommentId ? { parentCommentId } : {}),
+  };
 
-export async function postComment(feedId: number, data: CommentPayload, token: string) {
-  const res = await axios.post(`/api/feed/${feedId}/comment`, data, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-      "Content-Type": "application/json",
-    },
-  });
-  return res.data.result;
-}
+  console.log("📤 댓글 요청 전송:", { feedId, payload });
 
-export async function likeComment(feedId: number, commentId: number, token: string) {
-  return await axios.post(`/api/feed/${feedId}/comment/${commentId}/like`, null, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-}
+  const response = await api.post(`/feed/${feedId}/comment`, payload);
 
-export async function unlikeComment(feedId: number, commentId: number, token: string) {
-  return await axios.delete(`/api/feed/${feedId}/comment/${commentId}/like`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-}
+  console.log("✅ 댓글 작성 성공:", response.data);
 
-export async function fetchCommentList(feedId: number, token: string) {
-  const res = await axios.get(`/api/feed/${feedId}/comment/list`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-  return res.data.result.commentList;
-}
+  return response.data;
+};
+
+
+
+export const getCommentsByFeedId = async (feedId: number) => {
+  try {
+    console.log("📥 댓글 조회 요청:", feedId);
+
+    const res = await api.get(`/feed/${feedId}/comment/list`);
+
+    console.log("✅ 댓글 조회 응답:", res.data);
+
+    return res.data.result.commentList;
+  } catch (err) {
+    console.error("❌ 댓글 조회 실패:", err);
+    throw err;
+  }
+};
+
+export const likeComment = async (feedId: number, commentId: number) => {
+  try {
+    const res = await api.post(`/feed/${feedId}/comment/${commentId}/like`);
+    console.log("✅ 댓글 좋아요 완료:", res.data);
+    return res.data;
+  } catch (err) {
+    console.error("❌ 댓글 좋아요 실패:", err);
+    throw err;
+  }
+};
+
+// 댓글 좋아요 취소
+export const unlikeComment = async (feedId: number, commentId: number) => {
+  const res = await api.delete(`/feed/${feedId}/comment/${commentId}/like`);
+  console.log("🚫 좋아요 취소 완료:", res.data);
+  return res.data;
+};

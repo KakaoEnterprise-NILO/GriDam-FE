@@ -1,15 +1,17 @@
-import axios from "axios";
+// services/reactionService.ts
+import api from "@/api/axios"; // ✅ 커스텀 axios 인스턴스 import
 
-export async function toggleReaction(feedId: number, reactionType: string, token: string) {
-  const res = await axios.post(
-    `/api/feed/${feedId}/reaction`,
-    { reactionType },
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    }
-  );
-  return res.data.result;
-}
+export const toggleReaction = async (
+  feedId: number,
+  reactionType: string
+) => {
+  console.log(`📤 [toggleReaction] Sending reaction: ${reactionType} to feedId: ${feedId}`);
+  
+  const res = await api.post(`/feed/${feedId}/reaction`, {
+    reactionType,
+  });
+
+  console.log("✅ [toggleReaction] Response:", res.data);
+
+  return res.data;
+};
