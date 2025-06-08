@@ -1,4 +1,3 @@
-// src/api/axios.ts
 import axios, { AxiosRequestConfig } from "axios";
 
 // ✅ axios 인스턴스 생성
@@ -28,29 +27,28 @@ api.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config as AxiosRequestConfig & { _retry?: boolean };
 
-    // 401 에러 && 아직 재시도 안 했을 때
     if (error.response?.status === 401 && !originalRequest._retry) {
       const refreshToken = localStorage.getItem("refreshToken");
-
       if (!refreshToken) {
-        console.warn("refreshToken 없음. 로그아웃 필요");
+        console.warn("🔑 refreshToken 없음. 재로그인 필요");
         return Promise.reject(error);
       }
 
       originalRequest._retry = true;
 
       try {
+        // ✅ 수정 코드 (accessToken도 함께 보냄)
         const { data } = await axios.post("/api/auth/reissue", {
+          accessToken: localStorage.getItem("accessToken"),
           refreshToken,
         });
 
-        const newAccessToken = data.accessToken;
-        const newRefreshToken = data.refreshToken;
+        const newAccessToken = data.result.accessToken;
+        const newRefreshToken = data.result.refreshToken;
 
         localStorage.setItem("accessToken", newAccessToken);
         localStorage.setItem("refreshToken", newRefreshToken);
 
-        // 원래 요청 재시도
         originalRequest.headers = {
           ...originalRequest.headers,
           Authorization: `Bearer ${newAccessToken}`,
@@ -59,18 +57,13 @@ api.interceptors.response.use(
         return api(originalRequest);
       } catch (reissueError) {
         console.error("🔴 토큰 재발급 실패:", reissueError);
-
         localStorage.removeItem("accessToken");
         localStorage.removeItem("refreshToken");
-
-        // window.location.href = "/login"; // 필요 시 활성화
         return Promise.reject(reissueError);
       }
     }
 
-    // ✅ 추가 디버깅 로그 (선택적)
     console.error("❌ 요청 실패:", error.response?.status, error.response?.data);
-
     return Promise.reject(error);
   }
 );

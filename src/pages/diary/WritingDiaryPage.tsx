@@ -73,7 +73,10 @@ export default function WritingDiaryPage() {
       {/* 미리보기 카드 (모달) */}
       {isPreviewOpen && (
         <div className="fixed inset-0 flex justify-center items-center z-40">
-          <EmotionPreviewCard onClose={handlePreviewClose} />
+          <EmotionPreviewCard
+            diaryId={diaryId}         // ✅ 전달
+            onClose={handlePreviewClose}
+/>
         </div>
       )}
     </MainLayout>

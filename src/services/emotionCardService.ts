@@ -1,4 +1,4 @@
-// ✅ 1. services/emotionCardService.ts
+// services/emotionCardService.ts
 import axios from "axios";
 
 export const getEmotionCardImage = async (diaryId: string, token: string) => {
@@ -6,5 +6,6 @@ export const getEmotionCardImage = async (diaryId: string, token: string) => {
     params: { diaryId },
     headers: { Authorization: `Bearer ${token}` },
   });
-  return res.data.result;
+
+  return res.data.result?.cardImageUrl || null;
 };
