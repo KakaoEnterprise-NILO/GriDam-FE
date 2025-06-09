@@ -1,10 +1,21 @@
 // src/api/axios.ts
 import axios, { AxiosRequestConfig } from "axios";
 
-// ✅ axios 인스턴스 생성
+// // ✅ axios 인스턴스 생성 **배포용**
+// const api = axios.create({
+//   // 주소
+//   baseURL: "http://158.180.70.205:8080/api",
+//   headers: {
+//     "Content-Type": "application/json",
+//   },
+//   withCredentials: true,
+// });
+
+// ✅ axios 인스턴스 생성 **개발용**
 const api = axios.create({
-  // 주소
-  baseURL: "http://158.180.70.205:8080/api",
+
+  // baseURL: "http://158.180.70.205:8080/api",
+  baseURL: "/api",
   headers: {
     "Content-Type": "application/json",
   },

@@ -14,6 +14,7 @@ interface EmotionCardApiResponse {
     emotionCardId: number
     emotion: string
     emotions: { [key: string]: number }[]
+    hashtags: { tagName: string }[]
   }
   message: string
 }
@@ -110,7 +111,7 @@ export default function DiaryPopup({ open, onClose, date, diaryId }: DiaryPopupP
 
       console.log("🎭 감정 카드 조회 응답:", data)
 
-      if (data.success) {
+      if (data.success && data.result) {
         setEmotionCard(data.result)
         console.log("✅ 감정 카드 데이터 설정 완료:", data.result)
       } else {
@@ -282,7 +283,7 @@ export default function DiaryPopup({ open, onClose, date, diaryId }: DiaryPopupP
                   back={{
                     color: getEmotionColor(emotionCard.emotion),
                     date: formatDate(date),
-                    hashtags: diary?.title ? [diary.title] : [],
+                    hashtags: emotionCard.hashtags?.map((tag) => tag.tagName) || (diary?.title ? [diary.title] : []),
                     chartData: Object.entries(emotionCard.emotions[0] || {}).map(([name, value]) => ({
                       name,
                       value: Number(value),
