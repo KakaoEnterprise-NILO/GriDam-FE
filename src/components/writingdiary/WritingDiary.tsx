@@ -12,7 +12,6 @@ interface WritingDiaryProps {
 
 export default function WritingDiary({ onComplete }: WritingDiaryProps) {
   const currentDate = new Date().toISOString().split("T")[0];
-  const token = localStorage.getItem("accessToken") || "";
 
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
@@ -24,17 +23,13 @@ export default function WritingDiary({ onComplete }: WritingDiaryProps) {
     imageHeight,
     handleImageChange,
     handleImageClick,
-  } = useImageUpload(token);
+  } = useImageUpload(); // ✅ token 제거
 
-  const { isCompleted, setIsCompleted, handleCompleteClick } = useDiaryForm(onComplete);
+  const { isCompleted,  handleCompleteClick } = useDiaryForm(onComplete);
 
   const onSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
-    await handleCompleteClick(selectedFile, token, title, content); // ✅ title, content 전달
-  };
-
-  const resetCompletion = () => {
-    setIsCompleted(false);
+    await handleCompleteClick(selectedFile, title, content); // ✅ token 제거 후 정상 호출
   };
 
   return (
@@ -44,7 +39,7 @@ export default function WritingDiary({ onComplete }: WritingDiaryProps) {
         minHeight: `700px`,
         height: `calc(700px + ${imageHeight}px)`,
       }}
-      onClick={resetCompletion}
+      // onClick={resetCompletion}
     >
       {/* 제목 입력 */}
       <div>

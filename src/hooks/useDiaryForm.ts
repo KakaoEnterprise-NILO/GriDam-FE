@@ -1,3 +1,4 @@
+// src/hooks/useDiaryForm.ts
 import { useState } from "react";
 import { submitDiary } from "../api/diary";
 
@@ -11,14 +12,13 @@ export function useDiaryForm(
 
   const handleCompleteClick = async (
     image: File | null,
-    token: string,
     title: string,
     content: string
   ) => {
     setIsCompleted(true);
 
     try {
-      const diaryResult = await submitDiary({ title, content, image }, token);
+      const diaryResult = await submitDiary({ title, content, image });
       const diaryId = diaryResult?.diaryId;
 
       if (diaryId) {
