@@ -29,7 +29,7 @@ export default function UploadEmotionCard({ onPreview, diaryId, diaryInfo }: Upl
   const [error, setError] = useState<string | null>(null)
   const progressBarRef = useRef<HTMLDivElement | null>(null)
   const retryCount = useRef(0)
-  const maxRetries = 10 // 재시도 횟수 증가
+  const maxRetries = 100 // 재시도 횟수 증가
   const timeoutRef = useRef<NodeJS.Timeout | null>(null)
 
   const fetchImage = async () => {
@@ -59,16 +59,15 @@ export default function UploadEmotionCard({ onPreview, diaryId, diaryInfo }: Upl
 
         timeoutRef.current = setTimeout(fetchImage, retryDelay)
       } else {
-<<<<<<< HEAD
+
         console.error("🛑 최대 재시도 도달. 기본 이미지로 대체:", err);
         setImageUrl("https://objectstorage.kr-central-2.kakaocloud.com/v1/e1aa923a4373419aace9daef92f80e91/image-storage/overlay/52b0a7b9-6698-4c73-b757-7cbebe409e80.jpg");
         setLoading(false)
-=======
+
         console.error("🛑 최대 재시도 도달. 기본 이미지로 대체")
         setImageUrl(defaultImg)
         setLoading(false)
         setError("이미지를 불러올 수 없습니다. 새로고침을 시도해보세요.")
->>>>>>> e365eb618c54e42a054addf26802359fa3b87df3
       }
     }
   }
@@ -170,7 +169,7 @@ export default function UploadEmotionCard({ onPreview, diaryId, diaryInfo }: Upl
           )}
         </div>
 
-        {/* 디버깅 정보 (개발 환경에서만 표시) */}
+        {/* 디버깅 정보 (개발 환경에서만 표시)
         {process.env.NODE_ENV === "development" && (
           <div className="text-xs text-gray-500 bg-gray-100 p-2 rounded">
             <div>DiaryId: {diaryId}</div>
@@ -179,31 +178,18 @@ export default function UploadEmotionCard({ onPreview, diaryId, diaryInfo }: Upl
             </div>
             <div>이미지 URL: {imageUrl ? "✅" : "❌"}</div>
           </div>
-        )}
+        )} */}
 
         {/* 감정 카드 영역 */}
         <div className="flex justify-center">
           <div className="rounded-lg overflow-hidden shadow">
             {loading ? (
-<<<<<<< HEAD
-              <div className="flex items-center justify-center px-8 py-12 text-sm text-gray-500 animate-pulse">
-                감정 카드 생성 중...
-              </div>
-            ) : imageUrl ? (
-              <img
-                src={imageUrl}
-                alt="감정 카드"
-                className="block max-w-full h-auto rounded-lg shadow"
-              />
-            ) : (
-              <div className="flex items-center justify-center px-8 py-12 text-sm text-red-500 bg-red-100 rounded">
-                이미지 없음
-=======
+
               <div className="w-64 h-64 bg-gray-300 animate-pulse flex flex-col items-center justify-center text-sm text-gray-500">
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500 mb-2"></div>
                 <div>감정 카드 생성 중...</div>
                 <div className="text-xs mt-1">
-                  재시도 {retryCount.current}/{maxRetries}
+                  {/* 재시도 {retryCount.current}/{maxRetries} */}
                 </div>
               </div>
             ) : imageUrl ? (
@@ -227,19 +213,15 @@ export default function UploadEmotionCard({ onPreview, diaryId, diaryInfo }: Upl
                 >
                   다시 시도
                 </button>
->>>>>>> e365eb618c54e42a054addf26802359fa3b87df3
               </div>
             )}
           </div>
         </div>
 
-<<<<<<< HEAD
-=======
         {/* 에러 메시지 */}
         {error && (
           <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded text-center">{error}</div>
         )}
->>>>>>> e365eb618c54e42a054addf26802359fa3b87df3
 
         <hr className="border-t border-gray-300 my-4" />
 

@@ -4,8 +4,9 @@ import { useEffect, useRef, useState } from "react";
 import StatusCard from "./StatusCard";
 import RecommendedCard from "../writingdiary/RecommendationCard";
 import "./EmotionPreviewCard.css";
-import { uploadFeed } from "@/services/feedService"; // ✅ 새로 추가된 API 호출
-import { getEmotionCardImage } from "@/services/emotionCardService"; // ✅ 추가
+import axios from "axios";
+// import { uploadFeed } from "@/services/feedService"; // ✅ 새로 추가된 API 호출
+// import { getEmotionCardImage } from "@/services/emotionCardService"; // ✅ 추가
 
 
 interface EmotionPreviewCardProps {
@@ -19,7 +20,7 @@ export default function EmotionPreviewCard({ diaryId, onClose }: EmotionPreviewC
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [emotion, setEmotion] = useState<string | null>(null);
   const [hashtags, setHashtags] = useState<string[]>([]);
-  const [emotionCardId, setEmotionCardId] = useState<number>(247); // ✅ 기본값 fallback
+  const [_, setEmotionCardId] = useState<number>(247); // ✅ 기본값 fallback
 
   const retryCount = useRef(0);
   const maxRetries = 5;
@@ -62,17 +63,17 @@ export default function EmotionPreviewCard({ diaryId, onClose }: EmotionPreviewC
   }
 }, [diaryId]);
 
-  const handleUpload = async () => {
-  setStep("uploading");
+  // const handleUpload = async () => {
+  // setStep("uploading");
 
-    try {
-      const token = localStorage.getItem("accessToken") || "";
-      const result = await upload(emotionCardId, "피드 내용 예시", true, token);
-      console.log("[피드 업로드 완료]", result);
-    } catch (err) {
-      console.error("[피드 업로드 실패]", err);
-    }
-  };
+  //   try {
+  //     const token = localStorage.getItem("accessToken") || "";
+  //     const result = await upload(emotionCardId, "피드 내용 예시", true, token);
+  //     console.log("[피드 업로드 완료]", result);
+  //   } catch (err) {
+  //     console.error("[피드 업로드 실패]", err);
+  //   }
+  // };
 
   const handleStatusClose = () => {
     setStep("recommendation");
@@ -132,7 +133,7 @@ export default function EmotionPreviewCard({ diaryId, onClose }: EmotionPreviewC
         <div className="flex justify-center">
           <button
             className="bg-blue-500 text-white w-full py-2 rounded-lg hover:bg-blue-600"
-            onClick={handleUpload}
+            // onClick={handleUpload}
           >
             업로드
           </button>

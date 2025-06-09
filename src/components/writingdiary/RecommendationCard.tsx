@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { IoClose, IoChevronBack, IoChevronForward } from "react-icons/io5";
-import r1 from "../../assets/picture/r1.png";
-import r2 from "../../assets/picture/r2.png";
-import r3 from "../../assets/picture/r3.png";
+// import r1 from "../../assets/picture/r1.png";
+// import r2 from "../../assets/picture/r2.png";
+// import r3 from "../../assets/picture/r3.png";
 
 
 const cards = [
@@ -11,21 +11,21 @@ const cards = [
     description:
       "계속되는 오해와 반복되는 실망. 감정이 쌓여 폭발 직전이다. 오늘은 내 감정을 솔직하게 표현해보고 싶다. …더보기",
     tags: ["분노", "답답함", "억울함"],
-    image: r1,
+    image: "https://objectstorage.kr-central-2.kakaocloud.com/v1/e1aa923a4373419aace9daef92f80e91/image-storage/overlay/077160e9-da83-490d-920a-de21a9335722.jpg",
   },
   {
     title: "Overwhelmed",
     description:
       "끝없이 쏟아지는 일들과 기대 속에 지친 하루. 감정의 무게가 어깨를 짓누른다. 잠시 멈추고 숨을 고른다. …더보기",
     tags: ["스트레스", "지침", "감정과잉"],
-    image: r2,
+    image: "https://objectstorage.kr-central-2.kakaocloud.com/v1/e1aa923a4373419aace9daef92f80e91/image-storage/overlay/077160e9-da83-490d-920a-de21a9335722.jpg",
   },
   {
     title: "Resentful",
     description:
       "이해받지 못한 마음, 무시당한 느낌이 깊은 불쾌감으로 번진다. 나를 위한 거리를 둬야 할 때. …더보기",
     tags: ["억울함", "불쾌함", "거리두기"],
-    image: r3,
+    image: "https://objectstorage.kr-central-2.kakaocloud.com/v1/e1aa923a4373419aace9daef92f80e91/image-storage/overlay/2919b70a-49d4-4166-8e6e-02d604a9c5b7.jpg",
   },
 ];
 
@@ -81,7 +81,7 @@ export default function RecommendedCardModal() {
 
         {/* 카드 이미지 */}
         <img
-        src={currentCard.image}
+        src="https://objectstorage.kr-central-2.kakaocloud.com/v1/e1aa923a4373419aace9daef92f80e91/image-storage/overlay/03ca9b0e-5b44-4e5b-baa1-f47eb2ae4bbb.jpg"
         alt={currentCard.title}
         className="w-[17rem] h-auto"
         />

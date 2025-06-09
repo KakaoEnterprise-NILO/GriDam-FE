@@ -2,16 +2,18 @@
 import api from "@/api/axios" // ✅ 커스텀 axios 인스턴스를 불러오기
 
 export const getEmotionCardImage = async (diaryId: string) => {
-  const res = await api.get("/emotion-cards/card-image", {
-    params: { diaryId },
-  });
+  try {
+    const res = await api.get("/emotion-cards/card-image", {
+      params: { diaryId },
+    });
 
     return res.data.result?.cardImageUrl || null;
   } catch (error: any) {
     console.error("감정 카드 이미지 조회 실패:", error);
-    throw error; // 에러를 다시 던져서 호출하는 곳에서 처리할 수 있도록 함
+    throw error;
   }
 };
+
 
 
 // ✅ 2. 날짜로 감정 카드 정보 조회 (감정, 해시태그, 이미지 URL)

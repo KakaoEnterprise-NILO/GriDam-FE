@@ -2,40 +2,29 @@
 import axios, { AxiosRequestConfig } from "axios";
 
 
-// ✅ axios 인스턴스 생성
+// // ✅ axios 인스턴스 생성
+// const api = axios.create({
+//   // 주소
+//   baseURL: "https://gridam.store/api",
+
+//   headers: {
+//     "Content-Type": "application/json",
+//   },
+//   withCredentials: true,
+// });
+
+//✅ axios 인스턴스 생성 **개발용**
+
 const api = axios.create({
   // 주소
-  baseURL: "https://gridam.store/api",
-
+  // baseURL: "http://158.180.70.205:8080/api",
+  // baseURL: "https://gridam.store/api",
+  baseURL: "/api",
   headers: {
     "Content-Type": "application/json",
   },
   withCredentials: true,
 });
-
-// ✅ axios 인스턴스 생성 **개발용**
-
-// const api = axios.create({
-//   // 주소
-//   // baseURL: "http://158.180.70.205:8080/api",
-//   // baseURL: "https://gridam.store/api",
-//   baseURL: "/api",
-//   headers: {
-//     "Content-Type": "application/json",
-//   },
-//   withCredentials: true,
-// });
-
-// // ✅ axios 인스턴스 생성 **개발용**
-// const api = axios.create({
-
-//   // baseURL: "http://158.180.70.205:8080/api",
-//   baseURL: "/api",
-//   headers: {
-//     "Content-Type": "application/json",
-//   },
-//   withCredentials: true,
-// });
 
 // ✅ 요청 보낼 때 accessToken 자동 설정
 api.interceptors.request.use(
