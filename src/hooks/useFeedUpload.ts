@@ -5,12 +5,12 @@ export function useFeedUpload() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<null | Error>(null);
 
-  const upload = async (emotionCardId: number, content: string, isPublic: boolean, token: string) => {
+  const upload = async (emotionCardId: number, content: string, isPublic: boolean) => {
     setLoading(true);
     setError(null);
 
     try {
-      const result = await uploadFeed(emotionCardId, content, isPublic, token);
+      const result = await uploadFeed(emotionCardId, content, isPublic);
       return result;
     } catch (err) {
       setError(err as Error);
