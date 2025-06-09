@@ -25,13 +25,20 @@ type DiaryCardProps = {
   onDelete: (diaryId: string) => void
 }
 
-// API 응답 타입 정의 (명세서에 맞춤)
-type EmotionCardApiResponse = {
-  cardImageUrl: string
-  emotionCardId: number
-  emotion: string
-  emotions: Array<{ [key: string]: number }>
-}
+// // API 응답 타입 정의 (새로운 명세서에 맞춤)
+// type EmotionCardApiResponse = {
+//   timestamp: string
+//   success: boolean
+//   code: string
+//   result: {
+//     cardImageUrl: string
+//     emotionCardId: number
+//     emotion: string
+//     emotions: Array<{ [key: string]: number }>
+//     hashtags: Array<{ tagName: string }>
+//   }
+//   message: string
+// }
 
 // 감정별 색상 매핑 - 백엔드 Emotion enum에 맞춤
 const emotionColorMap: { [key: string]: string } = {
@@ -71,17 +78,21 @@ export default function DiaryCard({ id, title, content, date, imageUrl, hashtags
           params: { diaryId: id },
         })
 
-        if (res.data.success) {
-          const { emotion, cardImageUrl } = res.data.result as EmotionCardApiResponse
+        console.log("감정 정보 조회 응답:", res.data)
+
+        if (res.data.success && res.data.result) {
+          const { emotion, cardImageUrl } = res.data.result
           setEmotion(emotion)
           setCardImageUrl(cardImageUrl)
           setEmotionCardExists(true)
+        } else {
+          throw new Error(res.data.message || "감정 정보를 불러올 수 없습니다.")
         }
       } catch (err: any) {
         console.error("감정 정보 조회 실패:", err)
 
-        // 404 에러인 경우 감정카드가 존재하지 않음을 표시
-        if (err.response?.status === 404) {
+        // 특정 에러 코드에 대한 처리
+        if (err.response?.data?.code === "EMOTIONCARD4001" || err.response?.status === 404) {
           setEmotionCardExists(false)
           setEmotion("")
           setCardImageUrl("")
@@ -116,21 +127,28 @@ export default function DiaryCard({ id, title, content, date, imageUrl, hashtags
         params: { diaryId: id },
       })
 
-      if (res.data.success) {
-        const { cardImageUrl, emotion, emotions, emotionCardId } = res.data.result as EmotionCardApiResponse
+      console.log("감정카드 조회 응답:", res.data)
+
+      if (res.data.success && res.data.result) {
+        const { cardImageUrl, emotion, emotions, emotionCardId, hashtags } = res.data.result
         const color = emotionColorMap[emotion] || emotionColorMap.default
 
-        console.log("API 응답 데이터:", { cardImageUrl, emotion, emotions, emotionCardId })
+        console.log("API 응답 데이터:", { cardImageUrl, emotion, emotions, emotionCardId, hashtags })
 
         setEmotion(emotion)
         setCardImageUrl(cardImageUrl)
         setEmotionCardExists(true)
+
+        // hashtags 처리: API에서 받은 hashtags가 있으면 사용하고, 없으면 기존 hashtags 사용
+        const processedHashtags =
+          hashtags && hashtags.length > 0 ? hashtags.map((tag: { tagName: string }) => tag.tagName) : hashtags
+
         setEmotionCardData({
           color,
           emotion,
           image: cardImageUrl,
           date,
-          hashtags,
+          hashtags: processedHashtags,
           emotions, // 원본 API 응답 데이터를 그대로 전달
           emotionCardId,
         })
@@ -141,7 +159,7 @@ export default function DiaryCard({ id, title, content, date, imageUrl, hashtags
     } catch (err: any) {
       console.error("감정카드 조회 실패", err)
 
-      if (err.response?.status === 404) {
+      if (err.response?.data?.code === "EMOTIONCARD4001" || err.response?.status === 404) {
         setEmotionCardExists(false)
         alert("아직 감정카드가 생성되지 않았습니다. 잠시 후 다시 시도해주세요.")
       } else if (err.response?.status === 401) {
