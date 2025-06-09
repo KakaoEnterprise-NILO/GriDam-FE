@@ -6,8 +6,8 @@ import YearMonthPopup from "../../components/calendar/YearMonthPopup"
 import StatisticsPopup from "../../components/calendar/StatisticsPopup"
 import DiaryPopup from "../../components/calendar/DayDiaryPopup"
 import { getCalendarDays } from "../../utils/getCalendarDays"
-import { ChevronRight } from "lucide-react"
-import { BarChart3 } from "lucide-react"
+import { ChevronRight } from 'lucide-react'
+import { BarChart3 } from 'lucide-react'
 import api from "@/api/axios"
 
 interface EmotionCardApiResponse {
@@ -19,6 +19,7 @@ interface EmotionCardApiResponse {
     emotionCardId: number
     emotion: string
     emotions: { [key: string]: number }[]
+    hashtags: { tagName: string }[]
   }
   message: string
 }
@@ -159,26 +160,36 @@ export default function Calendar() {
                     emotionCardId: Math.floor(Math.random() * 1000),
                     emotion: emotion,
                     emotions: [{ [emotion]: 100 }],
+                    hashtags: [],
                   },
                 } as CalendarDiary
               }
 
               // 실제 API 데이터인 경우 기존 로직 사용
+              console.log(`🎭 감정 카드 요청 - diaryId: ${diary.diaryId}`)
               const emotionResponse = await api.get(`/emotion-cards/card-image?diaryId=${diary.diaryId}`)
               const emotionData = emotionResponse.data
+
+              console.log("감정 카드 API 응답:", emotionData)
 
               const diaryDate = new Date(diary.date)
               return {
                 diaryId: diary.diaryId,
                 day: diaryDate.getDate(),
-                emotion: emotionData.success ? emotionData.result.emotion : "NONE",
+                emotion: emotionData.success && emotionData.result ? emotionData.result.emotion : "NONE",
                 title: diary.title,
                 hashtags: diary.hashtags,
                 date: diary.date,
                 emotionData: emotionData.success ? emotionData.result : undefined,
-              } as CalendarDiary
-            } catch (emotionErr) {
+              }
+            } catch (emotionErr: any) {
               console.warn(`감정 데이터 조회 실패 (diaryId: ${diary.diaryId}):`, emotionErr)
+              
+              // 특정 에러 코드에 대한 처리
+              if (emotionErr.response?.data?.code === "EMOTIONCARD4001") {
+                console.log(`📝 일기 "${diary.title}"에 대한 감정 카드가 아직 생성되지 않았습니다.`)
+              }
+              
               const diaryDate = new Date(diary.date)
               return {
                 diaryId: diary.diaryId,
