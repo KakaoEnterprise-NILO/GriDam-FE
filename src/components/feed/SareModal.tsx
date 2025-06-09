@@ -3,7 +3,7 @@ import {
   FaFacebook,
   FaWhatsapp,
   FaXTwitter,
-  FaRegCopy,
+  // FaRegCopy,
 } from "react-icons/fa6";
 import { SiKakaotalk } from "react-icons/si";
 

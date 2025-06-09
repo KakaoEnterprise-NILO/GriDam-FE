@@ -13,18 +13,18 @@ export default function FeedList() {
 
   const loadInitialFeed = useCallback(async () => {
     try {
-      const token = localStorage.getItem("accessToken") || "";
-      const userId = await getMyUserId(token);
+      // 토큰은 api 인터셉터가 자동 설정함
+      const userId = await getMyUserId(); // 인자 제거
       console.log("✅ 받아온 userId:", userId);
 
-      const feeds = await getUserFeedList(userId, token);
+      const feeds = await getUserFeedList(userId);
       setFeedList(feeds);
 
       const emotionData: Record<string, any> = {};
       for (const feed of feeds) {
         const date = feed.createdAt.split("T")[0];
         try {
-          const emotionCard = await getEmotionCardByDate(date, token);
+          const emotionCard = await getEmotionCardByDate(date);
           emotionData[feed.id] = emotionCard;
         } catch (e) {
           console.warn(`⚠️ 감정카드 불러오기 실패 (${date}):`, e);

@@ -19,17 +19,17 @@ export default function ReactionButtons({ feedId }: ReactionButtonsProps) {
   const [selectedEmoji, setSelectedEmoji] = useState<string | null>(null);
 
   const handleEmojiClick = async (emoji: string) => {
-    const token = localStorage.getItem("accessToken") || "";
     const reactionType = emojiToReaction[emoji];
-    if (!reactionType || !token) return;
+    if (!reactionType) return; // token 검사 제거
 
     try {
-      await toggleReaction(feedId, reactionType, token);
+      await toggleReaction(feedId, reactionType); // ✅ token 제거
       setSelectedEmoji(emoji); // UI 반영
     } catch (err) {
       console.error("❌ 피드 반응 처리 실패:", err);
     }
   };
+
 
   return (
     <div className="flex items-center bg-gray-100 rounded-full px-3 h-[2.25rem] space-x-2">

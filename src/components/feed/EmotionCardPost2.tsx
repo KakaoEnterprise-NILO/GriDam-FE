@@ -39,24 +39,23 @@ export default function EmotionCardPost2() {
   const [feedDetail, setFeedDetail] = useState<FeedDetail | null>(null); // ✅ 피드 상세 상태
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        // 댓글 조회
-        const commentData = await getCommentsByFeedId(feedId);
-        setComments(commentData);
+  const fetchData = async () => {
+    try {
+      // 댓글 조회
+      const commentData = await getCommentsByFeedId(feedId);
+      setComments(commentData);
 
-        // 피드 상세 조회
-        const token = localStorage.getItem("accessToken") || "";
-        const userId = localStorage.getItem("userId") || "";
-        const detail = await getFeedDetail(feedId, userId, token);
-        setFeedDetail(detail);
-      } catch (err) {
-        console.error("❌ 데이터 불러오기 실패:", err);
-      }
-    };
+      // 피드 상세 조회
+      const userId = localStorage.getItem("userId") || "";
+      const detail = await getFeedDetail(feedId, userId); // ✅ token 제거
+      setFeedDetail(detail);
+    } catch (err) {
+      console.error("❌ 데이터 불러오기 실패:", err);
+    }
+  };
 
-    fetchData();
-  }, [feedId]);
+  fetchData();
+}, [feedId]);
 
   const handleSubmit = async () => {
     if (comment.length < 10) return;

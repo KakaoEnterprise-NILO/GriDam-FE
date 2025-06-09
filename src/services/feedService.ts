@@ -34,4 +34,3 @@ export const getFeedDetail = async (feedId: number, userId: string) => {
 
   return res.data.result; // { id, content, emotionCardId, createdAt, ... }
 };
-

@@ -4,7 +4,7 @@ import { IoShareOutline, IoBookmarkOutline } from "react-icons/io5";
 import { FaUserCircle } from "react-icons/fa";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import cardImage from "../../assets/picture/default_img.jpg";
-import { toggleReaction } from "@/services/reactionService";
+// import { toggleReaction } from "@/services/reactionService";
 import { postComment } from "@/services/commentService";
 import { deleteFeed } from "@/services/feedService";
 
@@ -27,10 +27,10 @@ export default function EmotionCardPost({
   feedId,
   content,
   userId,
-  createdAt,
+  // createdAt,
   emotionCard,
 }: EmotionCardPostProps) {
-  const [selectedEmoji, setSelectedEmoji] = useState<string | null>(null);
+  // const [selectedEmoji, setSelectedEmoji] = useState<string | null>(null);
   const [comment, setComment] = useState("");
   const [isFocused, setIsFocused] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -39,12 +39,12 @@ export default function EmotionCardPost({
 
   const navigate = useNavigate();
 
-  const emojiToReaction: Record<string, string> = {
-    "😄": "좋아요",
-    "🥰": "공감해요",
-    "😂": "슬퍼요",
-    "😡": "힘내요",
-  };
+  // const emojiToReaction: Record<string, string> = {
+  //   "😄": "좋아요",
+  //   "🥰": "공감해요",
+  //   "😂": "슬퍼요",
+  //   "😡": "힘내요",
+  // };
 
   const handleSubmit = async () => {
     if (comment.length < 10) return;
@@ -67,23 +67,22 @@ export default function EmotionCardPost({
     navigate(`/friend/list/feed/entire/${feedId}`);
   };
 
-  const handleEmojiClick = async (emoji: string) => {
-    const token = localStorage.getItem("accessToken") || "";
-    const reactionType = emojiToReaction[emoji];
-    if (!reactionType || !token) return;
+  // const handleEmojiClick = async (emoji: string) => {
+  //   const token = localStorage.getItem("accessToken") || "";
+  //   const reactionType = emojiToReaction[emoji];
+  //   if (!reactionType || !token) return;
 
-    try {
-      await toggleReaction(feedId, reactionType, token);
-      setSelectedEmoji(emoji);
-    } catch (err) {
-      console.error("❌ 피드 반응 처리 실패:", err);
-    }
-  };
+  //   try {
+  //     await toggleReaction(feedId, reactionType, token);
+  //     setSelectedEmoji(emoji);
+  //   } catch (err) {
+  //     console.error("❌ 피드 반응 처리 실패:", err);
+  //   }
+  // };
 
   const handleDeleteFeed = async () => {
     try {
-      const token = localStorage.getItem("accessToken") || "";
-      await deleteFeed(feedId, token);
+      await deleteFeed(feedId); // ✅ token 없이 호출
       alert("피드가 성공적으로 삭제되었습니다.");
       window.location.reload();
     } catch (err) {

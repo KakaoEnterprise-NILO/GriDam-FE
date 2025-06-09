@@ -70,13 +70,14 @@ export default function WritingDiaryPage() {
         </div>
       </div>
 
-      {/* 미리보기 카드 (모달) */}
-      {isPreviewOpen && (
+      {/* 미리보기 카드 (모달) */} 
+      {/* // 수정 후 (조건부 렌더링 추가) */}
+      {isPreviewOpen && diaryId && (
         <div className="fixed inset-0 flex justify-center items-center z-40">
           <EmotionPreviewCard
-            diaryId={diaryId}         // ✅ 전달
+            diaryId={diaryId} // 이제 string 타입 확실
             onClose={handlePreviewClose}
-/>
+          />
         </div>
       )}
     </MainLayout>
