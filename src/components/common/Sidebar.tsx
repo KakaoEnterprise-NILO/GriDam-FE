@@ -9,6 +9,7 @@ import {
   Calendar,
   Bell,
   Settings,
+  BarChart, // ✅ 추가
 } from 'lucide-react';
 import logoUrl from '@/assets/picture/gridam_no_text.svg';
 
@@ -18,6 +19,7 @@ const iconMap = {
   profile: User,
   friends: Users,
   calendar: Calendar,
+  statistics: BarChart, // ✅ 통계 아이콘 추가
   alerts: Bell,
   settings: Settings,
 } as const;
@@ -37,7 +39,7 @@ export default function Sidebar() {
         {/* Menu */}
         <ul className="flex flex-col gap-2">
           {sidebarItems.map((item) => {
-            const Icon = iconMap[item.icon]; // ✅ Type-safe now!
+            const Icon = iconMap[item.icon]; // ✅ Type-safe
             const isActive = location.pathname === item.href;
 
             return (

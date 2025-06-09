@@ -18,7 +18,10 @@ import NotificationTest from "./test/TestNotification";
 import ConfigurationPage from "./pages/configuration/ConfigurationPage";
 import HomeMyDiary from "./pages/home/HomeMyDiary";
 import EmotionCardTest from "./test/emotionCardTest";
-import AllUsersPage from "./components/follow/AllUsersPage";
+
+import FeedEntire from "./pages/feed/FeedEntire";
+import Statistics from "./pages/statistics/statistics";
+
 
 function App() {
   return (
@@ -37,9 +40,14 @@ function App() {
 
         <Route path="/friends/feed" element={<FeedList/>} />
         <Route path="/friend/list/feed/entire/:id" element={<EmotionCardPost2/>} />
+        <Route path="/friend/feed/entire/1" element={<FeedEntire/>} />
         <Route path="/alarm" element={<NotificationPage/>} />
         <Route path="/setting" element={<ConfigurationPage/>} />
         <Route path="/homeDiary" element={<HomeMyDiary />} />
+
+        <Route path="/statistics" element={<Statistics />} />
+
+
 
         {/* 테스트 */}
         <Route path="/notification_test" element={<NotificationTest />} />

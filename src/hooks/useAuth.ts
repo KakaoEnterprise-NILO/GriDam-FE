@@ -24,14 +24,21 @@ export const useAuth = () => {
   const loginUser = async (data: any) => {
     const response = await login(data);
 
+    // ✅ 응답 구조 로깅
+    console.log("✅ 로그인 응답 데이터:", response.data);
+
     const { accessToken, refreshToken } = response.data.result;
-    
-    // ✅ 토큰 로컬스토리지에 저장
+
+    // ✅ 토큰 로깅
+    console.log("✅ accessToken:", accessToken);
+    console.log("✅ refreshToken:", refreshToken);
+
     localStorage.setItem("accessToken", accessToken);
     localStorage.setItem("refreshToken", refreshToken);
 
     return response.data;
   };
+
 
 
   const logoutUser = async () => {

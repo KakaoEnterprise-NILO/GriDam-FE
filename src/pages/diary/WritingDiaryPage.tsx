@@ -9,8 +9,19 @@ import EmotionPreviewCard from "@/components/writingdiary/EmotionPreviewCard"
 export default function WritingDiaryPage() {
   const [isCompleted, setIsCompleted] = useState(false)
   const [isPreviewOpen, setIsPreviewOpen] = useState(false)
+  const [diaryId, setDiaryId] = useState<string | null>(null)
+  const [diaryInfo, setDiaryInfo] = useState<{
+    title: string
+    content: string
+    imageFile?: File | null
+  } | null>(null)
 
-  const handleComplete = () => {
+  const handleComplete = (
+    id: string,
+    data: { title: string; content: string; imageFile?: File | null }
+  ) => {
+    setDiaryId(id)
+    setDiaryInfo(data)
     setIsCompleted(true)
   }
 
@@ -49,14 +60,24 @@ export default function WritingDiaryPage() {
             isCompleted ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-10"
           }`}
         >
-          <UploadEmotionCard onPreview={handlePreviewOpen} />
+          {diaryId && diaryInfo && (
+            <UploadEmotionCard
+              onPreview={handlePreviewOpen}
+              diaryId={diaryId}
+              diaryInfo={diaryInfo} // ✅ 추가된 diaryInfo 전달
+            />
+          )}
         </div>
       </div>
 
-      {/* 미리보기 카드 (모달) */}
-      {isPreviewOpen && (
+      {/* 미리보기 카드 (모달) */} 
+      {/* // 수정 후 (조건부 렌더링 추가) */}
+      {isPreviewOpen && diaryId && (
         <div className="fixed inset-0 flex justify-center items-center z-40">
-          <EmotionPreviewCard onClose={handlePreviewClose} />
+          <EmotionPreviewCard
+            diaryId={diaryId} // 이제 string 타입 확실
+            onClose={handlePreviewClose}
+          />
         </div>
       )}
     </MainLayout>

@@ -22,7 +22,7 @@ export async function submitDiary(
   if (image) {
     formData.append("image", image);
   }
-
+  //https://gridam.store/
   const response = await fetch("/api/diary", {
     method: "POST",
     headers: {
@@ -33,6 +33,47 @@ export async function submitDiary(
 
   if (!response.ok) {
     throw new Error(`[일기 작성 실패] ${response.status}`);
+  }
+
+  const data = await response.json();
+  return data.result; // ✅ 이게 diaryId 구조에 더 맞을 수 있음
+}
+
+export async function regenerateDiaryCard(
+  diaryId: string,
+  token: string,
+  image?: File | null,
+  title?: string,
+  content?: string
+) {
+  const formData = new FormData();
+
+  const requestData = {
+    title: title || "",
+    content: content || "",
+  };
+
+  formData.append(
+    "request",
+    new Blob([JSON.stringify(requestData)], {
+      type: "application/json",
+    })
+  );
+
+  if (image) {
+    formData.append("image", image);
+  }
+
+  const response = await fetch(`/api/diary?diaryId=${diaryId}`, {
+    method: "PATCH",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    body: formData,
+  });
+
+  if (!response.ok) {
+    throw new Error(`[재생성 실패] ${response.status}`);
   }
 
   const data = await response.json();
