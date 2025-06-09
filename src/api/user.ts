@@ -30,3 +30,25 @@ export const changePassword = async (data: ChangePasswordRequest): Promise<Chang
     throw error
   }
 }
+export interface UserInfo {
+  userId: string
+  profileImgUrl: string
+  userName: string
+  createdAt: string
+  diaryCount: number
+  followerCount: number
+}
+
+export interface UserInfoResponse {
+  timestamp: string
+  success: boolean
+  code: string
+  result: UserInfo
+  message: string
+}
+
+// 마이페이지 정보 조회
+export const getUserInfo = async (): Promise<UserInfoResponse> => {
+  const response = await api.get("/users/info")
+  return response.data
+}

@@ -19,6 +19,7 @@ import ConfigurationPage from "./pages/configuration/ConfigurationPage";
 import HomeMyDiary from "./pages/home/HomeMyDiary";
 import EmotionCardTest from "./test/emotionCardTest";
 import FeedEntire from "./pages/feed/FeedEntire";
+import Statistics from "./pages/statistics/statistics";
 
 function App() {
   return (
@@ -41,6 +42,10 @@ function App() {
         <Route path="/alarm" element={<NotificationPage/>} />
         <Route path="/setting" element={<ConfigurationPage/>} />
         <Route path="/homeDiary" element={<HomeMyDiary />} />
+
+        <Route path="/statistics" element={<Statistics />} />
+
+
 
         {/* 테스트 */}
         <Route path="/notification_test" element={<NotificationTest />} />
