@@ -51,7 +51,7 @@ function App() {
 
         {/* 테스트 */}
         <Route path="/notification_test" element={<NotificationTest />} />
-        <Route path="/alluser" element={<AllUsersPage />} />
+{/*         <Route path="/alluser" element={<AllUsersPage />} /> */}
         
         <Route path="/test/emotion-cards" element={<EmotionCardTest />} />
 
