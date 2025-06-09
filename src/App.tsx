@@ -18,8 +18,10 @@ import NotificationTest from "./test/TestNotification";
 import ConfigurationPage from "./pages/configuration/ConfigurationPage";
 import HomeMyDiary from "./pages/home/HomeMyDiary";
 import EmotionCardTest from "./test/emotionCardTest";
+
 import FeedEntire from "./pages/feed/FeedEntire";
 import Statistics from "./pages/statistics/statistics";
+
 
 function App() {
   return (
@@ -49,6 +51,7 @@ function App() {
 
         {/* 테스트 */}
         <Route path="/notification_test" element={<NotificationTest />} />
+        <Route path="/alluser" element={<AllUsersPage />} />
         
         <Route path="/test/emotion-cards" element={<EmotionCardTest />} />
 

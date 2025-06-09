@@ -5,6 +5,7 @@ import axios, { AxiosRequestConfig } from "axios";
 // const api = axios.create({
 //   // 주소
 //   baseURL: "https://gridam.store/api",
+
 //   headers: {
 //     "Content-Type": "application/json",
 //   },
