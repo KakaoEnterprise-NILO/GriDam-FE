@@ -1,33 +1,26 @@
-import { uploadImageToServer } from "@/api/image"; // ✅ 이름 정확히 맞추기
-import { useRef,useState } from "react";
 
-export const useImageUpload = (token: string) => {
-  const fileInputRef = useRef<HTMLInputElement>(null);
+import { useRef,useState } from "react";
+import api from "@/api/axios"; // ✅ 커스텀 axios 인스턴스 import
+export function useImageUpload() {
+  const token = localStorage.getItem("accessToken"); // ✅ 내부에서 가져오기
+
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewImage, setPreviewImage] = useState<string | null>(null);
-  const [imageHeight, setImageHeight] = useState(0);
-
-  const heightIncreaseRatio = 0.1;
+  const [imageHeight, _] = useState<number>(0);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (!file) return;
-
-    setSelectedFile(file);
-
-    const reader = new FileReader();
-    reader.onload = (ev) => {
-      const result = ev.target?.result as string;
-      setPreviewImage(result);
-
-      const img = new Image();
-      img.src = result;
-      img.onload = () => {
-        const adjustedHeight = img.height * heightIncreaseRatio;
-        setImageHeight(adjustedHeight);
+    if (file) {
+      setSelectedFile(file);
+      const reader = new FileReader();
+      reader.onload = () => {
+        if (typeof reader.result === "string") {
+          setPreviewImage(reader.result);
+        }
       };
-    };
-    reader.readAsDataURL(file);
+      reader.readAsDataURL(file);
+    }
   };
 
   const handleImageClick = () => {
@@ -37,18 +30,19 @@ export const useImageUpload = (token: string) => {
   const uploadImage = async (): Promise<string | null> => {
     if (!selectedFile) return null;
 
-    try {
-      const res = await uploadImageToServer(selectedFile, token);
+    const formData = new FormData();
+    formData.append("file", selectedFile);
 
-      if (res?.result?.imageUrl) {
-        console.log("[업로드 결과 URL]", res.result.imageUrl);
-        return res.result.imageUrl;
-      } else {
-        console.warn("⚠️ 응답에 imageUrl 없음", res);
-        return null;
-      }
+    try {
+      const res = await api.post("/images", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${token}`, // ✅ 내부에서 token 사용
+        },
+      });
+      return res.data.imageUrl;
     } catch (err) {
-      console.error("❌ 이미지 업로드 중 오류", err);
+      console.error("이미지 업로드 실패", err);
       return null;
     }
   };
@@ -62,4 +56,4 @@ export const useImageUpload = (token: string) => {
     handleImageClick,
     uploadImage,
   };
-};
+}

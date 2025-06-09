@@ -12,18 +12,20 @@ export function useEmotionCardImage(diaryId: string) {
 
     const fetchImage = async () => {
       try {
-        const token = localStorage.getItem("accessToken") || "";
-        const result = await getEmotionCardImage(diaryId, token);
+        // token 파라미터 제거 (interceptor에서 자동 처리)
+        const result = await getEmotionCardImage(diaryId);
         if (result) {
           setImageUrl(result);
           setLoading(false);
         } else {
           throw new Error("Image not ready");
         }
-      } catch {
+      } catch (error) {
         if (++retryCount < maxRetries) {
+          console.warn(`⏳ 이미지 로딩 재시도 ${retryCount}/${maxRetries}`);
           setTimeout(fetchImage, 3000);
         } else {
+          console.error("🛑 최대 재시도 도달. 이미지 로딩 실패");
           setLoading(false);
         }
       }

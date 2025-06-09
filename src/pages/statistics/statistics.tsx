@@ -30,9 +30,9 @@ export default function WordCloudStats() {
   // 샘플 사용자 데이터
   const sampleUserInfo: UserInfo = {
     userId: "user123",
-    userName: "김민수",
-    diaryCount: 42,
-    followerCount: 18,
+    userName: "김범진",
+    diaryCount: 1,
+    followerCount: 3,
   }
 
   // 샘플 워드클라우드 데이터

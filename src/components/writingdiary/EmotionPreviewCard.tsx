@@ -27,14 +27,19 @@ export default function EmotionPreviewCard({ diaryId, onClose }: EmotionPreviewC
   useEffect(() => {
     const fetchEmotionCard = async () => {
       try {
-        const result = await getEmotionCardImage(diaryId);
+        const token = localStorage.getItem("accessToken") || "";
+        const res = await axios.get("/api/emotion-cards/card-image", {
+          params: { diaryId },
+          headers: { Authorization: `Bearer ${token}` },
+        });
 
+        const result = res.data.result;
         if (!result.cardImageUrl) throw new Error("cardImageUrl is null");
 
         setImageUrl(result.cardImageUrl);
         setEmotion(result.emotion);
         setHashtags(result.hashtags.map((tag: any) => tag.tagName));
-        setEmotionCardId(result.emotionCardId ?? 247);
+        setEmotionCardId(result.emotionCardId ?? 247); // ✅ 서버에서 온 값 또는 fallback
       } catch (err) {
         retryCount.current += 1;
 
@@ -43,10 +48,11 @@ export default function EmotionPreviewCard({ diaryId, onClose }: EmotionPreviewC
           setTimeout(fetchEmotionCard, 3000);
         } else {
           console.error("🛑 최대 재시도 도달. 기본 백업 데이터 사용", err);
+          // ✅ fallback 데이터 세팅
           setImageUrl("https://objectstorage.kr-central-2.kakaocloud.com/v1/e1aa923a4373419aace9daef92f80e91/image-storage/overlay/52b0a7b9-6698-4c73-b757-7cbebe409e80.jpg");
           setEmotion("화남");
           setHashtags(["#분노", "#억울함", "#스트레스"]);
-          setEmotionCardId(248);
+          setEmotionCardId(248); // ✅ 유효한 fallback ID
         }
       }
     };
@@ -57,10 +63,11 @@ export default function EmotionPreviewCard({ diaryId, onClose }: EmotionPreviewC
 }, [diaryId]);
 
   const handleUpload = async () => {
-    setStep("uploading");
+  setStep("uploading");
 
     try {
-      const result = await uploadFeed(emotionCardId, "피드 내용 예시", true);
+      const token = localStorage.getItem("accessToken") || "";
+      const result = await upload(emotionCardId, "피드 내용 예시", true, token);
       console.log("[피드 업로드 완료]", result);
     } catch (err) {
       console.error("[피드 업로드 실패]", err);
