@@ -48,8 +48,8 @@ export default function UploadEmotionCard({
         setTimeout(fetchImage, 5000);
       } else {
         console.error("🛑 최대 재시도 도달. 기본 이미지로 대체:", err);
-        setImageUrl(defaultImg);
-        setLoading(false);
+        setImageUrl("https://objectstorage.kr-central-2.kakaocloud.com/v1/e1aa923a4373419aace9daef92f80e91/image-storage/overlay/52b0a7b9-6698-4c73-b757-7cbebe409e80.jpg");
+        setLoading(false)
       }
     }
   };
@@ -109,18 +109,23 @@ export default function UploadEmotionCard({
         <div className="flex justify-center">
           <div className="rounded-lg overflow-hidden shadow">
             {loading ? (
-              <div className="w-64 h-64 bg-gray-300 animate-pulse flex items-center justify-center text-sm text-gray-500">
+              <div className="flex items-center justify-center px-8 py-12 text-sm text-gray-500 animate-pulse">
                 감정 카드 생성 중...
               </div>
             ) : imageUrl ? (
-              <img src={imageUrl} alt="감정 카드" className="block max-w-full h-auto rounded-lg shadow" />
+              <img
+                src={imageUrl}
+                alt="감정 카드"
+                className="block max-w-full h-auto rounded-lg shadow"
+              />
             ) : (
-              <div className="w-64 h-64 bg-red-100 flex items-center justify-center text-sm text-red-500">
+              <div className="flex items-center justify-center px-8 py-12 text-sm text-red-500 bg-red-100 rounded">
                 이미지 없음
               </div>
             )}
           </div>
         </div>
+
 
         <hr className="border-t border-gray-300 my-4" />
 

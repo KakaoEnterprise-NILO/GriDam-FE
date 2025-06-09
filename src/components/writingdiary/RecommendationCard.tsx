@@ -1,26 +1,31 @@
 import { useState } from "react";
 import { IoClose, IoChevronBack, IoChevronForward } from "react-icons/io5";
-import sampleCard from "../../assets/picture/sample_emotion_card.png";
+import r1 from "../../assets/picture/r1.png";
+import r2 from "../../assets/picture/r2.png";
+import r3 from "../../assets/picture/r3.png";
+
 
 const cards = [
   {
-    title: "Peaceful",
+    title: "Frustrated",
     description:
-      "오늘은 감각향 햇살 아래 조용한 시간을 보낸다. 바람 따라 산책하며 마음도 함께 가벼워졌다. …더보기",
-    tags: ["행복", "기쁨", "평화"],
-    image: sampleCard,
+      "계속되는 오해와 반복되는 실망. 감정이 쌓여 폭발 직전이다. 오늘은 내 감정을 솔직하게 표현해보고 싶다. …더보기",
+    tags: ["분노", "답답함", "억울함"],
+    image: r1,
   },
   {
-    title: "Energetic",
-    description: "활기찬 하루의 시작. 새로운 도전을 향해 전진한다. …더보기",
-    tags: ["열정", "활력", "자신감"],
-    image: sampleCard,
+    title: "Overwhelmed",
+    description:
+      "끝없이 쏟아지는 일들과 기대 속에 지친 하루. 감정의 무게가 어깨를 짓누른다. 잠시 멈추고 숨을 고른다. …더보기",
+    tags: ["스트레스", "지침", "감정과잉"],
+    image: r2,
   },
   {
-    title: "Melancholy",
-    description: "조용히 내면을 들여다보는 시간. 감정의 깊이에 잠긴다. …더보기",
-    tags: ["슬픔", "고요함", "사색"],
-    image: sampleCard,
+    title: "Resentful",
+    description:
+      "이해받지 못한 마음, 무시당한 느낌이 깊은 불쾌감으로 번진다. 나를 위한 거리를 둬야 할 때. …더보기",
+    tags: ["억울함", "불쾌함", "거리두기"],
+    image: r3,
   },
 ];
 

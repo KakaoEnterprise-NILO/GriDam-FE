@@ -18,7 +18,8 @@ import axios, { AxiosRequestConfig } from "axios";
 const api = axios.create({
   // 주소
   // baseURL: "http://158.180.70.205:8080/api",
-  baseURL: "https://gridam.store/api",
+  // baseURL: "https://gridam.store/api",
+  baseURL: "http://localhost:8080/api",
   headers: {
     "Content-Type": "application/json",
   },

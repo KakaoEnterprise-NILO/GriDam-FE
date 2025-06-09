@@ -1,15 +1,14 @@
 // services/emotionCardService.ts
-import axios from "axios";
 import api from "@/api/axios" // ✅ 커스텀 axios 인스턴스를 불러오기
 
-export const getEmotionCardImage = async (diaryId: string, token: string) => {
-  const res = await axios.get("/api/emotion-cards/card-image", {
+export const getEmotionCardImage = async (diaryId: string) => {
+  const res = await api.get("/emotion-cards/card-image", {
     params: { diaryId },
-    headers: { Authorization: `Bearer ${token}` },
   });
 
   return res.data.result?.cardImageUrl || null;
 };
+
 
 // ✅ 2. 날짜로 감정 카드 정보 조회 (감정, 해시태그, 이미지 URL)
 export interface EmotionCardByDateResponse {
