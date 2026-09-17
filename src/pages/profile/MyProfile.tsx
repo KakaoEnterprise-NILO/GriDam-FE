@@ -37,7 +37,6 @@ export default function MyProfile() {
     try {
       setIsLoading(true)
       const response = await api.get("/users/profile")
-      console.log("✅ 받아온 유저 정보:", response.data.result)
       setUserInfo(response.data.result)
     } catch (error) {
       console.error("❌ 유저 정보 불러오기 실패:", error)
@@ -49,12 +48,10 @@ export default function MyProfile() {
   const fetchSelectedUserInfo = async (userId: string) => {
     try {
       setIsLoadingSelectedUser(true)
-      console.log("🔍 선택한 사용자 ID:", userId)
       const response = await api.get(`/users/profile/${userId}`)
-      console.log("✅ 선택한 유저 정보:", response.data.result)
       setSelectedUserInfo(response.data.result)
     } catch (error) {
-      console.error("❌ 선택한 유저 정보 불러오기 실패:", error)
+      console.error("선택한 유저 정보 불러오기 실패:", error)
       alert("사용자 정보를 불러오는데 실패했습니다.")
     } finally {
       setIsLoadingSelectedUser(false)
@@ -79,7 +76,6 @@ export default function MyProfile() {
   }
 
   const handleUserSelect = (userId: string) => {
-    console.log("👤 사용자 선택됨:", userId)
     fetchSelectedUserInfo(userId)
     setActiveTab("emotion") // 사용자 선택 시 감정 탭으로 전환
   }
@@ -105,7 +101,6 @@ export default function MyProfile() {
         )}
 
         <div className="grid grid-cols-1 xl:grid-cols-[350px_1fr] gap-8 items-start">
-          {/* 왼쪽 - 유저 프로필 카드 */}
           <div className="w-full">
             {isLoading && !selectedUserInfo ? (
               <Card className="w-full border-0 shadow-lg">
@@ -164,7 +159,6 @@ export default function MyProfile() {
             )}
           </div>
 
-          {/* 오른쪽 - 감정 카드, 팔로잉 목록, 팔로워 목록 */}
           <div className="w-full">
             {activeTab === "emotion" && <EmotionCardGrid userId={selectedUserInfo?.userId} />}
             {activeTab === "following" && (
@@ -184,7 +178,6 @@ export default function MyProfile() {
           </div>
         </div>
 
-        {/* 프로필 편집 모달 */}
         {userInfo && (
           <ProfileEditModal
             isOpen={isEditModalOpen}

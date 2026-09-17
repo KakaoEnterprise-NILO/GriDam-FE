@@ -3,7 +3,6 @@ export default function Footer() {
   return (
     <footer className="w-full h-36 bg-blue-400 text-white mt-12 flex items-center justify-center">
       <div className="max-w-screen-xl w-full flex flex-col items-center justify-center space-y-2">
-        {/* 상단 링크 */}
         <div className="flex space-x-6 text-sm">
           <a href="#" className="hover:underline">
             NILO
@@ -19,7 +18,6 @@ export default function Footer() {
           </a>
         </div>
 
-        {/* 하단 저작권 */}
         <div className="text-xs">© 2025 Gridam from NILO Corp.</div>
       </div>
     </footer>

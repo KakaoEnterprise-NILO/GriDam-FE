@@ -10,7 +10,6 @@ export default function ProfileMenu() {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
 
-  // 로그인 상태 감지 + storage 변화 감지
   useEffect(() => {
     const checkToken = () => {
       const token = localStorage.getItem('accessToken');
@@ -33,7 +32,6 @@ export default function ProfileMenu() {
     }
   };
 
-  // 드롭다운 외부 클릭 시 닫기
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {

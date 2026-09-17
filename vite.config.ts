@@ -4,16 +4,11 @@ import tailwindcss from '@tailwindcss/vite'
 import path from 'path'
 
 
-// https://vite.dev/config/
 export default defineConfig({
   server: {
     proxy: {
       '/api': {
-
-        // target: 'http://158.180.70.205:8080',
-
         target: 'http://localhost:8080',
-        
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, '/api'),
       },

@@ -31,12 +31,10 @@ export default function UserProfileCard({
   return (
     <Card className="w-full border-0 shadow-lg">
       <CardContent className="p-6">
-        {/* 배경 이미지 */}
         <div className="h-32 bg-gradient-to-r from-blue-400 to-purple-500 rounded-lg mb-4 relative">
           <div className="absolute inset-0 bg-black/10 rounded-lg" />
         </div>
 
-        {/* 프로필 이미지 */}
         <div className="flex justify-center -mt-16 mb-4">
           <Avatar className="h-32 w-32 border-4 border-white shadow-lg">
             <AvatarImage src={profileImgUrl || "/placeholder.svg"} alt={username} />
@@ -46,13 +44,11 @@ export default function UserProfileCard({
           </Avatar>
         </div>
 
-        {/* 사용자 정보 */}
         <div className="text-center space-y-2 mb-6">
           <h2 className="text-2xl font-bold text-gray-900">{username}</h2>
           <p className="text-gray-600">{introduction || "자기소개가 없습니다."}</p>
         </div>
 
-        {/* 통계 */}
         <div className="flex w-full gap-4 mb-6">
           <button
             onClick={onFollowersClick}
@@ -76,7 +72,6 @@ export default function UserProfileCard({
           </button>
         </div>
 
-        {/* 프로필 편집 버튼 */}
         {isMyProfile && (
           <Button
             onClick={onEditProfile}

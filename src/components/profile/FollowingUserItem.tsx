@@ -51,7 +51,6 @@ export default function FollowingUserItem({
   const handleUserClick = (e: React.MouseEvent) => {
     e.preventDefault()
     e.stopPropagation()
-    console.log("🖱️ 사용자 클릭됨:", userId, username)
     if (onUserSelect) {
       onUserSelect(userId)
     }

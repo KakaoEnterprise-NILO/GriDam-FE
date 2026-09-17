@@ -9,7 +9,7 @@ import {
   Calendar,
   Bell,
   Settings,
-  BarChart, // ✅ 추가
+  BarChart,
 } from 'lucide-react';
 import logoUrl from '@/assets/picture/gridam_no_text.svg';
 
@@ -19,7 +19,7 @@ const iconMap = {
   profile: User,
   friends: Users,
   calendar: Calendar,
-  statistics: BarChart, // ✅ 통계 아이콘 추가
+  statistics: BarChart,
   alerts: Bell,
   settings: Settings,
 } as const;
@@ -30,16 +30,14 @@ export default function Sidebar() {
   return (
     <aside className="w-64 h-[50em] bg-white rounded-2xl shadow-lg px-6 py-8 flex flex-col justify-between">
       <div>
-        {/* Logo */}
         <Link to="/" className="flex items-center gap-3 mb-12">
           <img src={logoUrl} alt="GriDam" className="w-16 h-14" />
           <span className="text-2xl font-bold text-gray-800">GriDam</span>
         </Link>
 
-        {/* Menu */}
         <ul className="flex flex-col gap-2">
           {sidebarItems.map((item) => {
-            const Icon = iconMap[item.icon]; // ✅ Type-safe
+            const Icon = iconMap[item.icon];
             const isActive = location.pathname === item.href;
 
             return (

@@ -38,20 +38,14 @@ export default function SettingsPage() {
     { icon: HelpCircle, label: "고객 센터", action: true },
   ]
 
-  const handlePasswordChangeSuccess = () => {
-    // 비밀번호 변경 성공 시 추가 로직 (예: 토스트 알림, 로그 등)
-    console.log("비밀번호 변경 성공")
-  }
 
   const renderSettingsView = () => (
     <div className="w-full max-w-3xl mx-auto">
-      {/* 헤더 */}
       <div className="mb-6">
         <h1 className="text-2xl font-bold text-gray-800">환경설정</h1>
         <p className="text-gray-500 mt-1">계정 및 앱 설정을 관리하세요</p>
       </div>
 
-      {/* 탭 네비게이션 */}
       <div className="flex border-b mb-6">
         <button
           onClick={() => setActiveTab("personal")}
@@ -79,9 +73,7 @@ export default function SettingsPage() {
         </button>
       </div>
 
-      {/* 설정 카드 */}
       <div className="space-y-6">
-        {/* 개인 정보 설정 */}
         {activeTab === "personal" && (
           <div className="bg-white rounded-2xl shadow overflow-hidden">
             <div className="bg-gradient-to-r from-blue-500 to-blue-600 py-4 px-6">
@@ -114,7 +106,6 @@ export default function SettingsPage() {
           </div>
         )}
 
-        {/* 피드 관리 설정 */}
         {activeTab === "feed" && (
           <div className="bg-white rounded-2xl shadow overflow-hidden">
             <div className="bg-gradient-to-r from-blue-500 to-blue-600 py-4 px-6">
@@ -142,7 +133,6 @@ export default function SettingsPage() {
           </div>
         )}
 
-        {/* 지원 설정 */}
         {activeTab === "support" && (
           <div className="bg-white rounded-2xl shadow overflow-hidden">
             <div className="bg-gradient-to-r from-blue-500 to-blue-600 py-4 px-6">
@@ -170,7 +160,6 @@ export default function SettingsPage() {
           </div>
         )}
 
-        {/* 추가 정보 카드 */}
         <div className="bg-gradient-to-r from-blue-50 to-blue-100 rounded-2xl p-6">
           <h3 className="text-blue-800 font-medium mb-2">도움이 필요하신가요?</h3>
           <p className="text-blue-700 text-sm mb-4">설정에 관한 질문이 있으시면 고객 센터에 문의하세요.</p>
@@ -188,7 +177,7 @@ export default function SettingsPage() {
         {currentView === "settings" ? (
           renderSettingsView()
         ) : (
-          <ChangePasswordForm onBack={() => setCurrentView("settings")} onSuccess={handlePasswordChangeSuccess} />
+          <ChangePasswordForm onBack={() => setCurrentView("settings")} />
         )}
       </div>
     </MainLayout>

@@ -14,7 +14,6 @@ export default function NotificationList() {
   const [nextCursor, setNextCursor] = useState<number | undefined>(undefined)
   const [error, setError] = useState<string | null>(null)
 
-  // 초기 데이터 로딩
   const loadInitialData = useCallback(async () => {
     try {
       setInitialLoading(true)
@@ -33,7 +32,6 @@ export default function NotificationList() {
     }
   }, [])
 
-  // 추가 데이터 로딩 (무한스크롤)
   const loadMoreNotifications = useCallback(async () => {
     if (loading || !hasNext || !nextCursor || initialLoading) return
 
@@ -54,12 +52,10 @@ export default function NotificationList() {
     }
   }, [loading, hasNext, nextCursor, initialLoading])
 
-  // 초기 데이터 로딩
   useEffect(() => {
     loadInitialData()
   }, [loadInitialData])
 
-  // 무한스크롤 옵저버 설정
   useEffect(() => {
     if (initialLoading) return
 
@@ -83,9 +79,6 @@ export default function NotificationList() {
     }
   }, [loadMoreNotifications, hasNext, loading, initialLoading])
 
-  const handleNotificationClick = (notification: NotificationItem) => {
-    console.log("알림 클릭:", notification)
-  }
 
   if (initialLoading) {
     return (
@@ -142,7 +135,6 @@ export default function NotificationList() {
                 content={notification.content}
                 createdAt={notification.createdAt}
                 checked={notification.checked}
-                onClick={() => handleNotificationClick(notification)}
               />
             ))}
           </div>

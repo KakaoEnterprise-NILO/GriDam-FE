@@ -5,9 +5,10 @@ import MainLayout from "../../components/common/MainLayout"
 import { useNavigate } from "react-router-dom"
 import logoUrl from "@/assets/picture/gridam.svg"
 
-import api from "../../api/axios" // 커스텀 axios 인스턴스 사용
+import api from "../../api/axios"
+import { isAxiosError } from "axios";
+import type { ApiErrorResponse } from "@/api/axios";
 
-// 일기 타입
 type DiaryItem = {
   diaryId: string
   title: string
@@ -28,32 +29,24 @@ type ApiResponse = {
 export default function Home() {
   const navigate = useNavigate()
 
-  // 로그인 상태, 로딩 상태
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
 
-  // 일기 상태
   const [, setDiaries] = useState<DiaryItem[]>([])
   const [, setDiaryLoading] = useState(false)
   const [, setDiaryError] = useState<string | null>(null)
 
-  // 페이징 상태 (일기 목록용)
-  //const [page, setPage] = useState(1)
-  //const ITEMS_PER_PAGE = 3
 
-  // 토큰 체크 및 일기 목록 조회
   useEffect(() => {
     const checkAndFetch = async () => {
       const token = localStorage.getItem("accessToken")
       setIsLoggedIn(!!token)
 
       if (!token) {
-        // 로그인 안된 상태
         setIsLoading(false)
         return
       }
 
-      // 로그인 상태면 일기 목록 조회
       setDiaryLoading(true)
       setDiaryError(null)
       try {
@@ -63,14 +56,15 @@ export default function Home() {
 
           // 일기가 1개 이상이면 바로 일기 목록 화면으로 이동
           if (response.data.result.length > 0) {
-            navigate("/homeDiary") // 여기서 "my-diary" 는 일기 목록 페이지 경로입니다. 필요시 맞게 수정하세요.
+            navigate("/homeDiary")
             return
           }
         } else {
           setDiaryError(response.data.message || "일기를 불러오는데 실패했습니다.")
         }
-      } catch (err: any) {
-        setDiaryError(err.response?.data?.message || "일기 목록 조회 중 오류가 발생했습니다.")
+      } catch (err: unknown) {
+        const errorResponse = isAxiosError<ApiErrorResponse>(err) ? err.response : undefined
+        setDiaryError(errorResponse?.data?.message || "일기 목록 조회 중 오류가 발생했습니다.")
       } finally {
         setDiaryLoading(false)
         setIsLoading(false)
@@ -125,7 +119,6 @@ export default function Home() {
 
   return (
     <MainLayout>
-      {/* Hero Section */}
       <div className="relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-white to-purple-50 -z-10"></div>
         <div className="absolute top-10 left-10 w-20 h-20 bg-blue-200 rounded-full opacity-20 animate-pulse"></div>
@@ -180,7 +173,6 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Features Section */}
       <div className="py-16 px-4">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-12">

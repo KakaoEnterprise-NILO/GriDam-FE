@@ -43,7 +43,6 @@ export default function FollowerUserItem({
   const handleUserClick = (e: React.MouseEvent) => {
     e.preventDefault()
     e.stopPropagation()
-    console.log("🖱️ 팔로워 클릭됨:", userId, username)
     if (onUserSelect) {
       onUserSelect(userId)
     }

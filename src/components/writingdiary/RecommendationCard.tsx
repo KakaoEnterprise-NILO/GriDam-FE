@@ -1,8 +1,5 @@
 import { useState } from "react";
 import { IoClose, IoChevronBack, IoChevronForward } from "react-icons/io5";
-// import r1 from "../../assets/picture/r1.png";
-// import r2 from "../../assets/picture/r2.png";
-// import r3 from "../../assets/picture/r3.png";
 
 
 const cards = [
@@ -48,7 +45,6 @@ export default function RecommendedCardModal() {
   return (
     <div className="flex justify-center items-center w-[25rem] h-[30rem] bg-gray-100">
       <div className="relative bg-white w-[25rem] h-[30rem] p-6 rounded-2xl shadow-lg flex flex-col items-center space-y-3">
-        {/* X 버튼 */}
         <button
           onClick={() => setIsVisible(false)}
           className="absolute top-3 right-3 z-10 text-gray-400 hover:text-black"
@@ -56,7 +52,6 @@ export default function RecommendedCardModal() {
           <IoClose size={24} />
         </button>
 
-        {/* 왼쪽 화살표 */}
         {currentIndex > 0 && (
           <button
             onClick={handlePrev}
@@ -66,7 +61,6 @@ export default function RecommendedCardModal() {
           </button>
         )}
 
-        {/* 오른쪽 화살표 */}
         {currentIndex < cards.length - 1 && (
           <button
             onClick={handleNext}
@@ -76,29 +70,24 @@ export default function RecommendedCardModal() {
           </button>
         )}
 
-        {/* 상단 제목 */}
         <p className="text-sm text-gray-600">비슷한 감정 카드 추천</p>
 
-        {/* 카드 이미지 */}
         <img
         src="https://objectstorage.kr-central-2.kakaocloud.com/v1/e1aa923a4373419aace9daef92f80e91/image-storage/overlay/03ca9b0e-5b44-4e5b-baa1-f47eb2ae4bbb.jpg"
         alt={currentCard.title}
         className="w-[17rem] h-auto"
         />
 
-        {/* 설명 */}
         <p className="text-xs text-center text-gray-600 leading-snug px-2">
           {currentCard.description}
         </p>
 
-        {/* 해시태그 */}
         <div className="text-sm text-blue-500 space-x-2">
-          {currentCard.tags.map((tag, idx) => (
-            <span key={idx}># {tag}</span>
+          {currentCard.tags.map((tag) => (
+            <span key={tag}># {tag}</span>
           ))}
         </div>
 
-        {/* 인디케이터 */}
         <div className="flex space-x-1 mt-auto">
           {cards.map((_, idx) => (
             <span

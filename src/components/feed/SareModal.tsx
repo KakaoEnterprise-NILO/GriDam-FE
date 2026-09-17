@@ -3,7 +3,6 @@ import {
   FaFacebook,
   FaWhatsapp,
   FaXTwitter,
-  // FaRegCopy,
 } from "react-icons/fa6";
 import { SiKakaotalk } from "react-icons/si";
 
@@ -17,7 +16,6 @@ export default function ShareModal({
   return (
     <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
       <div className="bg-white rounded-xl w-[26rem] p-5 relative shadow-lg">
-        {/* 닫기 버튼 */}
         <button
           onClick={onClose}
           className="absolute top-4 right-4 text-gray-500 hover:text-black"
@@ -25,7 +23,6 @@ export default function ShareModal({
           <IoClose size={24} />
         </button>
 
-        {/* 공유 아이콘 */}
         <div className="flex justify-around items-center mt-2">
           <div className="flex flex-col items-center text-xs">
             <SiKakaotalk size={30} className="text-yellow-400" />
@@ -45,7 +42,6 @@ export default function ShareModal({
           </div>
         </div>
 
-        {/* 링크 복사 */}
         <div className="mt-5 flex items-center gap-2 bg-gray-100 px-3 py-2 rounded-full">
           <input
             readOnly

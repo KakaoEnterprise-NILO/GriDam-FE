@@ -4,6 +4,8 @@ import type React from "react"
 import { useState } from "react"
 import { ArrowLeft, Eye, EyeOff } from "lucide-react"
 import { changePassword, type ChangePasswordRequest } from "@/api/user"
+import { isAxiosError } from "axios";
+import type { ApiErrorResponse } from "@/api/axios";
 
 interface ChangePasswordFormProps {
   onBack: () => void
@@ -56,28 +58,26 @@ export default function ChangePasswordForm({ onBack, onSuccess }: ChangePassword
       if (response.success) {
         alert("비밀번호가 성공적으로 변경되었습니다.")
 
-        // 폼 초기화
         setPasswordForm({
           currentPassword: "",
           newPassword: "",
           confirmPassword: "",
         })
 
-        // 성공 콜백 실행
         onSuccess?.()
         onBack()
       } else {
         alert(response.message || "비밀번호 변경에 실패했습니다.")
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const errorResponse = isAxiosError<ApiErrorResponse>(error) ? error.response : undefined
       console.error("비밀번호 변경 에러:", error)
 
-      // 에러 메시지 처리
-      if (error.response?.data?.message) {
-        alert(error.response.data.message)
-      } else if (error.response?.status === 400) {
+      if (errorResponse?.data?.message) {
+        alert(errorResponse.data.message)
+      } else if (errorResponse?.status === 400) {
         alert("현재 비밀번호가 올바르지 않습니다.")
-      } else if (error.response?.status === 401) {
+      } else if (errorResponse?.status === 401) {
         alert("인증이 필요합니다. 다시 로그인해주세요.")
       } else {
         alert("비밀번호 변경 중 오류가 발생했습니다. 다시 시도해주세요.")
@@ -89,7 +89,6 @@ export default function ChangePasswordForm({ onBack, onSuccess }: ChangePassword
 
   return (
     <div className="w-full bg-white rounded-2xl shadow max-w-3xl mx-auto px-4 md:px-8 py-6">
-      {/* 헤더 */}
       <div className="flex items-center mb-6">
         <button
           onClick={onBack}
@@ -105,7 +104,6 @@ export default function ChangePasswordForm({ onBack, onSuccess }: ChangePassword
         <h1 className="text-2xl font-bold text-gray-800 mb-8 text-center">비밀번호 변경</h1>
 
         <form onSubmit={handlePasswordSubmit} className="space-y-6">
-          {/* 현재 비밀번호 */}
           <div>
             <label htmlFor="currentPassword" className="block text-sm font-medium text-gray-700 mb-2">
               현재 비밀번호
@@ -132,7 +130,6 @@ export default function ChangePasswordForm({ onBack, onSuccess }: ChangePassword
             </div>
           </div>
 
-          {/* 새 비밀번호 */}
           <div>
             <label htmlFor="newPassword" className="block text-sm font-medium text-gray-700 mb-2">
               새 비밀번호
@@ -160,7 +157,6 @@ export default function ChangePasswordForm({ onBack, onSuccess }: ChangePassword
             </div>
           </div>
 
-          {/* 새 비밀번호 확인 */}
           <div>
             <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-2">
               새 비밀번호 확인
@@ -190,7 +186,6 @@ export default function ChangePasswordForm({ onBack, onSuccess }: ChangePassword
             )}
           </div>
 
-          {/* 비밀번호 요구사항 안내 */}
           <div className="bg-gray-50 p-4 rounded-xl">
             <h3 className="text-sm font-medium text-gray-700 mb-2">비밀번호 요구사항:</h3>
             <ul className="text-sm text-gray-600 space-y-1">
@@ -200,7 +195,6 @@ export default function ChangePasswordForm({ onBack, onSuccess }: ChangePassword
             </ul>
           </div>
 
-          {/* 버튼 */}
           <div className="flex space-x-4">
             <button
               type="button"

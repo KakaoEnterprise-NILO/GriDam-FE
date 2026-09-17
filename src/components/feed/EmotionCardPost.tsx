@@ -4,7 +4,6 @@ import { IoShareOutline, IoBookmarkOutline } from "react-icons/io5";
 import { FaUserCircle } from "react-icons/fa";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import cardImage from "../../assets/picture/default_img.jpg";
-// import { toggleReaction } from "@/services/reactionService";
 import { postComment } from "@/services/commentService";
 import { deleteFeed } from "@/services/feedService";
 
@@ -27,10 +26,8 @@ export default function EmotionCardPost({
   feedId,
   content,
   userId,
-  // createdAt,
   emotionCard,
 }: EmotionCardPostProps) {
-  // const [selectedEmoji, setSelectedEmoji] = useState<string | null>(null);
   const [comment, setComment] = useState("");
   const [isFocused, setIsFocused] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -39,18 +36,10 @@ export default function EmotionCardPost({
 
   const navigate = useNavigate();
 
-  // const emojiToReaction: Record<string, string> = {
-  //   "😄": "좋아요",
-  //   "🥰": "공감해요",
-  //   "😂": "슬퍼요",
-  //   "😡": "힘내요",
-  // };
-
   const handleSubmit = async () => {
     if (comment.length < 10) return;
     try {
-      const result = await postComment(feedId, comment);
-      console.log("✅ 댓글 등록 완료:", result);
+      await postComment(feedId, comment);
       setComment("");
       setIsFocused(false);
     } catch (err) {
@@ -67,22 +56,9 @@ export default function EmotionCardPost({
     navigate(`/friend/list/feed/entire/${feedId}`);
   };
 
-  // const handleEmojiClick = async (emoji: string) => {
-  //   const token = localStorage.getItem("accessToken") || "";
-  //   const reactionType = emojiToReaction[emoji];
-  //   if (!reactionType || !token) return;
-
-  //   try {
-  //     await toggleReaction(feedId, reactionType, token);
-  //     setSelectedEmoji(emoji);
-  //   } catch (err) {
-  //     console.error("❌ 피드 반응 처리 실패:", err);
-  //   }
-  // };
-
   const handleDeleteFeed = async () => {
     try {
-      await deleteFeed(feedId); // ✅ token 없이 호출
+      await deleteFeed(feedId);
       alert("피드가 성공적으로 삭제되었습니다.");
       window.location.reload();
     } catch (err) {
@@ -106,7 +82,6 @@ export default function EmotionCardPost({
             <button
               onClick={() => {
                 setMenuOpen(false);
-                console.log("✏️ 수정 클릭됨");
               }}
               className="w-full px-4 py-2 text-sm hover:bg-gray-100 text-left"
             >
@@ -153,7 +128,6 @@ export default function EmotionCardPost({
 
           <button
             className="flex items-center justify-center h-[2.25rem] space-x-1 bg-gray-100 text-sm text-gray-700 px-3 rounded-full hover:bg-gray-200 transition"
-            onClick={() => console.log("🔖 저장하기 클릭됨")}
           >
             <IoBookmarkOutline size={16} />
             <span>저장하기</span>
@@ -166,8 +140,8 @@ export default function EmotionCardPost({
       </p>
 
       <div className="text-sm px-6 space-x-2 mt-10 mb-2">
-        {emotionCard?.hashtags?.map((tag, idx) => (
-          <span key={idx} className="text-blue-600 font-medium">
+        {emotionCard?.hashtags?.map((tag) => (
+          <span key={tag} className="text-blue-600 font-medium">
             #{tag}
           </span>
         )) || (

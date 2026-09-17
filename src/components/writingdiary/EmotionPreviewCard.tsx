@@ -1,12 +1,12 @@
 "use client";
 
+
+import type { EmotionCardApiResponse } from "@/services/emotionCardService";
 import { useEffect, useRef, useState } from "react";
 import StatusCard from "./StatusCard";
 import RecommendedCard from "../writingdiary/RecommendationCard";
 import "./EmotionPreviewCard.css";
 import axios from "axios";
-// import { uploadFeed } from "@/services/feedService"; // ✅ 새로 추가된 API 호출
-// import { getEmotionCardImage } from "@/services/emotionCardService"; // ✅ 추가
 
 
 interface EmotionPreviewCardProps {
@@ -20,7 +20,6 @@ export default function EmotionPreviewCard({ diaryId, onClose }: EmotionPreviewC
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [emotion, setEmotion] = useState<string | null>(null);
   const [hashtags, setHashtags] = useState<string[]>([]);
-  const [_, setEmotionCardId] = useState<number>(247); // ✅ 기본값 fallback
 
   const retryCount = useRef(0);
   const maxRetries = 5;
@@ -29,7 +28,7 @@ export default function EmotionPreviewCard({ diaryId, onClose }: EmotionPreviewC
     const fetchEmotionCard = async () => {
       try {
         const token = localStorage.getItem("accessToken") || "";
-        const res = await axios.get("/api/emotion-cards/card-image", {
+        const res = await axios.get<EmotionCardApiResponse>("/api/emotion-cards/card-image", {
           params: { diaryId },
           headers: { Authorization: `Bearer ${token}` },
         });
@@ -39,21 +38,17 @@ export default function EmotionPreviewCard({ diaryId, onClose }: EmotionPreviewC
 
         setImageUrl(result.cardImageUrl);
         setEmotion(result.emotion);
-        setHashtags(result.hashtags.map((tag: any) => tag.tagName));
-        setEmotionCardId(result.emotionCardId ?? 247); // ✅ 서버에서 온 값 또는 fallback
+        setHashtags(result.hashtags.map((tag) => tag.tagName));
       } catch (err) {
         retryCount.current += 1;
 
         if (retryCount.current < maxRetries) {
-          console.warn(`⏳ 재시도 ${retryCount.current}/${maxRetries}`);
           setTimeout(fetchEmotionCard, 3000);
         } else {
           console.error("🛑 최대 재시도 도달. 기본 백업 데이터 사용", err);
-          // ✅ fallback 데이터 세팅
           setImageUrl("https://objectstorage.kr-central-2.kakaocloud.com/v1/e1aa923a4373419aace9daef92f80e91/image-storage/overlay/52b0a7b9-6698-4c73-b757-7cbebe409e80.jpg");
           setEmotion("화남");
           setHashtags(["#분노", "#억울함", "#스트레스"]);
-          setEmotionCardId(248); // ✅ 유효한 fallback ID
         }
       }
     };
@@ -63,20 +58,12 @@ export default function EmotionPreviewCard({ diaryId, onClose }: EmotionPreviewC
   }
 }, [diaryId]);
 
-  // const handleUpload = async () => {
-  // setStep("uploading");
-
-  //   try {
-  //     const token = localStorage.getItem("accessToken") || "";
-  //     const result = await upload(emotionCardId, "피드 내용 예시", true, token);
-  //     console.log("[피드 업로드 완료]", result);
-  //   } catch (err) {
-  //     console.error("[피드 업로드 실패]", err);
-  //   }
-  // };
-
   const handleStatusClose = () => {
     setStep("recommendation");
+  };
+
+  const handleUpload = () => {
+    setStep("uploading");
   };
 
   if (step === "uploading") {
@@ -111,7 +98,7 @@ export default function EmotionPreviewCard({ diaryId, onClose }: EmotionPreviewC
                 <img
                   src={imageUrl}
                   alt="감정 카드"
-                  className="w-full max-w-md h-auto rounded shadow" // ⬅️ 여기 수정
+                  className="w-full max-w-md h-auto rounded shadow"
                 />
                 {emotion && <h2 className="text-xl font-bold text-gray-700">{emotion}</h2>}
               </>
@@ -132,8 +119,9 @@ export default function EmotionPreviewCard({ diaryId, onClose }: EmotionPreviewC
 
         <div className="flex justify-center">
           <button
+            type="button"
+            onClick={handleUpload}
             className="bg-blue-500 text-white w-full py-2 rounded-lg hover:bg-blue-600"
-            // onClick={handleUpload}
           >
             업로드
           </button>

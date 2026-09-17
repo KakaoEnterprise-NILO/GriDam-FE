@@ -35,7 +35,6 @@ export default function WritingDiaryPage() {
 
   return (
     <MainLayout>
-      {/* 미리보기 블러 배경 */}
       {isPreviewOpen && (
         <div className="absolute inset-0 backdrop-blur-sm bg-gray-600 bg-opacity-10 z-30 transition-opacity duration-300"></div>
       )}
@@ -45,7 +44,6 @@ export default function WritingDiaryPage() {
           isPreviewOpen ? "opacity-50 pointer-events-none" : "opacity-100"
         }`}
       >
-        {/* Writing Diary */}
         <div
           className={`w-[700px] flex-shrink-0 transition-transform duration-500 ${
             isCompleted ? "translate-x-[-50px]" : "translate-x-[+200px]"
@@ -54,7 +52,6 @@ export default function WritingDiaryPage() {
           <WritingDiary onComplete={handleComplete} />
         </div>
 
-        {/* Upload Emotion Card */}
         <div
           className={`w-[600px] flex-shrink-0 transition-opacity duration-500 ${
             isCompleted ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-10"
@@ -64,18 +61,16 @@ export default function WritingDiaryPage() {
             <UploadEmotionCard
               onPreview={handlePreviewOpen}
               diaryId={diaryId}
-              diaryInfo={diaryInfo} // ✅ 추가된 diaryInfo 전달
+              diaryInfo={diaryInfo}
             />
           )}
         </div>
       </div>
 
-      {/* 미리보기 카드 (모달) */} 
-      {/* // 수정 후 (조건부 렌더링 추가) */}
       {isPreviewOpen && diaryId && (
         <div className="fixed inset-0 flex justify-center items-center z-40">
           <EmotionPreviewCard
-            diaryId={diaryId} // 이제 string 타입 확실
+            diaryId={diaryId}
             onClose={handlePreviewClose}
           />
         </div>

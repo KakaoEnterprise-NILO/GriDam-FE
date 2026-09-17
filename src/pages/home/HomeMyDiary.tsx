@@ -4,7 +4,9 @@ import { useEffect, useState } from "react"
 import MainLayout from "../../components/common/MainLayout"
 import DiaryCard from "../../components/diary/DiaryCard"
 import DiaryPagination from "../../components/diary/DiaryPagination"
-import api from "../../api/axios" // 커스텀 axios 인스턴스 사용
+import api from "../../api/axios"
+import { isAxiosError } from "axios";
+import type { ApiErrorResponse } from "@/api/axios";
 
 type DiaryItem = {
   diaryId: string
@@ -36,26 +38,24 @@ export default function HomeMyDiary() {
       setLoading(true)
       setError(null)
 
-      // 일기 목록 가져오기
       const diariesResponse = await api.get<ApiResponse>("/diary/list")
 
       if (diariesResponse.data.success) {
         setDiaries(diariesResponse.data.result)
-        console.log("일기 목록 조회 성공:", diariesResponse.data.result.length, "개")
       } else {
         setError(diariesResponse.data.message || "일기를 불러오는데 실패했습니다.")
       }
 
       setIsAuthenticated(true)
-    } catch (err: any) {
+    } catch (err: unknown) {
+      const errorResponse = isAxiosError<ApiErrorResponse>(err) ? err.response : undefined
       console.error("데이터 조회 실패:", err)
 
-      // 인증 관련 에러 처리
-      if (err.response?.status === 401) {
+      if (errorResponse?.status === 401) {
         setIsAuthenticated(false)
         setError("로그인이 필요합니다.")
       } else {
-        setError(err.response?.data?.message || "데이터를 불러오는데 실패했습니다.")
+        setError(errorResponse?.data?.message || "데이터를 불러오는데 실패했습니다.")
       }
     } finally {
       setLoading(false)
@@ -63,7 +63,6 @@ export default function HomeMyDiary() {
   }
 
   useEffect(() => {
-    // 토큰 존재 여부 확인
     const token = localStorage.getItem("accessToken")
     if (!token) {
       setIsAuthenticated(false)
@@ -84,10 +83,8 @@ export default function HomeMyDiary() {
 
   const handleDeleteDiary = async (diaryId: string) => {
     try {
-      // 삭제 API 호출 (커스텀 axios 인스턴스 사용)
       await api.delete(`/diary/${diaryId}`)
 
-      // 삭제 후 목록 새로고침
       await fetchDiaries()
 
       // 현재 페이지에 일기가 없으면 이전 페이지로 이동
@@ -95,14 +92,14 @@ export default function HomeMyDiary() {
       if (page > newMaxPage && newMaxPage > 0) {
         setPage(newMaxPage)
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
+      const errorResponse = isAxiosError<ApiErrorResponse>(err) ? err.response : undefined
       console.error("일기 삭제 실패:", err)
-      alert(err.response?.data?.message || "일기 삭제에 실패했습니다.")
+      alert(errorResponse?.data?.message || "일기 삭제에 실패했습니다.")
     }
   }
 
   const handleLogin = () => {
-    // 로그인 페이지로 이동
     window.location.href = "/login"
   }
 
@@ -155,21 +152,6 @@ export default function HomeMyDiary() {
           ))}
         </div>
 
-        {/* 디버깅 정보 (개발 중에만 표시)
-        {process.env.NODE_ENV === "development" && (
-          <div className="mt-8 p-4 bg-gray-100 rounded-lg">
-            <h3 className="font-bold mb-2">🔍 디버깅 정보</h3>
-            <p>일기 개수: {diaries.length}</p>
-            <p>현재 페이지: {page}</p>
-            <p>총 페이지: {maxPage}</p>
-            <details className="mt-2">
-              <summary className="cursor-pointer text-blue-600">일기 목록 보기</summary>
-              <pre className="mt-2 text-xs bg-white p-2 rounded overflow-auto max-h-40">
-                {JSON.stringify(diaries, null, 2)}
-              </pre>
-            </details>
-          </div>
-        )} */}
       </div>
     </MainLayout>
   )

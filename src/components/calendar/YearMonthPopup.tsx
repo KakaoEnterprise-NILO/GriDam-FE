@@ -1,4 +1,3 @@
-// components/YearMonthPopup.tsx
 import { useState } from 'react'
 import { X, ChevronLeft, ChevronRight } from 'lucide-react'
 
@@ -27,7 +26,6 @@ export default function YearMonthPopup({ selectedYear, onSelect, onClose }: Prop
   return (
     <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
       <div className="bg-white rounded-xl p-6 w-[360px] shadow-xl relative">
-        {/* 헤더 */}
         <div className="flex items-center justify-between mb-4">
           <button onClick={() => setYear(year - 1)}>
             <ChevronLeft className="w-6 h-6 text-gray-700" />
@@ -38,7 +36,6 @@ export default function YearMonthPopup({ selectedYear, onSelect, onClose }: Prop
           </button>
         </div>
 
-        {/* 월 그리드 */}
         <div className="grid grid-cols-3 gap-4">
           {Array.from({ length: 12 }, (_, idx) => (
             <button
@@ -52,7 +49,6 @@ export default function YearMonthPopup({ selectedYear, onSelect, onClose }: Prop
           ))}
         </div>
 
-        {/* 닫기 버튼 */}
         <button onClick={onClose} className="absolute top-2 right-2 text-gray-400 hover:text-gray-600">
           <X className="w-5 h-5" />
         </button>

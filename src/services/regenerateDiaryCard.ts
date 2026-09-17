@@ -1,4 +1,4 @@
-import api from "axios"; // 또는 api가 axios 인스턴스면 'import api from "../api"' 등 경로 맞춰서
+import api from "axios";
 
 export async function regenerateDiaryCard({
   diaryId,
@@ -21,7 +21,6 @@ export async function regenerateDiaryCard({
   }
 
   try {
-    // Authorization 헤더는 api 인스턴스가 자동으로 추가한다고 가정
     const res = await api.patch(`/diary?diaryId=${diaryId}`, formData);
 
     if (!res.data.result) {
@@ -30,7 +29,7 @@ export async function regenerateDiaryCard({
 
     return res.data.result;
   } catch (err) {
-    console.error("❌ [regenerateDiaryCard] 요청 실패", err);
+    console.error("[regenerateDiaryCard] 요청 실패", err);
     throw err;
   }
 }

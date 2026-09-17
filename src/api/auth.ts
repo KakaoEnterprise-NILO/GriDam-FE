@@ -1,4 +1,4 @@
-// ✅ src/api/auth.ts
+import type { ApiResponse } from "@/services/notificationService";
 import api from "./axios";
 
 
@@ -23,7 +23,7 @@ export const signUp = (data: {
 
 //로그인 POST 요청
 export const login = (data: { loginId: string; password: string }) =>
-  api.post("/auth/login", data);
+  api.post<ApiResponse<{ accessToken: string; refreshToken: string }>>("/auth/login", data);
 
 
 //로그아웃 POST 요청

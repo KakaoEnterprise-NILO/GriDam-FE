@@ -9,7 +9,7 @@ import {
   likeComment,
   unlikeComment,
 } from "@/services/commentService";
-import { getFeedDetail } from "@/services/feedService"; // ✅ 피드 상세 조회 API 추가
+import { getFeedDetail } from "@/services/feedService";
 
 interface CommentType {
   id: number;
@@ -36,18 +36,16 @@ export default function EmotionCardPost2() {
   const [replyTargetId, setReplyTargetId] = useState<number | null>(null);
   const [replyTargetUser, setReplyTargetUser] = useState<string | null>(null);
 
-  const [feedDetail, setFeedDetail] = useState<FeedDetail | null>(null); // ✅ 피드 상세 상태
+  const [feedDetail, setFeedDetail] = useState<FeedDetail | null>(null);
 
   useEffect(() => {
   const fetchData = async () => {
     try {
-      // 댓글 조회
       const commentData = await getCommentsByFeedId(feedId);
       setComments(commentData);
 
-      // 피드 상세 조회
       const userId = localStorage.getItem("userId") || "";
-      const detail = await getFeedDetail(feedId, userId); // ✅ token 제거
+      const detail = await getFeedDetail(feedId, userId);
       setFeedDetail(detail);
     } catch (err) {
       console.error("❌ 데이터 불러오기 실패:", err);
@@ -127,19 +125,16 @@ export default function EmotionCardPost2() {
         <IoClose size={24} />
       </button>
 
-      {/* 카드 이미지 영역 */}
       <div className="flex-1 bg-gray-50 flex justify-center items-center p-6">
         <img
-          src={"/assets/picture/sample_emotion_card.png"} // 필요시 feedDetail.emotionCardId 활용 가능
+          src={"/assets/picture/sample_emotion_card.png"}
           alt="감정카드"
           className="w-full rounded-xl"
         />
       </div>
 
-      {/* 댓글 영역 */}
       <div className="flex-1 relative flex flex-col">
         <div className="flex-1 overflow-y-auto p-6 pb-28 space-y-4">
-          {/* 카드 작성자 + 내용 */}
           <div className="flex items-start gap-3 mb-6">
             <FaUserCircle size={40} className="text-gray-500 mt-1" />
             <div className="flex flex-col text-[18px]">
@@ -150,7 +145,6 @@ export default function EmotionCardPost2() {
             </div>
           </div>
 
-          {/* 댓글 리스트 */}
           {comments.map((c) => (
             <div
               key={c.id}
@@ -184,7 +178,6 @@ export default function EmotionCardPost2() {
           ))}
         </div>
 
-        {/* 댓글 입력창 */}
         <div className="absolute bottom-0 left-0 right-0 px-6 py-3 bg-white border-t border-gray-200">
           {replyTargetUser && (
             <div className="text-sm text-gray-500 mb-1">

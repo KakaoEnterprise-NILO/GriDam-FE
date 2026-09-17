@@ -11,10 +11,8 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
         </aside>
 
         <div className="flex-1 flex flex-col p-6">
-          {/* 상단바(검색 + 프로필) */}
           <Topbar />
 
-          {/* Content */}
           <main className="ml-5 bg-[#F7F8FC] rounded-2xl p-10">{children}</main>
         </div>
       </div>

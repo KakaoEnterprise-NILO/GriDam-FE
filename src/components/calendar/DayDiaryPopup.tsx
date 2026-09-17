@@ -1,23 +1,13 @@
 "use client"
 
+
+import type { EmotionCardApiResponse } from "@/services/emotionCardService";
 import { useState, useEffect } from "react"
 import { X, WalletCards, BookOpen } from "lucide-react"
 import api from "@/api/axios"
 import EmotionCard from "./EmotionCard_Calendar"
-
-interface EmotionCardApiResponse {
-  timestamp: string
-  success: boolean
-  code: string
-  result: {
-    cardImageUrl: string
-    emotionCardId: number
-    emotion: string
-    emotions: { [key: string]: number }[]
-    hashtags: { tagName: string }[]
-  }
-  message: string
-}
+import { isAxiosError } from "axios";
+import type { ApiErrorResponse } from "@/api/axios";
 
 interface DiaryApiResponse {
   timestamp: string
@@ -35,7 +25,7 @@ interface DiaryPopupProps {
   open: boolean
   onClose: () => void
   date: string // YYYY-MM-DD 형태
-  diaryId?: string // 일기 ID 추가
+  diaryId?: string
 }
 
 export default function DiaryPopup({ open, onClose, date, diaryId }: DiaryPopupProps) {
@@ -46,38 +36,33 @@ export default function DiaryPopup({ open, onClose, date, diaryId }: DiaryPopupP
   const [emotionCard, setEmotionCard] = useState<EmotionCardApiResponse["result"] | null>(null)
   const [emotionLoading, setEmotionLoading] = useState(false)
 
-  // API에서 일기 데이터 가져오기
   const fetchDiaryData = async (date: string) => {
     setLoading(true)
     setError(null)
 
     try {
-      console.log(`📖 일기 조회 요청: ${date}`)
 
-      // 현재 토큰 확인
-      const token = localStorage.getItem("accessToken")
-      console.log("🔑 현재 토큰:", token ? "존재함" : "없음")
 
       const response = await api.get(`/diary?date=${date}`)
       const data: DiaryApiResponse = response.data
 
-      console.log("📖 일기 조회 응답:", data)
 
       if (data.success) {
         setDiary(data.result)
-        console.log("✅ 일기 데이터 설정 완료:", data.result)
       } else {
         throw new Error(data.message || "일기를 불러오는데 실패했습니다.")
       }
-    } catch (err: any) {
-      console.error("❌ 일기 조회 실패:", err)
-      console.error("📄 에러 응답:", err.response?.data)
+    } catch (err: unknown) {
+      const errorResponse = isAxiosError<ApiErrorResponse>(err) ? err.response : undefined
+      const errorMessage = err instanceof Error ? err.message
+        : typeof err === "object" && err !== null && "message" in err && typeof err.message === "string"
+          ? err.message : undefined
+      console.error("일기 조회 실패:", err)
 
-      // 서버 에러 코드별 처리
-      if (err.response?.status === 500) {
-        const errorData = err.response.data
+      if (errorResponse?.status === 500) {
+        const errorData = errorResponse.data
         if (errorData?.code === "COMMON500") {
-          if (errorData.result?.includes("Query did not return a unique result")) {
+          if (typeof errorData.result === "string" && errorData.result.includes("Query did not return a unique result")) {
             setError("해당 날짜에 여러 개의 일기가 있습니다. 서버 관리자에게 문의해주세요.")
           } else {
             setError("서버에서 오류가 발생했습니다. 잠시 후 다시 시도해주세요.")
@@ -85,15 +70,14 @@ export default function DiaryPopup({ open, onClose, date, diaryId }: DiaryPopupP
         } else {
           setError("서버 오류가 발생했습니다.")
         }
-      } else if (err.response?.status === 404) {
+      } else if (errorResponse?.status === 404) {
         setError("해당 날짜에 작성된 일기가 없습니다.")
-      } else if (err.response?.status === 401) {
+      } else if (errorResponse?.status === 401) {
         setError("로그인이 필요합니다.")
-      } else if (err.response?.status === 403) {
+      } else if (errorResponse?.status === 403) {
         setError("일기를 조회할 권한이 없습니다.")
       } else {
-        // 네트워크 오류 등
-        setError(err.response?.data?.message || err.message || "일기를 불러오는데 실패했습니다.")
+        setError(errorResponse?.data?.message || errorMessage || "일기를 불러오는데 실패했습니다.")
       }
       setDiary(null)
     } finally {
@@ -101,24 +85,20 @@ export default function DiaryPopup({ open, onClose, date, diaryId }: DiaryPopupP
     }
   }
 
-  // API에서 감정 카드 데이터 가져오기
   const fetchEmotionCardData = async (diaryId: string) => {
     setEmotionLoading(true)
     try {
-      console.log(`🎭 감정 카드 조회 요청: ${diaryId}`)
       const response = await api.get(`/emotion-cards/card-image?diaryId=${diaryId}`)
       const data: EmotionCardApiResponse = response.data
 
-      console.log("🎭 감정 카드 조회 응답:", data)
 
       if (data.success && data.result) {
         setEmotionCard(data.result)
-        console.log("✅ 감정 카드 데이터 설정 완료:", data.result)
       } else {
         throw new Error(data.message || "감정 카드를 불러오는데 실패했습니다.")
       }
-    } catch (err: any) {
-      console.error("❌ 감정 카드 조회 실패:", err)
+    } catch (err: unknown) {
+      console.error("감정 카드 조회 실패:", err)
       setEmotionCard(null)
     } finally {
       setEmotionLoading(false)
@@ -145,7 +125,7 @@ export default function DiaryPopup({ open, onClose, date, diaryId }: DiaryPopupP
       setShowCard(false)
       setDiary(null)
       setError(null)
-      setEmotionCard(null) // 감정 카드 상태도 초기화
+      setEmotionCard(null)
     }
   }, [open])
 
@@ -161,7 +141,6 @@ export default function DiaryPopup({ open, onClose, date, diaryId }: DiaryPopupP
     }
   }
 
-  // 감정에 따른 색상 매핑
   const getEmotionColor = (emotion: string) => {
     switch (emotion) {
       case "HAPPY":
@@ -199,7 +178,6 @@ export default function DiaryPopup({ open, onClose, date, diaryId }: DiaryPopupP
   return (
     <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 p-4">
       <div className="relative w-full max-w-lg h-[650px] bg-white rounded-3xl shadow-2xl border border-gray-100 flex flex-col overflow-hidden">
-        {/* 헤더 */}
         <div className="relative text-center p-6 bg-gradient-to-r from-gray-50 via-white to-gray-50 border-b border-gray-100">
           <p className="text-sm text-gray-500 mb-2 font-medium">{formatDate(date)}</p>
           <h2 className="text-xl font-bold text-gray-800 truncate px-8">
@@ -213,7 +191,6 @@ export default function DiaryPopup({ open, onClose, date, diaryId }: DiaryPopupP
           </button>
         </div>
 
-        {/* 컨텐츠 */}
         <div className="flex-1 overflow-hidden">
           {loading ? (
             <div className="h-full flex flex-col items-center justify-center">
@@ -301,7 +278,6 @@ export default function DiaryPopup({ open, onClose, date, diaryId }: DiaryPopupP
           )}
         </div>
 
-        {/* 토글 버튼 */}
         {diary && !loading && !error && (
           <div className="p-6 border-t border-gray-100 bg-white">
             <div className="flex gap-3">

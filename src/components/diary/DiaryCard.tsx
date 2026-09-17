@@ -3,7 +3,9 @@
 import { useState, useRef, useEffect } from "react"
 import { MoreVertical, Trash2, ImageIcon, Clock } from "lucide-react"
 import EmotionCard from "./EmotionCard"
-import api from "../../api/axios" // 커스텀 axios 인스턴스 사용
+import api from "../../api/axios"
+import { isAxiosError } from "axios";
+import type { ApiErrorResponse } from "@/api/axios";
 
 type EmotionCardDataType = {
   color: string
@@ -11,7 +13,7 @@ type EmotionCardDataType = {
   image: string
   date: string
   hashtags: string[]
-  emotions: Array<{ [key: string]: number }> // API 응답 형식으로 변경
+  emotions: Array<{ [key: string]: number }>
   emotionCardId: number
 }
 
@@ -25,21 +27,6 @@ type DiaryCardProps = {
   onDelete: (diaryId: string) => void
 }
 
-// // API 응답 타입 정의 (새로운 명세서에 맞춤)
-// type EmotionCardApiResponse = {
-//   timestamp: string
-//   success: boolean
-//   code: string
-//   result: {
-//     cardImageUrl: string
-//     emotionCardId: number
-//     emotion: string
-//     emotions: Array<{ [key: string]: number }>
-//     hashtags: Array<{ tagName: string }>
-//   }
-//   message: string
-// }
-
 // 감정별 색상 매핑 - 백엔드 Emotion enum에 맞춤
 const emotionColorMap: { [key: string]: string } = {
   행복: "#FFD700", // HAPPY
@@ -51,7 +38,6 @@ const emotionColorMap: { [key: string]: string } = {
   역겨움: "#696969", // DISGUST
   두려움: "#8B008B", // FEAR
   없음: "#CCCCCC", // NONE
-  // 기본값
   default: "#CCCCCC",
 }
 
@@ -66,10 +52,9 @@ export default function DiaryCard({ id, title, content, date, imageUrl, hashtags
   const [loadingEmotion, setLoadingEmotion] = useState(true)
   const [imageError, setImageError] = useState(false)
   const [imageLoaded, setImageLoaded] = useState(false)
-  const [emotionCardExists, setEmotionCardExists] = useState<boolean | null>(null) // 감정카드 존재 여부
+  const [emotionCardExists, setEmotionCardExists] = useState<boolean | null>(null)
   const menuRef = useRef<HTMLDivElement>(null)
 
-  // 컴포넌트 마운트 시 감정 정보 미리 가져오기
   useEffect(() => {
     const fetchEmotionInfo = async () => {
       try {
@@ -78,7 +63,6 @@ export default function DiaryCard({ id, title, content, date, imageUrl, hashtags
           params: { diaryId: id },
         })
 
-        console.log("감정 정보 조회 응답:", res.data)
 
         if (res.data.success && res.data.result) {
           const { emotion, cardImageUrl } = res.data.result
@@ -88,11 +72,11 @@ export default function DiaryCard({ id, title, content, date, imageUrl, hashtags
         } else {
           throw new Error(res.data.message || "감정 정보를 불러올 수 없습니다.")
         }
-      } catch (err: any) {
+      } catch (err: unknown) {
+        const errorResponse = isAxiosError<ApiErrorResponse>(err) ? err.response : undefined
         console.error("감정 정보 조회 실패:", err)
 
-        // 특정 에러 코드에 대한 처리
-        if (err.response?.data?.code === "EMOTIONCARD4001" || err.response?.status === 404) {
+        if (errorResponse?.data?.code === "EMOTIONCARD4001" || errorResponse?.status === 404) {
           setEmotionCardExists(false)
           setEmotion("")
           setCardImageUrl("")
@@ -127,13 +111,11 @@ export default function DiaryCard({ id, title, content, date, imageUrl, hashtags
         params: { diaryId: id },
       })
 
-      console.log("감정카드 조회 응답:", res.data)
 
       if (res.data.success && res.data.result) {
         const { cardImageUrl, emotion, emotions, emotionCardId, hashtags } = res.data.result
         const color = emotionColorMap[emotion] || emotionColorMap.default
 
-        console.log("API 응답 데이터:", { cardImageUrl, emotion, emotions, emotionCardId, hashtags })
 
         setEmotion(emotion)
         setCardImageUrl(cardImageUrl)
@@ -156,16 +138,20 @@ export default function DiaryCard({ id, title, content, date, imageUrl, hashtags
       } else {
         throw new Error(res.data.message || "감정카드 조회에 실패했습니다.")
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
+      const errorResponse = isAxiosError<ApiErrorResponse>(err) ? err.response : undefined
+      const errorMessage = err instanceof Error ? err.message
+        : typeof err === "object" && err !== null && "message" in err && typeof err.message === "string"
+          ? err.message : undefined
       console.error("감정카드 조회 실패", err)
 
-      if (err.response?.data?.code === "EMOTIONCARD4001" || err.response?.status === 404) {
+      if (errorResponse?.data?.code === "EMOTIONCARD4001" || errorResponse?.status === 404) {
         setEmotionCardExists(false)
         alert("아직 감정카드가 생성되지 않았습니다. 잠시 후 다시 시도해주세요.")
-      } else if (err.response?.status === 401) {
+      } else if (errorResponse?.status === 401) {
         alert("로그인이 필요합니다.")
       } else {
-        alert(err.response?.data?.message || err.message || "감정카드를 불러오는데 실패했습니다.")
+        alert(errorResponse?.data?.message || errorMessage || "감정카드를 불러오는데 실패했습니다.")
       }
     } finally {
       setLoadingCard(false)
@@ -185,24 +171,24 @@ export default function DiaryCard({ id, title, content, date, imageUrl, hashtags
         } else {
           throw new Error(response.data.message || "일기 삭제에 실패했습니다.")
         }
-      } catch (err: any) {
+      } catch (err: unknown) {
+        const errorResponse = isAxiosError<ApiErrorResponse>(err) ? err.response : undefined
         console.error("일기 삭제 실패:", err)
 
-        if (err.response?.status === 401) {
+        if (errorResponse?.status === 401) {
           alert("로그인이 필요합니다.")
-        } else if (err.response?.status === 404) {
+        } else if (errorResponse?.status === 404) {
           alert("삭제하려는 일기를 찾을 수 없습니다.")
-        } else if (err.response?.status === 500) {
-          // 서버 내부 오류 처리
-          const errorCode = err.response?.data?.code
+        } else if (errorResponse?.status === 500) {
+          const errorCode = errorResponse?.data?.code
           if (errorCode === "COMMON500") {
             alert("서버에서 일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.")
-            console.error("서버 오류 상세:", err.response?.data?.result)
+            console.error("서버 오류 상세:", errorResponse?.data?.result)
           } else {
             alert("서버 오류가 발생했습니다. 관리자에게 문의해주세요.")
           }
         } else {
-          alert(err.response?.data?.message || "일기 삭제에 실패했습니다.")
+          alert(errorResponse?.data?.message || "일기 삭제에 실패했습니다.")
         }
       }
     }
@@ -218,7 +204,6 @@ export default function DiaryCard({ id, title, content, date, imageUrl, hashtags
     setImageLoaded(true)
   }
 
-  // 감정카드 상태에 따른 색상 결정
   const getEmotionColor = () => {
     if (loadingEmotion) return "#CCCCCC"
     if (emotionCardExists === false) return "#E5E7EB" // 회색 (감정카드 없음)
@@ -226,7 +211,6 @@ export default function DiaryCard({ id, title, content, date, imageUrl, hashtags
     return "#CCCCCC"
   }
 
-  // 감정카드 버튼 텍스트 결정
   const getEmotionButtonText = () => {
     if (loadingCard) return "로딩 중..."
     if (loadingEmotion) return "분석 중..."
@@ -234,7 +218,6 @@ export default function DiaryCard({ id, title, content, date, imageUrl, hashtags
     return "감정카드 보기"
   }
 
-  // 감정카드 버튼 비활성화 여부
   const isEmotionButtonDisabled = () => {
     return loadingCard || loadingEmotion || emotionCardExists === false
   }
@@ -271,7 +254,6 @@ export default function DiaryCard({ id, title, content, date, imageUrl, hashtags
             <div className="flex items-center gap-2">
               <h2 className="text-lg font-bold">{title}</h2>
               <p className="text-sm text-gray-500 font-semibold whitespace-nowrap">· {date}</p>
-              {/* 감정 표시 */}
               {emotion && emotionCardExists === true && (
                 <span
                   className="text-xs px-2 py-1 rounded-full text-white font-semibold"
@@ -280,7 +262,6 @@ export default function DiaryCard({ id, title, content, date, imageUrl, hashtags
                   {emotion}
                 </span>
               )}
-              {/* 감정카드 생성 중 표시 */}
               {emotionCardExists === false && (
                 <span className="text-xs px-2 py-1 rounded-full bg-gray-200 text-gray-600 font-semibold flex items-center gap-1">
                   <Clock size={10} />
@@ -299,14 +280,12 @@ export default function DiaryCard({ id, title, content, date, imageUrl, hashtags
           <div className="flex-shrink-0 ml-auto mr-[5%]">
             {imageUrl ? (
               imageError ? (
-                // 이미지 로드 실패 시 아이콘으로 대체
                 <div className="w-24 h-24 flex items-center justify-center bg-gray-100 rounded-md">
                   <ImageIcon className="text-gray-400" size={32} />
                 </div>
               ) : (
                 <>
                   {!imageLoaded && (
-                    // 로딩 중 스켈레톤
                     <div className="w-24 h-24 bg-gray-200 animate-pulse rounded-md flex items-center justify-center">
                       <div className="text-gray-400">
                         <ImageIcon size={24} />
@@ -332,11 +311,10 @@ export default function DiaryCard({ id, title, content, date, imageUrl, hashtags
           className="flex justify-between items-center text-white px-4 py-2 transition-colors duration-300"
           style={{ backgroundColor: color }}
         >
-          {/* 해시태그 표시 영역 */}
           {hashtags.length > 0 && (
             <div className="flex flex-wrap gap-2">
-              {hashtags.map((tag, index) => (
-                <span key={index} className="text-sm font-semibold">
+              {hashtags.map((tag) => (
+                <span key={tag} className="text-sm font-semibold">
                   #{tag.replace(/^#/, "")}
                 </span>
               ))}

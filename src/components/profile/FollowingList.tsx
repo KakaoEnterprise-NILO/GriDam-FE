@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useRef, useCallback, useEffect, useState } from "react"
 import api from "@/api/axios"
 import FollowingUserItem from "@/components/profile/FollowingUserItem"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -8,6 +8,8 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Users, UserX, RefreshCw, Lock } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { isAxiosError } from "axios";
+import type { ApiErrorResponse } from "@/api/axios";
 
 interface FollowedUser {
   userId: string
@@ -17,8 +19,8 @@ interface FollowedUser {
 
 interface FollowingListProps {
   onUserSelect?: (userId: string) => void
-  targetUserId?: string // 조회할 사용자 ID
-  isMyProfile?: boolean // 내 프로필인지 여부
+  targetUserId?: string
+  isMyProfile?: boolean
 }
 
 export default function FollowingList({ onUserSelect, targetUserId, isMyProfile = true }: FollowingListProps) {
@@ -26,14 +28,17 @@ export default function FollowingList({ onUserSelect, targetUserId, isMyProfile 
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
-  const fetchFollowList = async () => {
+  // Ignore responses from a previous user/month or an unmounted component.
+  const requestGeneration = useRef(0)
+
+  const fetchFollowList = useCallback(async () => {
+    const generation = requestGeneration.current
     try {
       setLoading(true)
       setError(null)
 
       let res
       if (isMyProfile) {
-        // 내 팔로잉 목록 조회
         res = await api.get<{
           success: boolean
           result: {
@@ -50,27 +55,36 @@ export default function FollowingList({ onUserSelect, targetUserId, isMyProfile 
       } else {
         // 다른 사용자의 팔로잉 목록 조회 (API가 있다면)
         // 현재는 API가 없으므로 빈 배열 반환
-        console.log("다른 사용자의 팔로잉 목록 조회는 아직 지원되지 않습니다.")
         setFollowList([])
         setError("다른 사용자의 팔로잉 목록은 비공개입니다.")
         return
       }
+
+      if (generation !== requestGeneration.current) return
 
       if (res.data.success) {
         setFollowList(res.data.result.followList)
       } else {
         setError(res.data.message || "팔로우 목록을 불러오지 못했습니다.")
       }
-    } catch (err: any) {
-      setError(err.response?.data?.message || err.message || "알 수 없는 오류가 발생했습니다.")
+    } catch (err: unknown) {
+      if (generation !== requestGeneration.current) return
+      const errorResponse = isAxiosError<ApiErrorResponse>(err) ? err.response : undefined
+      const errorMessage = err instanceof Error ? err.message
+        : typeof err === "object" && err !== null && "message" in err && typeof err.message === "string"
+          ? err.message : undefined
+      setError(errorResponse?.data?.message || errorMessage || "알 수 없는 오류가 발생했습니다.")
     } finally {
-      setLoading(false)
+      if (generation === requestGeneration.current) setLoading(false)
     }
-  }
+  }, [isMyProfile])
 
   useEffect(() => {
     fetchFollowList()
-  }, [targetUserId, isMyProfile])
+    return () => {
+      requestGeneration.current += 1
+    }
+  }, [fetchFollowList, targetUserId])
 
   const handleUnfollow = async (userId: string) => {
     if (!isMyProfile) return // 다른 사용자의 목록에서는 언팔로우 불가
@@ -82,8 +96,12 @@ export default function FollowingList({ onUserSelect, targetUserId, isMyProfile 
       } else {
         alert(res.data.message || "언팔로우에 실패했습니다.")
       }
-    } catch (err: any) {
-      alert(err.response?.data?.message || err.message || "언팔로우 중 오류가 발생했습니다.")
+    } catch (err: unknown) {
+      const errorResponse = isAxiosError<ApiErrorResponse>(err) ? err.response : undefined
+      const errorMessage = err instanceof Error ? err.message
+        : typeof err === "object" && err !== null && "message" in err && typeof err.message === "string"
+          ? err.message : undefined
+      alert(errorResponse?.data?.message || errorMessage || "언팔로우 중 오류가 발생했습니다.")
     }
   }
 

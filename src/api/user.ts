@@ -1,13 +1,11 @@
 import api from "./axios"
 
-// 비밀번호 변경 API 요청 타입
 export interface ChangePasswordRequest {
   password: string // 현재 비밀번호
   changedPassword: string // 새 비밀번호
   checkPassword: string // 새 비밀번호 확인
 }
 
-// 비밀번호 변경 API 응답 타입
 export interface ChangePasswordResponse {
   timestamp: string
   success: boolean
@@ -20,7 +18,6 @@ export interface ChangePasswordResponse {
   message: string
 }
 
-// 비밀번호 변경 API 함수
 export const changePassword = async (data: ChangePasswordRequest): Promise<ChangePasswordResponse> => {
   try {
     const response = await api.patch<ChangePasswordResponse>("/users/password", data)
@@ -29,26 +26,4 @@ export const changePassword = async (data: ChangePasswordRequest): Promise<Chang
     console.error("비밀번호 변경 API 에러:", error)
     throw error
   }
-}
-export interface UserInfo {
-  userId: string
-  profileImgUrl: string
-  userName: string
-  createdAt: string
-  diaryCount: number
-  followerCount: number
-}
-
-export interface UserInfoResponse {
-  timestamp: string
-  success: boolean
-  code: string
-  result: UserInfo
-  message: string
-}
-
-// 마이페이지 정보 조회
-export const getUserInfo = async (): Promise<UserInfoResponse> => {
-  const response = await api.get("/users/info")
-  return response.data
 }

@@ -5,8 +5,9 @@ import { useEffect, useState } from "react"
 import ReactDOM from "react-dom"
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from "recharts"
 import { X, BarChart3, Sparkles, ImageIcon, Expand } from "lucide-react"
+import FullscreenImageViewer from "./FullscreenImageViewer"
+import CustomTooltip from "./CustomTooltip"
 
-// API 응답 타입 정의
 type EmotionApiData = Array<{ [key: string]: number }>
 
 type EmotionCardProps = {
@@ -19,13 +20,12 @@ type EmotionCardProps = {
     color: string
     date: string
     hashtags: string[]
-    chartData?: { name: string; value: number }[] // 기존 방식 (선택적)
-    emotions?: EmotionApiData // 새로운 API 응답 방식
+    chartData?: { name: string; value: number }[]
+    emotions?: EmotionApiData
   }
   onClose?: () => void
 }
 
-// 감정별 차트 색상 매핑 (영어 키 추가)
 const EMOTION_CHART_COLORS: { [key: string]: string } = {
   // 한국어
   행복: "#FFD700",
@@ -55,7 +55,6 @@ const EMOTION_CHART_COLORS: { [key: string]: string } = {
   default5: "#8B5CF6",
 }
 
-// 감정 이름 한국어 변환 매핑
 const EMOTION_NAME_MAP: { [key: string]: string } = {
   HAPPY: "행복",
   JOY: "기쁨",
@@ -100,7 +99,6 @@ export default function EmotionCard({ front, back, onClose }: EmotionCardProps) 
     setShowFullscreenImage(false)
   }
 
-  // API 응답 emotions 배열을 차트 데이터로 변환
   const convertEmotionsToChartData = (emotions: EmotionApiData): { name: string; value: number }[] => {
     if (!emotions || emotions.length === 0) {
       return []
@@ -108,11 +106,9 @@ export default function EmotionCard({ front, back, onClose }: EmotionCardProps) 
 
     const chartData: { name: string; value: number }[] = []
 
-    // emotions 배열의 모든 객체를 순회하여 감정 데이터 추출
     emotions.forEach((emotionObj) => {
       Object.entries(emotionObj).forEach(([emotionKey, value]) => {
         if (typeof value === "number" && value >= 0) {
-          // 0 이상으로 변경 (0.1도 포함)
           // 한국어 이름으로 변환 (없으면 원래 이름 사용)
           const displayName = EMOTION_NAME_MAP[emotionKey] || emotionKey
 
@@ -124,17 +120,14 @@ export default function EmotionCard({ front, back, onClose }: EmotionCardProps) 
       })
     })
 
-    // 값이 큰 순서로 정렬
     return chartData.sort((a, b) => b.value - a.value)
   }
 
   // 차트 데이터 결정 (API 응답 우선, 기존 방식 fallback)
   const getChartData = () => {
     if (back.emotions && back.emotions.length > 0) {
-      // 새로운 API 응답 방식
       return convertEmotionsToChartData(back.emotions)
     } else if (back.chartData && back.chartData.length > 0) {
-      // 기존 방식
       return back.chartData
     }
     return []
@@ -142,90 +135,10 @@ export default function EmotionCard({ front, back, onClose }: EmotionCardProps) 
 
   const chartData = getChartData()
 
-  // 차트 데이터에 색상 매핑
   const chartDataWithColors = chartData.map((item, index) => ({
     ...item,
     fill: EMOTION_CHART_COLORS[item.name] || EMOTION_CHART_COLORS[`default${(index % 5) + 1}`] || "#CCCCCC",
   }))
-
-  // 커스텀 툴팁 컴포넌트
-  const CustomTooltip = ({ active, payload }: any) => {
-    if (active && payload && payload.length) {
-      const data = payload[0]
-      return (
-        <div className="bg-white p-3 rounded-lg shadow-lg border border-gray-200">
-          <p className="font-semibold text-gray-800">{data.name}</p>
-          <p className="text-sm text-gray-600">{data.value}%</p>
-        </div>
-      )
-    }
-    return null
-  }
-
-  // 전체화면 이미지 뷰어 컴포넌트
-  const FullscreenImageViewer = () => (
-    <div className="fixed inset-0 z-[60] flex flex-col items-center justify-center bg-black/90 backdrop-blur-sm p-4">
-      <button
-        onClick={handleCloseFullscreen}
-        className="absolute top-4 right-4 p-3 rounded-full bg-white/20 backdrop-blur-sm text-white hover:bg-white/30 transition-all duration-200 shadow-lg z-10"
-      >
-        <X size={24} />
-      </button>
-
-      {/* 이미지 컨테이너 - 감정 라벨을 위한 공간 확보 */}
-      <div className="flex-1 flex items-center justify-center w-full max-h-[calc(100vh-120px)]">
-        {imageError || !front.image ? (
-          <div className="flex flex-col items-center justify-center text-white">
-            <ImageIcon size={80} className="mb-4 opacity-50" />
-            <p className="text-lg">이미지를 불러올 수 없습니다</p>
-          </div>
-        ) : (
-          <img
-            src={front.image || "/placeholder.svg"}
-            alt="emotion card full size"
-            className="max-w-full max-h-full object-contain rounded-lg shadow-2xl"
-            onError={handleImageError}
-          />
-        )}
-      </div>
-
-      {/* 감정 정보 오버레이 - 고정 위치 */}
-      <div className="flex-shrink-0 py-6">
-        <div
-          className="flex items-center gap-3 px-8 py-4 rounded-full text-white font-bold text-xl shadow-2xl backdrop-blur-sm border border-white/20"
-          style={{
-            background: `linear-gradient(135deg, ${front.color}, ${front.color}dd)`,
-            boxShadow: `0 12px 40px ${front.color}60`,
-          }}
-        >
-          <Sparkles size={22} />
-          {front.emotion}
-        </div>
-      </div>
-
-      {/* 안내 텍스트 */}
-      <div className="flex-shrink-0 pb-4">
-        <p className="text-white/70 text-sm text-center">화면을 터치하거나 ESC 키를 눌러 닫기</p>
-      </div>
-    </div>
-  )
-
-  // ESC 키로 전체화면 닫기
-  useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape" && showFullscreenImage) {
-        setShowFullscreenImage(false)
-      }
-    }
-
-    if (showFullscreenImage) {
-      document.addEventListener("keydown", handleKeyDown)
-    }
-
-    return () => {
-      document.removeEventListener("keydown", handleKeyDown)
-    }
-  }, [showFullscreenImage])
 
   const modalContent = (
     <>
@@ -242,12 +155,10 @@ export default function EmotionCard({ front, back, onClose }: EmotionCardProps) 
               transform: flipped ? "rotateY(180deg)" : "rotateY(0deg)",
             }}
           >
-            {/* 앞면 */}
             <div
               className="absolute w-full h-full rounded-2xl shadow-2xl bg-gradient-to-br from-white via-gray-50 to-gray-100 overflow-hidden"
               style={{ backfaceVisibility: "hidden" }}
             >
-              {/* 배경 장식 */}
               <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-purple-100/50 to-transparent rounded-bl-full"></div>
               <div className="absolute bottom-0 left-0 w-24 h-24 bg-gradient-to-tr from-blue-100/50 to-transparent rounded-tr-full"></div>
 
@@ -262,7 +173,6 @@ export default function EmotionCard({ front, back, onClose }: EmotionCardProps) 
               </button>
 
               <div className="p-8 h-full flex flex-col">
-                {/* 감정 라벨 */}
                 <div className="text-center mb-6">
                   <div
                     className="inline-flex items-center gap-2 px-6 py-3 rounded-full text-white font-semibold text-lg shadow-lg"
@@ -276,11 +186,9 @@ export default function EmotionCard({ front, back, onClose }: EmotionCardProps) 
                   </div>
                 </div>
 
-                {/* 이미지 - 에러 처리 개선 */}
                 <div className="flex-1 relative mb-4 max-h-[300px]">
                   <div className="w-full h-full rounded-xl overflow-hidden shadow-xl ring-1 ring-gray-200 bg-gray-100 relative">
                     {imageError || !front.image ? (
-                      // 이미지 로드 실패 시 아이콘으로 대체
                       <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200 text-gray-400">
                         <ImageIcon size={64} className="mb-4" />
                         <p className="text-sm font-medium">이미지를 불러올 수 없습니다</p>
@@ -288,7 +196,6 @@ export default function EmotionCard({ front, back, onClose }: EmotionCardProps) 
                     ) : (
                       <>
                         {!imageLoaded && (
-                          // 로딩 중 스켈레톤
                           <div className="w-full h-full bg-gradient-to-br from-gray-200 to-gray-300 animate-pulse flex items-center justify-center">
                             <div className="text-gray-400">
                               <ImageIcon size={48} />
@@ -308,14 +215,12 @@ export default function EmotionCard({ front, back, onClose }: EmotionCardProps) 
                           onError={handleImageError}
                           onLoad={handleImageLoad}
                         />
-                        {/* 이미지 오버레이 */}
                         {imageLoaded && (
                           <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent"></div>
                         )}
                       </>
                     )}
 
-                    {/* 확대 버튼 */}
                     {imageLoaded && !imageError && front.image && (
                       <button
                         onClick={handleExpandImage}
@@ -328,12 +233,11 @@ export default function EmotionCard({ front, back, onClose }: EmotionCardProps) 
                   </div>
                 </div>
 
-                {/* 해시태그 */}
                 <div className="text-center mb-4">
                   <div className="flex flex-wrap justify-center gap-2">
-                    {back.hashtags.map((tag, index) => (
+                    {back.hashtags.map((tag) => (
                       <span
-                        key={index}
+                        key={tag}
                         className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm font-medium border border-gray-200"
                       >
                         #{tag.replace(/^#/, "")}
@@ -342,7 +246,6 @@ export default function EmotionCard({ front, back, onClose }: EmotionCardProps) 
                   </div>
                 </div>
 
-                {/* 안내 텍스트 */}
                 <div className="text-center">
                   <p className="text-sm text-gray-500 flex items-center justify-center gap-2">
                     <span className="w-2 h-2 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full animate-pulse"></span>
@@ -353,7 +256,6 @@ export default function EmotionCard({ front, back, onClose }: EmotionCardProps) 
               </div>
             </div>
 
-            {/* 뒷면 */}
             <div
               className="absolute w-full h-full rounded-2xl shadow-2xl bg-gradient-to-br from-slate-50 via-white to-gray-50 overflow-hidden"
               style={{
@@ -364,7 +266,6 @@ export default function EmotionCard({ front, back, onClose }: EmotionCardProps) 
                 left: 0,
               }}
             >
-              {/* 배경 패턴 */}
               <div className="absolute inset-0 opacity-5">
                 <div className="absolute top-10 left-10 w-20 h-20 border-2 border-purple-300 rounded-full"></div>
                 <div className="absolute top-32 right-16 w-16 h-16 border-2 border-blue-300 rounded-full"></div>
@@ -382,7 +283,6 @@ export default function EmotionCard({ front, back, onClose }: EmotionCardProps) 
               </button>
 
               <div className="p-8 h-full flex flex-col">
-                {/* 감정 라벨 */}
                 <div className="text-center mb-6">
                   <div
                     className="inline-flex items-center gap-2 px-6 py-3 rounded-full text-white font-semibold text-lg shadow-lg"
@@ -396,7 +296,6 @@ export default function EmotionCard({ front, back, onClose }: EmotionCardProps) 
                   </div>
                 </div>
 
-                {/* 차트 영역 */}
                 <div className="flex-1 flex flex-col items-center justify-center">
                   <div className="bg-white rounded-xl p-4 shadow-lg ring-1 ring-gray-100 w-full">
                     <h3 className="text-lg font-bold text-gray-800 text-center mb-4 flex items-center justify-center gap-2">
@@ -420,8 +319,8 @@ export default function EmotionCard({ front, back, onClose }: EmotionCardProps) 
                               stroke="#ffffff"
                               strokeWidth={2}
                             >
-                              {chartDataWithColors.map((entry, index) => (
-                                <Cell key={`cell-${index}`} fill={entry.fill} />
+                              {chartDataWithColors.map((entry) => (
+                                <Cell key={entry.name} fill={entry.fill} />
                               ))}
                             </Pie>
                             <Tooltip content={<CustomTooltip />} />
@@ -448,14 +347,12 @@ export default function EmotionCard({ front, back, onClose }: EmotionCardProps) 
                   </div>
                 </div>
 
-                {/* 하단 정보 */}
                 <div className="space-y-4">
-                  {/* 해시태그 */}
                   <div className="text-center">
                     <div className="flex flex-wrap justify-center gap-2">
-                      {back.hashtags.map((tag, index) => (
+                      {back.hashtags.map((tag) => (
                         <span
-                          key={index}
+                          key={tag}
                           className="px-3 py-1 bg-gradient-to-r from-gray-100 to-gray-50 text-gray-700 rounded-full text-sm font-medium border border-gray-200 shadow-sm"
                         >
                           #{tag.replace(/^#/, "")}
@@ -464,7 +361,6 @@ export default function EmotionCard({ front, back, onClose }: EmotionCardProps) 
                     </div>
                   </div>
 
-                  {/* 안내 텍스트 */}
                   <div className="text-center">
                     <p className="text-sm text-gray-500 flex items-center justify-center gap-2">
                       <span className="w-2 h-2 bg-gradient-to-r from-green-400 to-blue-400 rounded-full animate-pulse"></span>
@@ -479,8 +375,14 @@ export default function EmotionCard({ front, back, onClose }: EmotionCardProps) 
         </div>
       </div>
 
-      {/* 전체화면 이미지 뷰어 */}
-      {showFullscreenImage && <FullscreenImageViewer />}
+      {showFullscreenImage && (
+        <FullscreenImageViewer
+          front={front}
+          imageError={imageError}
+          onImageError={handleImageError}
+          onClose={handleCloseFullscreen}
+        />
+      )}
     </>
   )
 

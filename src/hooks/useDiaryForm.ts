@@ -1,4 +1,3 @@
-// src/hooks/useDiaryForm.ts
 import { useState } from "react";
 import { submitDiary } from "../api/diary";
 
@@ -8,14 +7,18 @@ export function useDiaryForm(
     data: { title: string; content: string; imageFile?: File | null }
   ) => void
 ) {
-  const [isCompleted, setIsCompleted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleCompleteClick = async (
     image: File | null,
     title: string,
     content: string
   ) => {
-    setIsCompleted(true);
+    if (isSubmitting) return;
+
+    setIsSubmitting(true);
+    setError(null);
 
     try {
       const diaryResult = await submitDiary({ title, content, image });
@@ -28,12 +31,16 @@ export function useDiaryForm(
           imageFile: image,
         });
       } else {
-        console.warn("❗ diaryId가 응답에 없습니다:", diaryResult);
+        setError("저장 응답에 일기 ID가 없습니다. 다시 시도해주세요.");
+        console.warn("diaryId가 응답에 없습니다:", diaryResult);
       }
     } catch (err) {
-      console.error("[일기 작성 실패 ❌]", err);
+      setError(err instanceof Error && err.message ? err.message : "일기 저장에 실패했습니다. 다시 시도해주세요.");
+      console.error("일기 작성 실패", err);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
-  return { isCompleted, setIsCompleted, handleCompleteClick };
+  return { isSubmitting, error, handleCompleteClick };
 }

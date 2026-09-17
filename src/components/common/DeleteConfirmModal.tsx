@@ -1,4 +1,3 @@
-// components/common/DeleteConfirmModal.tsx
 interface DeleteConfirmModalProps {
   onCancel: () => void;
   onConfirm: () => void;

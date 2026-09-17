@@ -19,8 +19,6 @@ export default function FeedModal({ isOpen, onClose }: FeedModalProps) {
 
   const handleSubmitComment = () => {
     if (comment.trim()) {
-      // 여기서 댓글 추가 로직 구현
-      console.log("댓글 추가:", comment)
       setComment("")
     }
   }
@@ -28,7 +26,6 @@ export default function FeedModal({ isOpen, onClose }: FeedModalProps) {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-lg max-w-md w-full max-h-[90vh] overflow-y-auto">
-        {/* 헤더 */}
         <div className="flex items-center justify-between p-4 border-b">
           <div className="flex items-center gap-3">
             <img
@@ -50,7 +47,6 @@ export default function FeedModal({ isOpen, onClose }: FeedModalProps) {
           </div>
         </div>
 
-        {/* 피드 이미지 */}
         <div className="relative">
           <img
             src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-vFqyad3oiJPz1L580jbqy1HGjybmFN.png"
@@ -59,7 +55,6 @@ export default function FeedModal({ isOpen, onClose }: FeedModalProps) {
           />
         </div>
 
-        {/* 액션 버튼들 */}
         <div className="flex items-center justify-between p-4">
           <div className="flex items-center gap-4">
             <button
@@ -80,7 +75,6 @@ export default function FeedModal({ isOpen, onClose }: FeedModalProps) {
           </button>
         </div>
 
-        {/* 피드 내용 */}
         <div className="px-4 pb-4">
           <p className="text-gray-800 mb-3">오늘 좋은 하루~^^ 하늘 보며 힐링하세요</p>
           <div className="flex gap-2 mb-4">
@@ -89,7 +83,6 @@ export default function FeedModal({ isOpen, onClose }: FeedModalProps) {
           </div>
         </div>
 
-        {/* 댓글 섹션 */}
         <div className="border-t">
           <div className="p-4">
             <div className="flex items-start gap-3 mb-4">
@@ -105,7 +98,6 @@ export default function FeedModal({ isOpen, onClose }: FeedModalProps) {
             </div>
           </div>
 
-          {/* 댓글 입력 */}
           <div className="border-t p-4">
             <div className="flex items-center gap-2">
               <input

@@ -1,6 +1,9 @@
 "use client"
 
-import { useEffect, useState } from "react"
+
+import type { ApiResponse } from "@/services/notificationService";
+import type { EmotionCardApiResponse } from "@/services/emotionCardService";
+import { useRef, useCallback, useEffect, useState } from "react"
 import EmotionCard from "./EmotionCard"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -9,6 +12,13 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Button } from "@/components/ui/button"
 import api from "@/api/axios"
+import { isAxiosError } from "axios";
+import type { ApiErrorResponse } from "@/api/axios";
+
+type ProfileEmotionCard = Partial<EmotionCardApiResponse["result"]>
+type ProfileEmotionCardResult = ProfileEmotionCard & {
+  cardInfoList?: ProfileEmotionCard[]
+}
 
 interface EmotionCardData {
   id: string
@@ -28,37 +38,39 @@ export default function EmotionCardGrid({ userId }: EmotionCardGridProps) {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
-  const fetchEmotionCards = async () => {
+  // Ignore responses from a previous user/month or an unmounted component.
+  const requestGeneration = useRef(0)
+
+  const fetchEmotionCards = useCallback(async () => {
+    const generation = requestGeneration.current
     try {
       setLoading(true)
       setError(null)
 
       if (userId) {
-        // 다른 사용자의 감정 카드 조회
-        console.log("🎨 다른 사용자의 감정 카드 조회:", userId)
-        const res = await api.get("/emotion-cards", {
+        const res = await api.get<ApiResponse<ProfileEmotionCardResult | null>>("/emotion-cards", {
           params: {
             userId: userId,
             size: 9,
           },
         })
 
-        console.log("📊 API 응답:", res.data)
+
+        if (generation !== requestGeneration.current) return
 
         if (res.data.success) {
-          // API 응답 구조 확인
           if (res.data.result) {
             let transformedCards: EmotionCardData[] = []
 
             // 응답이 배열인 경우 (cardInfoList)
             if (Array.isArray(res.data.result.cardInfoList)) {
-              transformedCards = res.data.result.cardInfoList.map((card: any) => ({
-                id: card.emotionCardId?.toString() || `card-${Math.random()}`,
+              transformedCards = res.data.result.cardInfoList.map((card) => ({
+                id: card.emotionCardId?.toString() ?? JSON.stringify([card.cardImageUrl, card.emotion, card.hashtags?.map((tag) => tag.tagName)]),
                 src: card.cardImageUrl || "/placeholder.svg?height=200&width=160",
                 label: card.emotion || "감정",
                 mood: card.emotions?.[0] ? Object.keys(card.emotions[0])[0] : "Neutral",
                 date: new Date().toLocaleDateString("ko-KR"),
-                hashtags: card.hashtags?.map((tag: any) => tag.tagName) || [],
+                hashtags: card.hashtags?.map((tag) => tag.tagName) || [],
               }))
             }
             // 응답이 단일 객체인 경우 (현재 응답 구조)
@@ -66,12 +78,12 @@ export default function EmotionCardGrid({ userId }: EmotionCardGridProps) {
               const card = res.data.result
               transformedCards = [
                 {
-                  id: card.emotionCardId?.toString() || `card-${Math.random()}`,
+                  id: card.emotionCardId?.toString() ?? JSON.stringify([card.cardImageUrl, card.emotion, card.hashtags?.map((tag) => tag.tagName)]),
                   src: card.cardImageUrl || "/placeholder.svg?height=200&width=160",
                   label: card.emotion || "감정",
                   mood: card.emotions?.[0] ? Object.keys(card.emotions[0])[0] : "Neutral",
                   date: new Date().toLocaleDateString("ko-KR"),
-                  hashtags: card.hashtags?.map((tag: any) => tag.tagName) || [],
+                  hashtags: card.hashtags?.map((tag) => tag.tagName) || [],
                 },
               ]
             }
@@ -89,41 +101,37 @@ export default function EmotionCardGrid({ userId }: EmotionCardGridProps) {
               ]
             }
 
-            console.log("✅ 변환된 카드:", transformedCards)
             setCards(transformedCards)
           } else {
             setCards([])
-            console.log("❌ 결과 없음")
           }
         } else {
           setCards([])
           setError(res.data.message || "감정 카드를 불러올 수 없습니다.")
         }
       } else {
-        // 내 감정 카드 조회
-        console.log("🎨 내 감정 카드 조회")
-        const res = await api.get("/emotion-cards", {
+        const res = await api.get<ApiResponse<ProfileEmotionCardResult | null>>("/emotion-cards", {
           params: {
             size: 9,
           },
         })
 
-        console.log("📊 내 감정 카드 API 응답:", res.data)
+
+        if (generation !== requestGeneration.current) return
 
         if (res.data.success) {
-          // API 응답 구조 확인
           if (res.data.result) {
             let transformedCards: EmotionCardData[] = []
 
             // 응답이 배열인 경우 (cardInfoList)
             if (Array.isArray(res.data.result.cardInfoList)) {
-              transformedCards = res.data.result.cardInfoList.map((card: any) => ({
-                id: card.emotionCardId?.toString() || `card-${Math.random()}`,
+              transformedCards = res.data.result.cardInfoList.map((card) => ({
+                id: card.emotionCardId?.toString() ?? JSON.stringify([card.cardImageUrl, card.emotion, card.hashtags?.map((tag) => tag.tagName)]),
                 src: card.cardImageUrl || "/placeholder.svg?height=200&width=160",
                 label: card.emotion || "감정",
                 mood: card.emotions?.[0] ? Object.keys(card.emotions[0])[0] : "Neutral",
                 date: new Date().toLocaleDateString("ko-KR"),
-                hashtags: card.hashtags?.map((tag: any) => tag.tagName) || [],
+                hashtags: card.hashtags?.map((tag) => tag.tagName) || [],
               }))
             }
             // 응답이 단일 객체인 경우
@@ -131,45 +139,51 @@ export default function EmotionCardGrid({ userId }: EmotionCardGridProps) {
               const card = res.data.result
               transformedCards = [
                 {
-                  id: card.emotionCardId?.toString() || `card-${Math.random()}`,
+                  id: card.emotionCardId?.toString() ?? JSON.stringify([card.cardImageUrl, card.emotion, card.hashtags?.map((tag) => tag.tagName)]),
                   src: card.cardImageUrl || "/placeholder.svg?height=200&width=160",
                   label: card.emotion || "감정",
                   mood: card.emotions?.[0] ? Object.keys(card.emotions[0])[0] : "Neutral",
                   date: new Date().toLocaleDateString("ko-KR"),
-                  hashtags: card.hashtags?.map((tag: any) => tag.tagName) || [],
+                  hashtags: card.hashtags?.map((tag) => tag.tagName) || [],
                 },
               ]
             }
 
-            console.log("✅ 변환된 내 카드:", transformedCards)
             setCards(transformedCards)
           } else {
             setCards([])
-            console.log("❌ 내 감정 카드 결과 없음")
           }
         } else {
           setCards([])
           setError(res.data.message || "내 감정 카드를 불러올 수 없습니다.")
         }
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
+      if (generation !== requestGeneration.current) return
+      const errorResponse = isAxiosError<ApiErrorResponse>(err) ? err.response : undefined
+      const errorMessage = err instanceof Error ? err.message
+        : typeof err === "object" && err !== null && "message" in err && typeof err.message === "string"
+          ? err.message : undefined
       console.error("❌ 감정 카드 불러오기 실패:", err)
       setCards([])
-      if (err.response?.status === 403) {
+      if (errorResponse?.status === 403) {
         setError("이 사용자의 감정 카드는 비공개로 설정되어 있습니다.")
-      } else if (err.response?.status === 404) {
+      } else if (errorResponse?.status === 404) {
         setError("사용자를 찾을 수 없습니다.")
       } else {
-        setError(err.response?.data?.message || err.message || "감정 카드를 불러오는 중 오류가 발생했습니다.")
+        setError(errorResponse?.data?.message || errorMessage || "감정 카드를 불러오는 중 오류가 발생했습니다.")
       }
     } finally {
-      setLoading(false)
+      if (generation === requestGeneration.current) setLoading(false)
     }
-  }
+  }, [userId])
 
   useEffect(() => {
     fetchEmotionCards()
-  }, [userId])
+    return () => {
+      requestGeneration.current += 1
+    }
+  }, [fetchEmotionCards])
 
   const LoadingSkeleton = () => (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">

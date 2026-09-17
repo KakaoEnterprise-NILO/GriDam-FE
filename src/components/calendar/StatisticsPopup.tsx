@@ -11,6 +11,11 @@ type EmotionData = {
   emoji: string
 }
 
+interface CustomTooltipProps {
+  active?: boolean
+  payload?: { payload?: EmotionData }[]
+}
+
 interface StatisticsPopupProps {
   open: boolean
   onClose: () => void
@@ -19,7 +24,6 @@ interface StatisticsPopupProps {
   month: number
 }
 
-// 월 이름 배열
 const monthNames = ["1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월"]
 
 // 감정에 따른 색상 매핑 (캘린더와 일관성 유지)
@@ -53,7 +57,7 @@ const getEmotionColor = (emotion: string): string => {
     case "없음":
       return "#D1D5DB" // 밝은 회색
     default:
-      return "#D1D5DB" // 기본값
+      return "#D1D5DB"
   }
 }
 
@@ -62,19 +66,16 @@ export default function StatisticsPopup({ open, onClose, data, year, month }: St
 
   if (!open) return null
 
-  // 데이터의 색상을 감정에 맞게 업데이트
   const updatedData = data.map((item) => ({
     ...item,
     color: getEmotionColor(item.name),
   }))
 
-  // 총 감정 개수 계산
   const totalEntries = updatedData.reduce((sum, item) => sum + item.value, 0)
 
-  // 커스텀 툴팁 컴포넌트
-  const CustomTooltip = ({ active, payload }: any) => {
-    if (active && payload && payload.length) {
-      const data = payload[0].payload
+  const CustomTooltip = ({ active, payload }: CustomTooltipProps) => {
+    const data = payload?.[0]?.payload
+    if (active && data) {
       return (
         <div className="bg-white p-4 rounded-xl shadow-lg border border-gray-100">
           <p className="text-lg font-bold flex items-center gap-2">
@@ -90,7 +91,6 @@ export default function StatisticsPopup({ open, onClose, data, year, month }: St
     return null
   }
 
-  // 감정 항목 클릭 핸들러
   const handleEmotionClick = (index: number) => {
     setActiveIndex(activeIndex === index ? null : index)
   }
@@ -98,7 +98,6 @@ export default function StatisticsPopup({ open, onClose, data, year, month }: St
   return (
     <div className="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50 p-4">
       <div className="bg-white rounded-3xl w-full max-w-3xl overflow-hidden shadow-2xl">
-        {/* 헤더 */}
         <div className="bg-gradient-to-r from-blue-50 via-white to-blue-50 p-6 border-b border-gray-100 relative">
           <div className="flex items-center justify-center">
             <Calendar className="w-6 h-6 text-blue-500 mr-2" />
@@ -114,7 +113,6 @@ export default function StatisticsPopup({ open, onClose, data, year, month }: St
           </button>
         </div>
 
-        {/* 본문 */}
         <div className="p-6 md:p-8">
           {updatedData.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-12">
@@ -124,7 +122,6 @@ export default function StatisticsPopup({ open, onClose, data, year, month }: St
             </div>
           ) : (
             <div className="flex flex-col md:flex-row items-center gap-8">
-              {/* 차트 영역 */}
               <div className="w-full md:w-1/2">
                 <div className="h-[300px] relative">
                   <ResponsiveContainer width="100%" height="100%">
@@ -145,7 +142,7 @@ export default function StatisticsPopup({ open, onClose, data, year, month }: St
                       >
                         {updatedData.map((entry, index) => (
                           <Cell
-                            key={`cell-${index}`}
+                            key={entry.name}
                             fill={entry.color}
                             stroke={activeIndex === index ? "#fff" : "none"}
                             strokeWidth={activeIndex === index ? 2 : 0}
@@ -162,7 +159,6 @@ export default function StatisticsPopup({ open, onClose, data, year, month }: St
                     </PieChart>
                   </ResponsiveContainer>
 
-                  {/* 중앙 텍스트 */}
                   <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center">
                     <p className="text-3xl font-bold text-gray-800">{totalEntries}</p>
                     <p className="text-gray-500 text-sm">총 기록</p>
@@ -170,13 +166,12 @@ export default function StatisticsPopup({ open, onClose, data, year, month }: St
                 </div>
               </div>
 
-              {/* 감정 목록 */}
               <div className="w-full md:w-1/2">
                 <h3 className="text-lg font-semibold mb-4 text-gray-700">감정 분포</h3>
                 <div className="space-y-3">
                   {updatedData.map((item, idx) => (
                     <div
-                      key={idx}
+                      key={item.name}
                       className={`flex items-center p-3 rounded-xl cursor-pointer transition-all duration-200 ${
                         activeIndex === idx ? "bg-gray-100" : "hover:bg-gray-50"
                       }`}
@@ -211,7 +206,6 @@ export default function StatisticsPopup({ open, onClose, data, year, month }: St
           )}
         </div>
 
-        {/* 푸터 */}
         <div className="bg-gray-50 p-4 text-center border-t border-gray-100">
           <p className="text-sm text-gray-500">
             {totalEntries > 0

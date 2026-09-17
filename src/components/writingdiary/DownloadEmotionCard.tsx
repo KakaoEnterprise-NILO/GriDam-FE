@@ -1,5 +1,4 @@
-// src/components/common/DownloadEmotionCard.tsx
-import downloadIcon from "@/assets/icons/download_button_icon.svg"; // 경로 맞게 조정
+import downloadIcon from "@/assets/icons/download_button_icon.svg";
 import { useEffect } from "react";
 
 interface DownloadEmotionCardProps {

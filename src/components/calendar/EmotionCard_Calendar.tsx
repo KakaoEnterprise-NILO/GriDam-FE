@@ -1,4 +1,3 @@
-// EmotionCard.tsx 수정본 (모달 부분 제거, 포탈X, 크기 조절)
 import { useState } from 'react'
 import { X } from 'lucide-react'
 import { PieChart, Pie, Cell } from 'recharts'
@@ -36,7 +35,6 @@ export default function EmotionCard({ front, back, onClose }: EmotionCardProps) 
           transform: flipped ? 'rotateY(180deg)' : 'rotateY(0deg)',
         }}
       >
-        {/* 앞면 */}
         <div
           className={`absolute w-full h-full rounded-xl border shadow-xl px-6 py-8 flex flex-col justify-between ${front.color}`}
           style={{
@@ -44,7 +42,7 @@ export default function EmotionCard({ front, back, onClose }: EmotionCardProps) 
             backfaceVisibility: 'hidden',
           }}
         >
-          
+
           <div className="text-center">
             <h2 className="text-3xl font-extrabold tracking-[0.3em] text-[#5b3d1d]">
               {front.emotion.toUpperCase()}
@@ -64,7 +62,6 @@ export default function EmotionCard({ front, back, onClose }: EmotionCardProps) 
           </div>
         </div>
 
-        {/* 뒷면 */}
         <div
           className={`absolute w-full h-full rounded-xl border shadow-xl px-6 py-8 flex flex-col justify-between`}
           style={{
@@ -101,8 +98,8 @@ export default function EmotionCard({ front, back, onClose }: EmotionCardProps) 
                   outerRadius={80}
                   label
                 >
-                  {back.chartData.map((_, index) => (
-                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                  {back.chartData.map((entry, index) => (
+                    <Cell key={entry.name} fill={COLORS[index % COLORS.length]} />
                   ))}
                 </Pie>
               </PieChart>

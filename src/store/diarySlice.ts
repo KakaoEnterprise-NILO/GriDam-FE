@@ -1,3 +1,4 @@
+import type { ApiResponse } from "@/services/notificationService";
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import api from '@/api/axios';
 
@@ -23,6 +24,11 @@ export interface Diary {
   hashtags?: string[];
 }
 
+type DiaryListItem = Pick<Diary, 'title' | 'content' | 'date' | 'hashtags'> & {
+  id?: Diary['id'];
+  imageUrl?: string;
+};
+
 interface DiaryState {
   diaries: Diary[];
   emotionCards: EmotionCardDataType[];
@@ -38,8 +44,8 @@ const initialState: DiaryState = {
 };
 
 export const fetchDiaries = createAsyncThunk('diary/fetchDiaries', async () => {
-  const response = await api.get('/diary/list');
-  return response.data.result.map((item: any, index: number) => ({
+  const response = await api.get<ApiResponse<DiaryListItem[]>>('/diary/list');
+  return response.data.result.map((item, index) => ({
     id: item.id ?? index,
     title: item.title,
     content: item.content,

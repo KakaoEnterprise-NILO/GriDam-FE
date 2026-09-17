@@ -1,38 +1,34 @@
-// ✅ FeedList.tsx (감정카드 + 피드 리스트)
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
 import MainLayout from "@/components/common/MainLayout";
 import EmotionCardPost from "@/components/feed/EmotionCardPost";
 import { getMyUserId } from "@/services/userService";
-import { getUserFeedList } from "@/services/feedService";
-import { getEmotionCardByDate } from "@/services/emotionCardService";
+import { getUserFeedList, type Feed } from "@/services/feedService";
+import { getEmotionCardByDate, type EmotionCardByDateResponse } from "@/services/emotionCardService";
 
 export default function FeedList() {
-  const [feedList, setFeedList] = useState<any[]>([]);
-  const [emotionCardMap, setEmotionCardMap] = useState<Record<string, any>>({});
-  const observerRef = useRef<HTMLDivElement | null>(null);
+  const [feedList, setFeedList] = useState<Feed[]>([]);
+  const [emotionCardMap, setEmotionCardMap] = useState<Record<number, EmotionCardByDateResponse | null>>({});
 
   const loadInitialFeed = useCallback(async () => {
     try {
-      // 토큰은 api 인터셉터가 자동 설정함
-      const userId = await getMyUserId(); // 인자 제거
-      console.log("✅ 받아온 userId:", userId);
+      const userId = await getMyUserId();
 
       const feeds = await getUserFeedList(userId);
       setFeedList(feeds);
 
-      const emotionData: Record<string, any> = {};
+      const emotionData: Record<number, EmotionCardByDateResponse | null> = {};
       for (const feed of feeds) {
         const date = feed.createdAt.split("T")[0];
         try {
           const emotionCard = await getEmotionCardByDate(date);
           emotionData[feed.id] = emotionCard;
         } catch (e) {
-          console.warn(`⚠️ 감정카드 불러오기 실패 (${date}):`, e);
+          console.warn(`감정카드 불러오기 실패 (${date}):`, e);
         }
       }
       setEmotionCardMap(emotionData);
     } catch (err) {
-      console.error("❌ 피드 불러오기 실패:", err);
+      console.error("피드 불러오기 실패:", err);
     }
   }, []);
 
@@ -55,7 +51,7 @@ export default function FeedList() {
                 emotionCard={emotionCardMap[feed.id] || null}
               />
             ))}
-            <div ref={observerRef} className="h-10" />
+            <div className="h-10" />
           </div>
         </div>
       </div>

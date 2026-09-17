@@ -7,6 +7,8 @@ import GridamLogo from "@/assets/picture/gridam.svg";
 import KakaoLogo from "@/assets/picture/login/kakao_login_logo.svg";
 import NaverLogo from "@/assets/picture/login/naver_login.logo.svg";
 import { useAuth } from "@/hooks/useAuth";
+import { isAxiosError } from "axios";
+import type { ApiErrorResponse } from "@/api/axios";
 
 export default function Login() {
   const [loginId, setLoginId] = useState("");
@@ -21,7 +23,7 @@ export default function Login() {
   const handleNavigateRegister = () => navigate("/register");
 
   const handleLoginClick = async () => {
-    setErrorMsg(""); // 초기화
+    setErrorMsg("");
     if (!loginId.trim() || !password.trim()) {
       setErrorMsg("아이디와 비밀번호를 모두 입력해주세요.");
       return;
@@ -30,9 +32,10 @@ export default function Login() {
     try {
       await loginUser({ loginId, password });
       navigate("/");
-    } catch (error: any) {
-      if (error.response) {
-        const serverMessage = error.response.data.message || "";
+    } catch (error: unknown) {
+      const errorResponse = isAxiosError<ApiErrorResponse>(error) ? error.response : undefined
+      if (errorResponse) {
+        const serverMessage = errorResponse.data.message || "";
         if (serverMessage === "서버 에러, 관리자에게 문의 바랍니다.") {
           setErrorMsg("아이디가 맞지 않습니다.");
         } else {
@@ -45,15 +48,10 @@ export default function Login() {
   };
 
 
-  //social Login 함수
   const handleSocialLogin = async (provider: "kakao" | "naver") => {
     try {
       const response = await axios.get(`/api/auth/login/uri/${provider}`);
-      console.log('로그인 URI:', response.data);
-      window.location.href = response.data; // 이걸로 로그인 페이지로 이동
-      // const response = await axios.get(`/api/auth/login/uri/${provider}`);
-      // const loginUri = response.data;
-      // window.location.href = loginUri; // 소셜 로그인 페이지로 이동
+      window.location.href = response.data;
     } catch (error) {
       console.error(`${provider} 로그인 오류`, error);
       setErrorMsg("소셜 로그인 중 오류가 발생했습니다.");

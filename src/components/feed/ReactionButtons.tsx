@@ -1,4 +1,3 @@
-// components/feed/ReactionButtons.tsx
 import { useState } from "react";
 import { toggleReaction } from "@/services/reactionService";
 
@@ -20,11 +19,11 @@ export default function ReactionButtons({ feedId }: ReactionButtonsProps) {
 
   const handleEmojiClick = async (emoji: string) => {
     const reactionType = emojiToReaction[emoji];
-    if (!reactionType) return; // token 검사 제거
+    if (!reactionType) return;
 
     try {
-      await toggleReaction(feedId, reactionType); // ✅ token 제거
-      setSelectedEmoji(emoji); // UI 반영
+      await toggleReaction(feedId, reactionType);
+      setSelectedEmoji(emoji);
     } catch (err) {
       console.error("❌ 피드 반응 처리 실패:", err);
     }

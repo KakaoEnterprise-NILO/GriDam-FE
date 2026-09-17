@@ -33,7 +33,6 @@ const Register = () => {
   const { isLoading, isAuthSent, isVerified, message, sendCode, verifyCode } = usePhoneVerification();
   const { signUpUser } = useAuth();
 
-  // 폼 데이터 변경 핸들러
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const target = e.target as HTMLInputElement;
     const { name, value } = target;
@@ -43,8 +42,6 @@ const Register = () => {
     }));
   };
 
-  //이거는 없애면 안됨 휴대폰 인증하는 함수 
-  // 폼 유효성 검사 함수
   const validateForm = (): boolean => {
     const { loginId, password, checkPassword, nickname, phoneNum } = formData;
 
@@ -58,22 +55,19 @@ const Register = () => {
       return false;
     }
 
-    //임시로 인증 체크 무시
     if (!isVerified) {
       setErrorMsg("전화번호 인증을 완료해주세요.");
       return false;
     }
 
-    setErrorMsg(""); // 유효성 검사 통과 시 에러 초기화
+    setErrorMsg("");
     return true;
   };
 
-  // 회원가입 핸들러
   const handleSignUp = async () => {
-    //일단 인증 무시
     if (!validateForm()) return;
 
-    setErrorMsg(""); // 시도 전 에러 초기화
+    setErrorMsg("");
 
     try {
       const res = await signUpUser({
@@ -91,8 +85,11 @@ const Register = () => {
       } else {
         setErrorMsg(res.message || "회원가입 실패가 발생했습니다.");
       }
-    } catch (err: any) {
-      setErrorMsg(err.message || "회원가입 중 오류가 발생했습니다.");
+    } catch (err: unknown) {
+      const errorMessage = err instanceof Error ? err.message
+        : typeof err === "object" && err !== null && "message" in err && typeof err.message === "string"
+          ? err.message : undefined
+      setErrorMsg(errorMessage || "회원가입 중 오류가 발생했습니다.");
     }
   };
 
@@ -154,7 +151,6 @@ const Register = () => {
             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
           />
 
-          {/* 분리된 PhoneVerification 컴포넌트 */}
           <PhoneVerification
             phoneNum={formData.phoneNum}
             authCode={formData.authCode}
@@ -167,7 +163,6 @@ const Register = () => {
             verifyCode={verifyCode}
           />
 
-          {/* 에러 메시지 노출 */}
           {errorMsg && (
             <p className="text-red-600 text-sm mt-2 font-semibold">
               {errorMsg}
@@ -190,5 +185,4 @@ const Register = () => {
     </div>
   );
 };
-
 export default Register;

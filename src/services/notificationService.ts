@@ -25,10 +25,14 @@ export interface ApiResponse<T> {
   message: string
 }
 
-// 안읽은 알림 조회
+interface NotificationParams {
+  size: number
+  cursor?: number
+}
+
 export const getUnreadNotifications = async (cursor?: number, size = 4): Promise<NotificationResponse> => {
   try {
-    const params: any = { size }
+    const params: NotificationParams = { size }
     if (cursor) params.cursor = cursor
 
     const response = await api.get<ApiResponse<NotificationResponse>>("/notifications/notifications/unchecked", {
@@ -42,10 +46,9 @@ export const getUnreadNotifications = async (cursor?: number, size = 4): Promise
   }
 }
 
-// 최근 알림 조회
 export const getRecentNotifications = async (cursor?: number, size = 3): Promise<NotificationResponse> => {
   try {
-    const params: any = { size }
+    const params: NotificationParams = { size }
     if (cursor) params.cursor = cursor
 
     const response = await api.get<ApiResponse<NotificationResponse>>("/notifications/notifications/recent", {

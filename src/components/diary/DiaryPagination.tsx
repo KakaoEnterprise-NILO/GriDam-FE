@@ -1,4 +1,3 @@
-// components/common/PaginationControls.tsx
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 interface PaginationControlsProps {

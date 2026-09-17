@@ -85,7 +85,6 @@ export default function ProfileEditModal({
         </DialogHeader>
 
         <div className="space-y-6 py-4">
-          {/* 프로필 이미지 */}
           <Card className="border border-gray-100 bg-gradient-to-br from-blue-50 to-purple-50">
             <CardContent className="p-6">
               <div className="flex flex-col items-center space-y-4">
@@ -111,7 +110,6 @@ export default function ProfileEditModal({
             </CardContent>
           </Card>
 
-          {/* 닉네임 */}
           <Card className="border border-gray-100">
             <CardContent className="p-6">
               {isEditingUsername ? (

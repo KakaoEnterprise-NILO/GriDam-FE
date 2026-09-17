@@ -20,16 +20,15 @@ export default function WritingDiary({ onComplete }: WritingDiaryProps) {
     fileInputRef,
     selectedFile,
     previewImage,
-    imageHeight,
     handleImageChange,
     handleImageClick,
-  } = useImageUpload(); // ✅ token 제거
+  } = useImageUpload();
 
-  const { isCompleted,  handleCompleteClick } = useDiaryForm(onComplete);
+  const { isSubmitting, error, handleCompleteClick } = useDiaryForm(onComplete);
 
   const onSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
-    await handleCompleteClick(selectedFile, title, content); // ✅ token 제거 후 정상 호출
+    await handleCompleteClick(selectedFile, title, content);
   };
 
   return (
@@ -37,11 +36,8 @@ export default function WritingDiary({ onComplete }: WritingDiaryProps) {
       className="bg-white w-[700px] p-8 rounded-2xl shadow-lg flex flex-col space-y-4 transition-all duration-500"
       style={{
         minHeight: `700px`,
-        height: `calc(700px + ${imageHeight}px)`,
       }}
-      // onClick={resetCompletion}
     >
-      {/* 제목 입력 */}
       <div>
         <input
           type="text"
@@ -49,50 +45,46 @@ export default function WritingDiary({ onComplete }: WritingDiaryProps) {
           onChange={(e) => setTitle(e.target.value)}
           className="w-full p-2 bg-transparent text-lg font-semibold placeholder-gray-400"
           placeholder="제목"
-          disabled={isCompleted}
+          disabled={isSubmitting}
         />
         <hr className="border-t border-gray-200 mt-2" />
       </div>
 
-      {/* 작성일자 */}
       <div className="flex justify-between text-gray-500">
         <span>작성날짜</span>
         <span>{currentDate}</span>
       </div>
       <hr className="border-t border-gray-200" />
 
-      {/* 내용 */}
       <div className="relative flex-1">
         <textarea
           className="w-full h-full p-2 bg-transparent placeholder-gray-400 resize-none"
           placeholder="오늘은 무슨 일이 있었나요?"
           value={content}
           onChange={(e) => setContent(e.target.value)}
-          disabled={isCompleted}
+          disabled={isSubmitting}
         />
 
-        {/* 이미지 추가 버튼 */}
         <button
           className={`absolute bottom-2 left-2 p-2 rounded-lg text-gray-600 hover:bg-gray-300 ${
-            isCompleted ? "cursor-not-allowed opacity-50" : ""
+            isSubmitting ? "cursor-not-allowed opacity-50" : ""
           }`}
           onClick={handleImageClick}
-          disabled={isCompleted}
+          disabled={isSubmitting}
         >
           <img src={addPictureIcon} alt="사진 추가" className="w-6 h-6" />
         </button>
 
-        {/* 파일 입력 */}
         <input
           type="file"
           ref={fileInputRef}
           onChange={handleImageChange}
           className="hidden"
           accept="image/*"
+          disabled={isSubmitting}
         />
       </div>
 
-      {/* 이미지 미리보기 */}
       {previewImage && (
         <div className="mt-4 flex justify-center">
           <img
@@ -104,14 +96,19 @@ export default function WritingDiary({ onComplete }: WritingDiaryProps) {
         </div>
       )}
 
-      {/* 작성 완료 버튼 */}
+      {error && (
+        <p role="alert" className="text-sm text-red-600">
+          {error}
+        </p>
+      )}
+
       <div className="mt-auto">
         <button
           className={`w-full py-3 text-lg rounded-lg ${
-            isCompleted ? "bg-gray-300 cursor-not-allowed" : "bg-blue-500 hover:bg-blue-600 text-white"
+            isSubmitting ? "bg-gray-300 cursor-not-allowed" : "bg-blue-500 hover:bg-blue-600 text-white"
           }`}
           onClick={onSubmit}
-          disabled={isCompleted}
+          disabled={isSubmitting}
         >
           작성 완료
         </button>

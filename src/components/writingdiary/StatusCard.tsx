@@ -21,7 +21,6 @@ export default function StatusCard({ onComplete }: StatusCardProps) {
   return (
     <div className="flex justify-center items-center w-[25rem] h-[30rem] bg-gray-100">
       <div className="relative bg-white w-[25rem] h-[30rem] p-6 rounded-2xl shadow-lg flex flex-col justify-center items-center space-y-4">
-        {/* X 버튼 */}
         <button
           onClick={onComplete}
           className="absolute top-3 right-3 z-10 text-gray-400 hover:text-black transition"
