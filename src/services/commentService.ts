@@ -10,9 +10,7 @@ export const postComment = async (
     ...(parentCommentId ? { parentCommentId } : {}),
   };
 
-
   const response = await api.post(`/feed/${feedId}/comment`, payload);
-
 
   return response.data;
 };
@@ -23,7 +21,6 @@ export const getCommentsByFeedId = async (feedId: number) => {
   try {
 
     const res = await api.get(`/feed/${feedId}/comment/list`);
-
 
     return res.data.result.commentList;
   } catch (err) {

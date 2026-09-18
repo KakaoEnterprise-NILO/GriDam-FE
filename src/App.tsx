@@ -1,56 +1,58 @@
 import { Routes, Route } from "react-router-dom";
 import "./App.css";
 
-import Home from "./pages/home/Home";
-import Register from "./pages/login/Register";
-import Login from "./pages/login/Login";
-import KakaoCallback from './pages/login/KakaoCallback';
-import NaverCallback from './pages/login/NaverCallback';
+import HomePage from "./pages/home/HomePage";
+import RegisterPage from "./pages/login/RegisterPage";
+import LoginPage from "./pages/login/LoginPage";
+import KakaoCallbackPage from "./pages/login/KakaoCallbackPage";
+import NaverCallbackPage from "./pages/login/NaverCallbackPage";
 import WritingDiaryPage from "./pages/diary/WritingDiaryPage";
-import Calendar from "./pages/calendar/Calendar";
-import FeedList from './pages/feed/FeedList';
-import EmotionCardPost2 from "./components/feed/EmotionCardPost2";
-import MyProfile from "./pages/profile/MyProfile";
-
-import NotificationPage from "./pages/alarm/NotificationPage";
+import CalendarPage from "./pages/calendar/CalendarPage";
+import FeedListPage from "./pages/feed/FeedListPage";
+import EmotionCardPostPage from "./components/feed/EmotionCardPost2";
+import MyProfilePage from "./pages/profile/MyProfilePage";
+import NotificationPage from "./pages/notification/NotificationPage";
 import ConfigurationPage from "./pages/configuration/ConfigurationPage";
-import HomeMyDiary from "./pages/home/HomeMyDiary";
-
-import FeedEntire from "./pages/feed/FeedEntire";
-import Statistics from "./pages/statistics/StatisticsPage";
-
+import HomeMyDiaryPage from "./pages/home/HomeMyDiaryPage";
+import FeedEntirePage from "./pages/feed/FeedEntirePage";
+import StatisticsPage from "./pages/statistics/StatisticsPage";
 
 function App() {
   return (
     <div className="min-h-screen flex flex-col">
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/home" element={<Home />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/login/oauth/kakao/callback" element={<KakaoCallback />} />
-        <Route path="/login/oauth/naver/callback" element={<NaverCallback />} />
+        <Route path="/" element={<HomePage />} />
+        <Route path="/home" element={<HomePage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route
+          path="/login/oauth/kakao/callback"
+          element={<KakaoCallbackPage />}
+        />
+        <Route
+          path="/login/oauth/naver/callback"
+          element={<NaverCallbackPage />}
+        />
 
-        <Route path="/calendar" element={<Calendar />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/diary/write" element={<WritingDiaryPage/>} />
-        <Route path="/profile" element={<MyProfile/>} />
+        <Route path="/calendar" element={<CalendarPage />} />
+        <Route path="/register" element={<RegisterPage />} />
+        <Route path="/diary/write" element={<WritingDiaryPage />} />
+        <Route path="/profile" element={<MyProfilePage />} />
 
-        <Route path="/friends/feed" element={<FeedList/>} />
-        <Route path="/friend/list/feed/entire/:id" element={<EmotionCardPost2/>} />
-        <Route path="/friend/feed/entire/1" element={<FeedEntire/>} />
-        <Route path="/alarm" element={<NotificationPage/>} />
-        <Route path="/setting" element={<ConfigurationPage/>} />
-        <Route path="/homeDiary" element={<HomeMyDiary />} />
-
-        <Route path="/statistics" element={<Statistics />} />
-
-
-
-
-
+        <Route path="/friends/feed" element={<FeedListPage />} />
+        <Route
+          path="/friend/list/feed/entire/:id"
+          element={<EmotionCardPostPage />}
+        />
+        <Route
+          path="/friend/feed/entire/1"
+          element={<FeedEntirePage />}
+        />
+        <Route path="/alarm" element={<NotificationPage />} />
+        <Route path="/setting" element={<ConfigurationPage />} />
+        <Route path="/homeDiary" element={<HomeMyDiaryPage />} />
+        <Route path="/statistics" element={<StatisticsPage />} />
       </Routes>
     </div>
   );
 }
-
 export default App;

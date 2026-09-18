@@ -164,7 +164,7 @@ export default function EmotionCardGrid({ userId }: EmotionCardGridProps) {
       const errorMessage = err instanceof Error ? err.message
         : typeof err === "object" && err !== null && "message" in err && typeof err.message === "string"
           ? err.message : undefined
-      console.error("❌ 감정 카드 불러오기 실패:", err)
+      console.error("감정 카드 불러오기 실패:", err)
       setCards([])
       if (errorResponse?.status === 403) {
         setError("이 사용자의 감정 카드는 비공개로 설정되어 있습니다.")

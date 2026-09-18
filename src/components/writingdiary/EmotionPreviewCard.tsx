@@ -6,7 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import StatusCard from "./StatusCard";
 import RecommendedCard from "../writingdiary/RecommendationCard";
 import "./EmotionPreviewCard.css";
-import axios from "axios";
+import api from "@/api/axios";
 
 
 interface EmotionPreviewCardProps {
@@ -27,10 +27,8 @@ export default function EmotionPreviewCard({ diaryId, onClose }: EmotionPreviewC
   useEffect(() => {
     const fetchEmotionCard = async () => {
       try {
-        const token = localStorage.getItem("accessToken") || "";
-        const res = await axios.get<EmotionCardApiResponse>("/api/emotion-cards/card-image", {
+        const res = await api.get<EmotionCardApiResponse>("/emotion-cards/card-image", {
           params: { diaryId },
-          headers: { Authorization: `Bearer ${token}` },
         });
 
         const result = res.data.result;

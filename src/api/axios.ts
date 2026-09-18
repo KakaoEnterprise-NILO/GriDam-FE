@@ -1,9 +1,9 @@
 import type { ApiResponse } from "@/services/notificationService";
 import axios, { AxiosRequestConfig } from "axios";
+import { useAuthStore } from "@/store/authStore";
 
 
 export type ApiErrorResponse = Partial<Pick<ApiResponse<unknown>, "message" | "code" | "result">>;
-
 
 const api = axios.create({
   baseURL: "/api",
@@ -15,7 +15,7 @@ const api = axios.create({
 
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem("accessToken");
+    const token = useAuthStore.getState().accessToken;
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -30,7 +30,7 @@ api.interceptors.response.use(
     const originalRequest = error.config as AxiosRequestConfig & { _retry?: boolean };
 
     if (error.response?.status === 401 && !originalRequest._retry) {
-      const refreshToken = localStorage.getItem("refreshToken");
+      const refreshToken = useAuthStore.getState().refreshToken;
 
       if (!refreshToken) {
         return Promise.reject(error);
@@ -39,15 +39,11 @@ api.interceptors.response.use(
       originalRequest._retry = true;
 
       try {
-        const { data } = await axios.post("/api/auth/reissue", {
-          refreshToken,
-        });
+        const { data } = await api.post("/auth/reissue", { refreshToken }, { _retry: true } as AxiosRequestConfig & { _retry?: boolean });
 
         const newAccessToken = data.accessToken;
         const newRefreshToken = data.refreshToken;
-
-        localStorage.setItem("accessToken", newAccessToken);
-        localStorage.setItem("refreshToken", newRefreshToken);
+        useAuthStore.getState().setTokens({ accessToken: newAccessToken, refreshToken: newRefreshToken });
 
         originalRequest.headers = {
           ...originalRequest.headers,
@@ -57,9 +53,7 @@ api.interceptors.response.use(
         return api(originalRequest);
       } catch (reissueError) {
         console.error("토큰 재발급 실패:", reissueError);
-
-        localStorage.removeItem("accessToken");
-        localStorage.removeItem("refreshToken");
+        useAuthStore.getState().clearAuth();
 
         return Promise.reject(reissueError);
       }

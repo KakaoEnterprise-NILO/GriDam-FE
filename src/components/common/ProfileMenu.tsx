@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
+import { useAuthStore } from '@/store/authStore';
 import { ChevronDownIcon } from '@heroicons/react/24/solid';
 import { useAuth } from '@/hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
@@ -6,21 +7,9 @@ import { useNavigate } from 'react-router-dom';
 export default function ProfileMenu() {
   const { logoutUser } = useAuth();
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const isLoggedIn = useAuthStore((state) => state.isAuthenticated);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
-
-  useEffect(() => {
-    const checkToken = () => {
-      const token = localStorage.getItem('accessToken');
-      setIsLoggedIn(!!token);
-    };
-
-    checkToken();
-    window.addEventListener('storage', checkToken);
-
-    return () => window.removeEventListener('storage', checkToken);
-  }, []);
 
   const handleLogout = async () => {
     try {

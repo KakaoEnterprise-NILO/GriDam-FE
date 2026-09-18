@@ -20,6 +20,8 @@ export default function WritingDiary({ onComplete }: WritingDiaryProps) {
     fileInputRef,
     selectedFile,
     previewImage,
+    error: imageError,
+    accept,
     handleImageChange,
     handleImageClick,
   } = useImageUpload();
@@ -80,7 +82,7 @@ export default function WritingDiary({ onComplete }: WritingDiaryProps) {
           ref={fileInputRef}
           onChange={handleImageChange}
           className="hidden"
-          accept="image/*"
+          accept={accept}
           disabled={isSubmitting}
         />
       </div>
@@ -96,9 +98,9 @@ export default function WritingDiary({ onComplete }: WritingDiaryProps) {
         </div>
       )}
 
-      {error && (
+      {(imageError || error) && (
         <p role="alert" className="text-sm text-red-600">
-          {error}
+          {imageError || error}
         </p>
       )}
 

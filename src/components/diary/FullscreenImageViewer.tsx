@@ -1,15 +1,15 @@
-import { useEffect } from "react"
-import { X, ImageIcon, Sparkles } from "lucide-react"
+import { useEffect } from "react";
+import { X, ImageIcon, Sparkles } from "lucide-react";
 
 interface FullscreenImageViewerProps {
   front: {
-    image: string
-    color: string
-    emotion: string
-  }
-  imageError: boolean
-  onImageError: () => void
-  onClose: () => void
+    image: string;
+    color: string;
+    emotion: string;
+  };
+  imageError: boolean;
+  onImageError: () => void;
+  onClose: () => void;
 }
 
 export default function FullscreenImageViewer({
@@ -21,15 +21,15 @@ export default function FullscreenImageViewer({
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
-        onClose()
+        onClose();
       }
-    }
+    };
 
-    document.addEventListener("keydown", handleKeyDown)
+    document.addEventListener("keydown", handleKeyDown);
     return () => {
-      document.removeEventListener("keydown", handleKeyDown)
-    }
-  }, [onClose])
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [onClose]);
 
   return (
     <div className="fixed inset-0 z-[60] flex flex-col items-center justify-center bg-black/90 backdrop-blur-sm p-4">
@@ -71,8 +71,10 @@ export default function FullscreenImageViewer({
       </div>
 
       <div className="flex-shrink-0 pb-4">
-        <p className="text-white/70 text-sm text-center">화면을 터치하거나 ESC 키를 눌러 닫기</p>
+        <p className="text-white/70 text-sm text-center">
+          화면을 터치하거나 ESC 키를 눌러 닫기
+        </p>
       </div>
     </div>
-  )
+  );
 }

@@ -1,4 +1,4 @@
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 interface PaginationControlsProps {
   page: number;
@@ -7,7 +7,12 @@ interface PaginationControlsProps {
   onNext: () => void;
 }
 
-export default function PaginationControls({ page, maxPage, onPrev, onNext }: PaginationControlsProps) {
+export default function PaginationControls({
+  page,
+  maxPage,
+  onPrev,
+  onNext,
+}: PaginationControlsProps) {
   return (
     <div className="flex items-center space-x-4">
       <button

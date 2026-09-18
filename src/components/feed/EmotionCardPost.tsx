@@ -8,7 +8,7 @@ import { postComment } from "@/services/commentService";
 import { deleteFeed } from "@/services/feedService";
 
 import ReactionButtons from "./ReactionButtons";
-import ShareModal from "./SareModal";
+import ShareModal from "./ShareModal";
 import DeleteConfirmModal from "@/components/common/DeleteConfirmModal";
 
 interface EmotionCardPostProps {
