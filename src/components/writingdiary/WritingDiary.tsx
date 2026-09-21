@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { useDiaryForm } from "../../hooks/useDiaryForm";
-import { useImageUpload } from "../../hooks/useImageUpload";
+import { useDiaryForm } from "@/components/writingdiary/useDiaryForm";
+import { useImageUpload } from "@/components/writingdiary/useImageUpload";
 import addPictureIcon from "../../assets/picture/add_picture_icon.svg";
 
 interface WritingDiaryProps {

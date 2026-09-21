@@ -1,5 +1,5 @@
 import { Sparkles, BarChart3 } from "lucide-react"
-import type { EmotionWordCloud } from "@/hooks/useWordCloudStatistics"
+import type { EmotionWordCloud } from "@/components/statistics/types"
 
 interface WordCloudGridProps {
   wordClouds: EmotionWordCloud[]

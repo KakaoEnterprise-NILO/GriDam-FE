@@ -1,4 +1,4 @@
-﻿import type { UserInfo } from "@/hooks/useWordCloudStatistics";
+﻿import type { UserInfo } from "@/components/statistics/types";
 import { BarChart3, RefreshCw, Sparkles } from "lucide-react";
 interface Props {
   userInfo: UserInfo | null;

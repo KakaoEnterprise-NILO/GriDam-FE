@@ -1,3 +1,5 @@
+import type { FeedComment } from "@/types/feed";
+import type { ApiResponse } from "@/services/notificationService";
 import api from "@/api/axios";
 
 export const postComment = async (
@@ -15,12 +17,10 @@ export const postComment = async (
   return response.data;
 };
 
-
-
 export const getCommentsByFeedId = async (feedId: number) => {
   try {
 
-    const res = await api.get(`/feed/${feedId}/comment/list`);
+    const res = await api.get<ApiResponse<{ commentList: FeedComment[] }>>(`/feed/${feedId}/comment/list`);
 
     return res.data.result.commentList;
   } catch (err) {

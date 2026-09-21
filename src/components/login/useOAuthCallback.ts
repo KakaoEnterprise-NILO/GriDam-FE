@@ -30,20 +30,20 @@ export function useOAuthCallback(provider: OAuthProvider) {
     const state = urlParams.get("state")
 
     if (!code || !state) {
-      alert("?멸? 肄붾뱶媛 ?놁뒿?덈떎.")
+      alert("로그인에 필요한 인가 코드 또는 상태 값이 없습니다. 다시 로그인해주세요.")
       navigate("/login")
       return
     }
 
     api
       .get<OAuthResponse>(endpointByProvider[provider], { params: { code, state } })
-      .then((response) => {
-        useAuthStore.getState().setTokens(response.data.result)
-        alert("濡쒓렇???깃났")
+      .then(async (response) => {
+        await useAuthStore.getState().startSession(response.data.result)
+        alert("로그인되었습니다.")
         navigate("/")
       })
       .catch(() => {
-        alert("濡쒓렇???ㅽ뙣")
+        alert("로그인에 실패했습니다. 다시 시도해주세요.")
         navigate("/login")
       })
   }, [navigate, provider])

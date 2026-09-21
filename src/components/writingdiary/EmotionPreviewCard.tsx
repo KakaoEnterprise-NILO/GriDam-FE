@@ -21,40 +21,112 @@ export default function EmotionPreviewCard({ diaryId, onClose }: EmotionPreviewC
   const [emotion, setEmotion] = useState<string | null>(null);
   const [hashtags, setHashtags] = useState<string[]>([]);
 
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const retryRequest = useRef<(() => void) | null>(null);
+
   const retryCount = useRef(0);
+  const retryTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const cancelRequest = useRef<(() => void) | null>(null);
   const maxRetries = 5;
 
   useEffect(() => {
+    const controller = new AbortController();
+    let active = true;
+    let busy = true;
+    setLoading(true);
+    setError(null);
+    setImageUrl(null);
+    setEmotion(null);
+    setHashtags([]);
+    retryCount.current = 0;
+
+    const clearRetryTimeout = () => {
+      if (retryTimeout.current !== null) {
+        clearTimeout(retryTimeout.current);
+        retryTimeout.current = null;
+      }
+    };
+
+    const cleanup = () => {
+      active = false;
+      clearRetryTimeout();
+      controller.abort();
+    };
+    cancelRequest.current = cleanup;
+
     const fetchEmotionCard = async () => {
+      if (!active) return;
       try {
         const res = await api.get<EmotionCardApiResponse>("/emotion-cards/card-image", {
           params: { diaryId },
+          signal: controller.signal,
         });
+
+        if (!active) return;
 
         const result = res.data.result;
         if (!result.cardImageUrl) throw new Error("cardImageUrl is null");
 
+        clearRetryTimeout();
         setImageUrl(result.cardImageUrl);
         setEmotion(result.emotion);
-        setHashtags(result.hashtags.map((tag) => tag.tagName));
+        setHashtags([...new Set(result.hashtags
+          .map((tag) => tag.tagName.replace(/#/g, "").trim())
+          .filter(Boolean))]);
+        setError(null);
+        setLoading(false);
+        busy = false;
       } catch (err) {
+        if (!active) return;
+
+        setImageUrl(null);
+        setEmotion(null);
+        setHashtags([]);
         retryCount.current += 1;
 
         if (retryCount.current < maxRetries) {
-          setTimeout(fetchEmotionCard, 3000);
+          clearRetryTimeout();
+          retryTimeout.current = setTimeout(() => {
+            retryTimeout.current = null;
+            void fetchEmotionCard();
+          }, 3000);
         } else {
-          console.error("🛑 최대 재시도 도달. 기본 백업 데이터 사용", err);
-          setImageUrl("https://objectstorage.kr-central-2.kakaocloud.com/v1/e1aa923a4373419aace9daef92f80e91/image-storage/overlay/52b0a7b9-6698-4c73-b757-7cbebe409e80.jpg");
-          setEmotion("화남");
-          setHashtags(["#분노", "#억울함", "#스트레스"]);
+          console.error("Emotion card request failed:", err);
+          clearRetryTimeout();
+          setError("감정 카드를 불러오지 못했습니다. 다시 시도해주세요.");
+          setLoading(false);
+          busy = false;
         }
       }
     };
 
-  if (diaryId) {
-    fetchEmotionCard();
-  }
-}, [diaryId]);
+    const retry = () => {
+      if (!active || busy) return;
+      busy = true;
+      clearRetryTimeout();
+      retryCount.current = 0;
+      setError(null);
+      setLoading(true);
+      void fetchEmotionCard();
+    };
+    retryRequest.current = retry;
+
+    if (diaryId) {
+      void fetchEmotionCard();
+    }
+
+    return () => {
+      cleanup();
+      if (retryRequest.current === retry) retryRequest.current = null;
+      if (cancelRequest.current === cleanup) cancelRequest.current = null;
+    };
+  }, [diaryId]);
+
+  const handleClose = () => {
+    cancelRequest.current?.();
+    onClose();
+  };
 
   const handleStatusClose = () => {
     setStep("recommendation");
@@ -78,7 +150,7 @@ export default function EmotionPreviewCard({ diaryId, onClose }: EmotionPreviewC
 
         <button
           className="absolute top-4 right-4 text-gray-500 text-lg"
-          onClick={onClose}
+          onClick={handleClose}
         >
           ×
         </button>
@@ -91,7 +163,19 @@ export default function EmotionPreviewCard({ diaryId, onClose }: EmotionPreviewC
 
         <div className="flex justify-center mb-4">
           <div className="rounded-lg flex flex-col items-center justify-center space-y-2">
-            {imageUrl ? (
+            {error ? (
+              <div role="alert" className="space-y-4 text-center">
+                <p className="text-sm text-red-600">{error}</p>
+                <button
+                  type="button"
+                  onClick={() => retryRequest.current?.()}
+                  disabled={loading}
+                  className="rounded-lg border px-4 py-2 hover:bg-gray-50 disabled:opacity-50"
+                >
+                  다시 시도
+                </button>
+              </div>
+            ) : !loading && imageUrl ? (
               <>
                 <img
                   src={imageUrl}
@@ -101,7 +185,7 @@ export default function EmotionPreviewCard({ diaryId, onClose }: EmotionPreviewC
                 {emotion && <h2 className="text-xl font-bold text-gray-700">{emotion}</h2>}
               </>
             ) : (
-              <p className="text-sm text-gray-500">이미지 불러오는 중...</p>
+              <p role="status" aria-live="polite" className="text-sm text-gray-500">이미지 불러오는 중...</p>
             )}
           </div>
         </div>
@@ -119,6 +203,7 @@ export default function EmotionPreviewCard({ diaryId, onClose }: EmotionPreviewC
           <button
             type="button"
             onClick={handleUpload}
+            disabled={loading || Boolean(error) || !imageUrl}
             className="bg-blue-500 text-white w-full py-2 rounded-lg hover:bg-blue-600"
           >
             업로드

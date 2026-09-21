@@ -1,4 +1,8 @@
-﻿import type { CalendarDiary } from "@/hooks/useCalendarDiaries";
+﻿import { isAxiosError } from "axios";
+import type { ApiErrorResponse } from "@/api/axios";
+import type { EmotionCardApiResponse } from "@/services/emotionCardService";
+import type { CalendarDiary, DiaryEntry } from "./types";
+
 export const getEmotionColor = (emotion: string) =>
   ({
     HAPPY: "bg-gradient-to-br from-yellow-100 to-yellow-200",
@@ -20,6 +24,7 @@ export const getEmotionColor = (emotion: string) =>
     NONE: "bg-gradient-to-br from-gray-50 to-gray-100",
     없음: "bg-gradient-to-br from-gray-50 to-gray-100",
   })[emotion] || "bg-gradient-to-br from-gray-50 to-gray-100";
+
 export const getBorderColor = (emotion: string) =>
   ({
     HAPPY: "border-yellow-300",
@@ -41,6 +46,7 @@ export const getBorderColor = (emotion: string) =>
     NONE: "border-gray-200",
     없음: "border-gray-200",
   })[emotion] || "border-gray-200";
+
 export const getEmotionEmoji = (emotion: string) =>
   ({
     HAPPY: "😊",
@@ -62,6 +68,7 @@ export const getEmotionEmoji = (emotion: string) =>
     NONE: "😐",
     없음: "😐",
   })[emotion] || "😐";
+
 export function getStatisticsData(diaries: CalendarDiary[]) {
   const counts: Record<string, number> = {};
   diaries.forEach(({ emotion }) => {
@@ -73,4 +80,53 @@ export function getStatisticsData(diaries: CalendarDiary[]) {
     color: getEmotionColor(emotion).replace("bg-", "#"),
     emoji: getEmotionEmoji(emotion),
   }));
+}
+
+export function filterDiariesByMonth(diaries: DiaryEntry[], year: number, month: number) {
+  return diaries.filter((diary) => {
+    const date = new Date(diary.date);
+    return date.getFullYear() === year && date.getMonth() + 1 === month;
+  });
+}
+
+export function toCalendarDiary(
+  diary: DiaryEntry,
+  response?: EmotionCardApiResponse,
+): CalendarDiary {
+  const result: CalendarDiary = {
+    diaryId: diary.diaryId,
+    day: new Date(diary.date).getDate(),
+    emotion: response?.success && response.result ? response.result.emotion : "NONE",
+    title: diary.title,
+    hashtags: diary.hashtags,
+    date: diary.date,
+  };
+  if (response) result.emotionData = response.success ? response.result : undefined;
+  return result;
+}
+
+export function toSampleCalendarDiary(diary: DiaryEntry, emotionCardId: number): CalendarDiary {
+  const emotion = diary.diaryId === "test-diary-1"
+    ? "HAPPY"
+    : diary.diaryId === "test-diary-2" ? "ANGRY" : "NONE";
+  return {
+    ...toCalendarDiary(diary),
+    emotion,
+    emotionData: {
+      cardImageUrl: "/placeholder.svg?height=280&width=280",
+      emotionCardId,
+      emotion,
+      emotions: [{ [emotion]: 100 }],
+      hashtags: [],
+    },
+  };
+}
+
+export function getCalendarDiaryError(error: unknown): string {
+  const response = isAxiosError<ApiErrorResponse>(error) ? error.response : undefined;
+  const message = error instanceof Error ? error.message
+    : typeof error === "object" && error !== null && "message" in error
+      && typeof error.message === "string" ? error.message : undefined;
+  if (response?.status === 401) return "로그인이 필요합니다. 다시 로그인해주세요.";
+  return response?.data?.message || message || "일기 목록을 가져오는데 실패했습니다.";
 }

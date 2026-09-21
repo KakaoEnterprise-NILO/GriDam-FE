@@ -11,7 +11,7 @@ import ReactionButtons from "./ReactionButtons";
 import ShareModal from "./ShareModal";
 import DeleteConfirmModal from "@/components/common/DeleteConfirmModal";
 
-interface EmotionCardPostProps {
+interface EmotionCardFeedItemProps {
   feedId: number;
   content: string;
   userId: string;
@@ -22,12 +22,12 @@ interface EmotionCardPostProps {
   } | null;
 }
 
-export default function EmotionCardPost({
+export default function EmotionCardFeedItem({
   feedId,
   content,
   userId,
   emotionCard,
-}: EmotionCardPostProps) {
+}: EmotionCardFeedItemProps) {
   const [comment, setComment] = useState("");
   const [isFocused, setIsFocused] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -43,7 +43,7 @@ export default function EmotionCardPost({
       setComment("");
       setIsFocused(false);
     } catch (err) {
-      console.error("❌ 댓글 등록 실패:", err);
+      console.error("댓글 등록 실패:", err);
     }
   };
 
@@ -62,7 +62,7 @@ export default function EmotionCardPost({
       alert("피드가 성공적으로 삭제되었습니다.");
       window.location.reload();
     } catch (err) {
-      console.error("❌ 피드 삭제 실패:", err);
+      console.error("피드 삭제 실패:", err);
       alert("피드 삭제에 실패했습니다.");
     }
   };

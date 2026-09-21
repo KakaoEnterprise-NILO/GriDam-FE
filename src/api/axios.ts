@@ -1,17 +1,51 @@
-import type { ApiResponse } from "@/services/notificationService";
-import axios, { AxiosRequestConfig } from "axios";
+﻿import type { ApiResponse } from "@/services/notificationService";
+import axios, { type InternalAxiosRequestConfig } from "axios";
 import { useAuthStore } from "@/store/authStore";
-
 
 export type ApiErrorResponse = Partial<Pick<ApiResponse<unknown>, "message" | "code" | "result">>;
 
-const api = axios.create({
+type RetryRequestConfig = InternalAxiosRequestConfig & { _retry?: boolean };
+type AuthTokens = { accessToken: string; refreshToken: string };
+
+const clientConfig = {
   baseURL: "/api",
-  headers: {
-    "Content-Type": "application/json",
-  },
+  headers: { "Content-Type": "application/json" },
   withCredentials: true,
-});
+};
+
+const api = axios.create(clientConfig);
+// Refresh requests must not enter the authentication interceptors.
+const refreshApi = axios.create(clientConfig);
+let refreshPromise: Promise<AuthTokens> | null = null;
+
+function refreshTokens(refreshToken: string): Promise<AuthTokens> {
+  if (!refreshPromise) {
+    const accessToken = useAuthStore.getState().accessToken;
+    refreshPromise = refreshApi
+      .post<AuthTokens>("/auth/reissue", { refreshToken }, {
+        headers: accessToken ? { Authorization: `Bearer ${accessToken}` } : {},
+      })
+      .then(({ data }) => {
+        // A completed logout or a different login must not be overwritten.
+        if (useAuthStore.getState().refreshToken !== refreshToken) {
+          throw new Error("Authentication changed during token refresh.");
+        }
+        useAuthStore.getState().setTokens(data);
+        return data;
+      })
+      .catch((error: unknown) => {
+        console.error("Token refresh failed.");
+        if (useAuthStore.getState().refreshToken === refreshToken) {
+          useAuthStore.getState().clearAuth();
+        }
+        throw error;
+      })
+      .finally(() => {
+        refreshPromise = null;
+      });
+  }
+  return refreshPromise;
+}
 
 api.interceptors.request.use(
   (config) => {
@@ -21,46 +55,36 @@ api.interceptors.request.use(
     }
     return config;
   },
-  (error) => Promise.reject(error)
+  (error: unknown) => Promise.reject(error)
 );
 
 api.interceptors.response.use(
   (response) => response,
-  async (error) => {
-    const originalRequest = error.config as AxiosRequestConfig & { _retry?: boolean };
+  async (error: unknown) => {
+    if (!axios.isAxiosError(error)) return Promise.reject(error);
 
-    if (error.response?.status === 401 && !originalRequest._retry) {
-      const refreshToken = useAuthStore.getState().refreshToken;
-
-      if (!refreshToken) {
-        return Promise.reject(error);
-      }
+    const originalRequest = error.config as RetryRequestConfig | undefined;
+    if (error.response?.status === 401 && originalRequest && !originalRequest._retry) {
+      const { accessToken, refreshToken } = useAuthStore.getState();
+      if (!refreshToken) return Promise.reject(error);
 
       originalRequest._retry = true;
 
-      try {
-        const { data } = await api.post("/auth/reissue", { refreshToken }, { _retry: true } as AxiosRequestConfig & { _retry?: boolean });
+      // A late 401 for the previous token can reuse an already rotated token.
+      const tokens = refreshPromise
+        ? await refreshPromise
+        : accessToken && originalRequest.headers.Authorization !== `Bearer ${accessToken}`
+          ? { accessToken, refreshToken }
+          : await refreshTokens(refreshToken);
 
-        const newAccessToken = data.accessToken;
-        const newRefreshToken = data.refreshToken;
-        useAuthStore.getState().setTokens({ accessToken: newAccessToken, refreshToken: newRefreshToken });
-
-        originalRequest.headers = {
-          ...originalRequest.headers,
-          Authorization: `Bearer ${newAccessToken}`,
-        };
-
-        return api(originalRequest);
-      } catch (reissueError) {
-        console.error("토큰 재발급 실패:", reissueError);
-        useAuthStore.getState().clearAuth();
-
-        return Promise.reject(reissueError);
+      if (useAuthStore.getState().refreshToken !== tokens.refreshToken) {
+        return Promise.reject(error);
       }
+      originalRequest.headers.Authorization = `Bearer ${tokens.accessToken}`;
+      return api(originalRequest);
     }
 
-    console.error("요청 실패:", error.response?.status, error.response?.data);
-
+    console.error("Request failed:", error.response?.status, error.response?.data);
     return Promise.reject(error);
   }
 );

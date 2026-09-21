@@ -4,7 +4,7 @@ import {
   IMAGE_ACCEPT,
   MAX_IMAGE_SIZE_BYTES,
   MAX_IMAGE_SIZE_MB,
-} from "@/constants/imageUpload"
+} from "@/components/writingdiary/imageUpload.constants"
 
 export function useImageUpload() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null)

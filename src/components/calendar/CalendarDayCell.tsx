@@ -1,4 +1,4 @@
-import type { CalendarDiary } from "@/hooks/useCalendarDiaries"
+import type { CalendarDiary } from "@/components/calendar/types"
 
 interface CalendarDayCellProps {
   day: string

@@ -1,5 +1,5 @@
 import { useLocation, Link } from 'react-router-dom';
-import { sidebarItems } from '../../styles/sidebarItem';
+import { sidebarItems } from '@/components/common/sidebar.constants';
 import { cn } from '@/lib/utils';
 import {
   Home,

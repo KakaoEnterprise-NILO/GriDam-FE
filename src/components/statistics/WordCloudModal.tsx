@@ -1,4 +1,4 @@
-import type { EmotionWordCloud } from "@/hooks/useWordCloudStatistics"
+import type { EmotionWordCloud } from "@/components/statistics/types"
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog"
 
 interface WordCloudModalProps { selectedImage: EmotionWordCloud | null; closeModal: () => void; getEmotionColor: (emotion: string) => string; getEmotionCardColor: (emotion: string) => string }

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { submitDiary } from "../api/diary";
+import { submitDiary } from "@/api/diary";
 
 export function useDiaryForm(
   onComplete: (

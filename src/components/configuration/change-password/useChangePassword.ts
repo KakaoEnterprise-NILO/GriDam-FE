@@ -3,12 +3,15 @@ import { isAxiosError } from "axios";
 import { changePassword, type ChangePasswordRequest } from "@/api/user";
 import type { ApiErrorResponse } from "@/api/axios";
 import type { PasswordFieldName, PasswordFormValues } from "./types";
+
 const EMPTY_FORM: PasswordFormValues = {
   currentPassword: "",
   newPassword: "",
   confirmPassword: "",
 };
+
 export function useChangePassword(onBack: () => void, onSuccess?: () => void) {
+
   const [passwordForm, setPasswordForm] =
     useState<PasswordFormValues>(EMPTY_FORM);
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);

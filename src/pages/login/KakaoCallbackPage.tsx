@@ -1,4 +1,4 @@
-import { useOAuthCallback } from "@/hooks/useOAuthCallback"
+import { useOAuthCallback } from "@/components/login/useOAuthCallback"
 
 export default function KakaoCallback() {
   useOAuthCallback("kakao")

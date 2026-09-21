@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Card, CardContent } from "@/components/ui/card"
 import { Camera, User, Save, X, Edit3 } from "lucide-react"
-import api from "@/api/axios"
+import { updateNickname, updateProfileImage } from "@/services/userService"
 
 interface ProfileEditModalProps {
   isOpen: boolean
@@ -38,7 +38,7 @@ export default function ProfileEditModal({
 
     setIsLoading(true)
     try {
-      await api.patch("/users/nickname", { nickname: newUsername })
+      await updateNickname(newUsername)
       onSuccess()
     } catch (error) {
       console.error("❌ 닉네임 수정 실패:", error)
@@ -56,14 +56,9 @@ export default function ProfileEditModal({
       const file = (e.target as HTMLInputElement).files?.[0]
       if (!file) return
 
-      const formData = new FormData()
-      formData.append("image", file)
-
       setIsLoading(true)
       try {
-        await api.patch("/users/profile-image", formData, {
-          headers: { "Content-Type": "multipart/form-data" },
-        })
+        await updateProfileImage(file)
         onSuccess()
       } catch (error) {
         console.error("❌ 프로필 이미지 수정 실패:", error)

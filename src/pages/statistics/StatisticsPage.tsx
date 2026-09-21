@@ -5,13 +5,13 @@ import WordCloudModal from "@/components/statistics/WordCloudModal";
 import StatisticsHeader from "@/components/statistics/StatisticsHeader";
 import StatisticsLoading from "@/components/statistics/StatisticsLoading";
 import StatisticsGenerationInfo from "@/components/statistics/StatisticsGenerationInfo";
-import { useWordCloudStatistics } from "@/hooks/useWordCloudStatistics";
+import { useWordCloudStatistics } from "@/components/statistics/useWordCloudStatistics";
 import { useStatisticsImageModal } from "@/components/statistics/useStatisticsImageModal";
 import {
   formatStatisticsDate,
   getEmotionColor,
   getEmotionCardColor,
-} from "@/utils/statistics";
+} from "@/components/statistics/utils";
 export default function StatisticsPage() {
   const statistics = useWordCloudStatistics();
   const modal = useStatisticsImageModal();

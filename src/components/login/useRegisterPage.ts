@@ -1,7 +1,7 @@
 ﻿import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
-import { usePhoneVerification } from "@/hooks/usePhoneVerification";
+import { usePhoneVerification } from "@/components/login/usePhoneVerification";
 export interface RegisterFormData {
   loginId: string;
   password: string;

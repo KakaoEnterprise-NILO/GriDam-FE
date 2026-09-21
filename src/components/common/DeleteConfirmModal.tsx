@@ -22,15 +22,15 @@ export default function DeleteConfirmModal({ onCancel, onConfirm }: DeleteConfir
         onInteractOutside={(event) => event.preventDefault()}
       >
         <DialogHeader>
-          <DialogTitle>뺣쭚 ??젣?섏떆寃좎뒿?덇퉴?</DialogTitle>
-          <DialogDescription className="sr-only">삭제할 일기를 확인합니다.</DialogDescription>
+          <DialogTitle>이 일기를 삭제하시겠습니까?</DialogTitle>
+          <DialogDescription className="sr-only">삭제한 일기는 복구할 수 없습니다.</DialogDescription>
         </DialogHeader>
         <DialogFooter className="justify-center gap-4 sm:justify-center">
           <button className="px-4 py-2 text-sm rounded-full bg-gray-200 hover:bg-gray-300" onClick={onCancel}>
-            痍⑥냼
+            취소
           </button>
           <button className="px-4 py-2 text-sm rounded-full bg-red-500 text-white hover:bg-red-600" onClick={onConfirm}>
-            ??젣
+            삭제
           </button>
         </DialogFooter>
       </DialogContent>

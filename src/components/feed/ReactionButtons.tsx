@@ -25,7 +25,7 @@ export default function ReactionButtons({ feedId }: ReactionButtonsProps) {
       await toggleReaction(feedId, reactionType);
       setSelectedEmoji(emoji);
     } catch (err) {
-      console.error("❌ 피드 반응 처리 실패:", err);
+      console.error("피드 반응 처리 실패:", err);
     }
   };
 

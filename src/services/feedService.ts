@@ -1,3 +1,4 @@
+import type { FeedDetail } from "@/types/feed";
 import type { ApiResponse } from "@/services/notificationService";
 import api from "@/api/axios";
 
@@ -27,10 +28,9 @@ export const deleteFeed = async (feedId: number) => {
 
 export const getFeedDetail = async (feedId: number, userId: string) => {
 
-  const res = await api.get(`/feed/${feedId}`, {
+  const res = await api.get<ApiResponse<FeedDetail>>(`/feed/${feedId}`, {
     params: { userId },
   });
-
 
   return res.data.result; // { id, content, emotionCardId, createdAt, ... }
 };

@@ -9,6 +9,5 @@ export const toggleReaction = async (
     reactionType,
   });
 
-
   return res.data;
 };

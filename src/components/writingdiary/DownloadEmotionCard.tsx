@@ -25,7 +25,7 @@ export default function DownloadEmotionCard({
 
       window.URL.revokeObjectURL(blobUrl); // 메모리 해제
     } catch (err) {
-      console.error("❌ 다운로드 실패", err);
+      console.error("다운로드 실패", err);
     }
   };
 

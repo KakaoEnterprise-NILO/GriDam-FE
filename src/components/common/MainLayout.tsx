@@ -12,7 +12,6 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
 
         <div className="flex-1 flex flex-col p-6">
           <Topbar />
-
           <main className="ml-5 bg-[#F7F8FC] rounded-2xl p-10">{children}</main>
         </div>
       </div>

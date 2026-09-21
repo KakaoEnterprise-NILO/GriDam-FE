@@ -1,31 +1,7 @@
-﻿import { useCallback, useEffect, useRef, useState } from "react";
+import type { EmotionWordCloud, UserInfo } from "./types";
+import { sampleUserInfo, sampleWordClouds } from "./constants";
+import { useCallback, useEffect, useRef, useState } from "react";
 
-export interface EmotionWordCloud {
-  emotion: string;
-  url: string;
-}
-export interface UserInfo {
-  userId: string;
-  userName: string;
-  diaryCount: number;
-  followerCount: number;
-}
-const sampleUserInfo: UserInfo = {
-  userId: "user123",
-  userName: "김범진",
-  diaryCount: 1,
-  followerCount: 3,
-};
-const sampleWordClouds: EmotionWordCloud[] = [
-  { emotion: "행복", url: "/wordcloud.png" },
-  { emotion: "불안", url: "/wordcloud2.png" },
-  { emotion: "화남", url: "/wordcloud3.png" },
-  { emotion: "기쁨", url: "/wordcloud.png" },
-  { emotion: "슬픔", url: "/wordcloud.png" },
-  { emotion: "놀람", url: "/wordcloud.png" },
-  { emotion: "역겨움", url: "/wordcloud.png" },
-  { emotion: "두려움", url: "/wordcloud.png" },
-];
 function waitForDelay(
   milliseconds: number,
   signal: AbortSignal,

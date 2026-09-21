@@ -13,15 +13,15 @@ export default function ShareModal({ onClose, shareUrl }: { onClose: () => void;
           <IoClose size={24} />
         </button>
         <div className="flex justify-around items-center mt-2">
-          <div className="flex flex-col items-center text-xs"><SiKakaotalk size={30} className="text-yellow-400" /><span>移댁뭅?ㅽ넚</span></div>
+          <div className="flex flex-col items-center text-xs"><SiKakaotalk size={30} className="text-yellow-400" /><span>카카오톡</span></div>
           <div className="flex flex-col items-center text-xs"><FaFacebook size={30} className="text-blue-600" /><span>Facebook</span></div>
           <div className="flex flex-col items-center text-xs"><FaWhatsapp size={30} className="text-green-500" /><span>WhatsApp</span></div>
           <div className="flex flex-col items-center text-xs"><FaXTwitter size={30} /><span>X</span></div>
         </div>
         <div className="mt-5 flex items-center gap-2 bg-gray-100 px-3 py-2 rounded-full">
           <input readOnly value={shareUrl} className="flex-1 text-sm bg-transparent outline-none" />
-          <button className="bg-blue-500 text-white text-sm px-4 py-1 rounded-full" onClick={() => { navigator.clipboard.writeText(shareUrl); alert("留곹겕媛 蹂듭궗?섏뿀?듬땲??") }}>
-            蹂듭궗
+          <button className="bg-blue-500 text-white text-sm px-4 py-1 rounded-full" onClick={() => { navigator.clipboard.writeText(shareUrl); alert("링크가 복사되었습니다.") }}>
+            링크 복사
           </button>
         </div>
       </DialogContent>

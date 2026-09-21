@@ -23,8 +23,8 @@ const handleSubmitComment = () => {
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <DialogContent className="bg-white rounded-lg max-w-md w-full max-h-[90vh] overflow-y-auto p-0">
-        <DialogTitle className="sr-only">??곕굡</DialogTitle>
-        <DialogDescription className="sr-only">??곕굡 ??곸뒠???類ㅼ뵥??랁??蹂????臾믨쉐??몃빍??</DialogDescription>
+        <DialogTitle className="sr-only">피드 상세</DialogTitle>
+        <DialogDescription className="sr-only">피드 내용과 댓글을 확인합니다.</DialogDescription>
         <div className="flex items-center justify-between p-4 border-b">
           <div className="flex items-center gap-3">
             <img
@@ -38,7 +38,7 @@ const handleSubmitComment = () => {
           </div>
           <div className="flex items-center gap-2">
             <Button variant="outline" size="sm" className="text-blue-600 border-blue-600 hover:bg-blue-50">
-              ?遺얠쨮??
+              팔로우
             </Button>
             <Button variant="ghost" size="sm" onClick={onClose}>
               <X className="w-5 h-5" />
@@ -49,7 +49,7 @@ const handleSubmitComment = () => {
         <div className="relative">
           <img
             src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-vFqyad3oiJPz1L580jbqy1HGjybmFN.png"
-            alt="??곕굡 ???筌왖"
+            alt="피드 이미지"
             className="w-full h-64 object-cover"
           />
         </div>
@@ -75,7 +75,7 @@ const handleSubmitComment = () => {
         </div>
 
         <div className="px-4 pb-4">
-          <p className="text-gray-800 mb-3">??삳뮎 ?ル뿭? ??롳펷~^^ ??롫뮎 癰귣?흭 ?癒?춦??뤾쉭??</p>
+          <p className="text-gray-800 mb-3">오늘은 기분 좋은 하루였어요. 평온한 일상에 감사해요.</p>
           <div className="flex gap-2 mb-4">
             <span className="text-blue-600 font-medium">#기쁨</span>
             <span className="text-blue-600 font-medium">#평화</span>
@@ -92,7 +92,7 @@ const handleSubmitComment = () => {
               />
               <div>
                 <span className="font-semibold text-sm">user_user</span>
-                <p className="text-gray-800 text-sm">?뚣끋逾???袁⑥컭?귐딅춦??</p>
+                <p className="text-gray-800 text-sm">행복한 하루 보내세요!</p>
               </div>
             </div>
           </div>
@@ -101,7 +101,7 @@ const handleSubmitComment = () => {
             <div className="flex items-center gap-2">
               <input
                 type="text"
-                placeholder="?蹂? ?곕떽?..."
+                placeholder="댓글을 입력하세요..."
                 value={comment}
                 onChange={(e) => setComment(e.target.value)}
                 className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
