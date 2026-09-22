@@ -1,12 +1,11 @@
+
+<p align="center">
+  <img alt="image" src="https://github.com/user-attachments/assets/65d06825-8354-4ebd-834b-cfff025494b9" />
+</p>
+
 # 🌌 Gridam
 
 > 하루의 기억을 감정으로 기록하고, 시각화하여 공유하는 감성 아카이브 플랫폼
-
-<p align="center">
-  <img width="60%" src="https://github.com/user-attachments/assets/e0397c12-319b-467d-8ddc-1ab11ec67896" />
-</p>
-<br/>
-
 ## ✨ 서비스 소개
 
 Gridam은 사용자의 일기를 기반으로 감정을 분석하고,  
