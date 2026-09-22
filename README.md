@@ -49,26 +49,36 @@ Gridam은 사용자의 일기를 기반으로 감정을 분석하고,
 <br/>
 
 ##  📂 프로젝트 구조
-```
+
+```text
 src/
-├── api/ # API 요청 로직 (Axios 인스턴스, 도메인별 API)
+├── api/                    # 공통 Axios 인스턴스 및 도메인별 API 요청
+├── assets/                 # 번들에 포함되는 이미지·아이콘
+├── components/
+├── pages/                  # 라우트 단위 페이지와 화면 조합
+├── services/               # 여러 API 결과의 조합 및 화면용 데이터 가공
+├── store/                  # Zustand 기반 인증·사용자 상태 관리
+├── hooks/                  # 여러 기능에서 공유하는 커스텀 훅
+├── types/                  # 공통 도메인 타입
+├── lib/                    # 공통 스타일·클래스 유틸리티
 │
-├── components/ # 공통 및 도메인 UI 컴포넌트
-│
-├── pages/ # 페이지 단위 컴포넌트
-│
-├── store/ # 상태 관리 (Zustand)
-│
-├── hooks/ # 커스텀 훅
-│ 
-│
-├── utils/ # 공통 유틸 함수
-│
-│
-├── App.tsx # 라우팅 및 전체 구조
-├── main.tsx # 엔트리 포인트
-└── index.css # 전역 스타일
+├── App.tsx                 # 페이지 지연 로딩 및 전체 라우팅
+├── main.tsx                # React 애플리케이션 진입점
+└── index.css               # Tailwind CSS 및 전역 스타일
+
+public/                     # URL로 직접 참조하는 정적 자원
+tests/                      # 라우팅·인증 갱신·빌드 회귀 테스트
 ```
+
+### 구조 설계 기준
+
+* `pages`는 페이지 구성과 사용자 흐름 제어에 집중합니다.
+* `components`는 공통 UI와 도메인별 화면 요소를 관리합니다.
+* 특정 기능에서만 사용하는 `hooks`, `utils`, `types`는 해당 기능 폴더에 함께 배치합니다.
+* 여러 기능에서 공유되는 훅과 타입만 `src/hooks`, `src/types`에서 관리합니다.
+* API 요청은 `src/api`의 공통 Axios 인스턴스를 통해 처리합니다.
+* 여러 API 응답의 조합이나 화면용 데이터 가공은 `src/services`에서 담당합니다.
+
 
 ## 🖼️ 화면
 ### 📔 내 일기장
