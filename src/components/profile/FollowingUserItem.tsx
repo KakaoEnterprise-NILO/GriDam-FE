@@ -1,9 +1,5 @@
-"use client"
-
-import type React from "react"
-
 import { useState } from "react"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import FollowUserRow from "./FollowUserRow"
 import { Button } from "@/components/ui/button"
 import { UserMinus, Loader2 } from "lucide-react"
 import {
@@ -15,7 +11,7 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
+  AlertDialogTrigger
 } from "@/components/ui/alert-dialog"
 
 interface FollowingUserItemProps {
@@ -33,7 +29,7 @@ export default function FollowingUserItem({
   username,
   onUnfollow,
   onUserSelect,
-  showUnfollowButton = true,
+  showUnfollowButton = true
 }: FollowingUserItemProps) {
   const [isUnfollowing, setIsUnfollowing] = useState(false)
 
@@ -48,30 +44,14 @@ export default function FollowingUserItem({
     }
   }
 
-  const handleUserClick = (e: React.MouseEvent) => {
-    e.preventDefault()
-    e.stopPropagation()
-    console.log("🖱️ 사용자 클릭됨:", userId, username)
-    if (onUserSelect) {
-      onUserSelect(userId)
-    }
-  }
-
   return (
-    <div className="flex items-center justify-between p-4 rounded-lg border bg-card hover:bg-accent/50 transition-colors">
-      <div className="flex items-center space-x-3 flex-1 cursor-pointer" onClick={handleUserClick}>
-        <Avatar className="h-12 w-12 ring-2 ring-background">
-          <AvatarImage src={profileImage || "/placeholder.svg"} alt={username} />
-          <AvatarFallback className="bg-primary/10 text-primary font-semibold">
-            {username.charAt(0).toUpperCase()}
-          </AvatarFallback>
-        </Avatar>
-        <div className="flex flex-col">
-          <span className="font-medium text-foreground">{username}</span>
-          <span className="text-sm text-muted-foreground">팔로잉 중</span>
-        </div>
-      </div>
-
+    <FollowUserRow
+      userId={userId}
+      profileImage={profileImage}
+      username={username}
+      description="팔로잉 중"
+      onUserSelect={onUserSelect}
+    >
       {showUnfollowButton && onUnfollow && (
         <AlertDialog>
           <AlertDialogTrigger asChild>
@@ -112,6 +92,6 @@ export default function FollowingUserItem({
           </AlertDialogContent>
         </AlertDialog>
       )}
-    </div>
+    </FollowUserRow>
   )
 }

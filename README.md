@@ -64,7 +64,6 @@ src/
 │
 ├── utils/ # 공통 유틸 함수
 │
-├── types/ # TypeScript 타입 정의
 │
 ├── App.tsx # 라우팅 및 전체 구조
 ├── main.tsx # 엔트리 포인트

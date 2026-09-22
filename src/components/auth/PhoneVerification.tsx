@@ -26,7 +26,8 @@ const PhoneVerification: React.FC<PhoneVerificationProps> = ({
   return (
     <div>
       <div className="flex space-x-2 mb-3">
-        <input
+        <label htmlFor="register-phone" className="sr-only">전화번호</label>
+        <input id="register-phone"
           type="text"
           placeholder="전화번호"
           value={phoneNum}
@@ -34,7 +35,7 @@ const PhoneVerification: React.FC<PhoneVerificationProps> = ({
           className="w-4/5 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
           name="phoneNum"
         />
-        <button
+        <button type="button"
           onClick={() => sendCode(phoneNum)}
           disabled={isLoading || isAuthSent}
           className={`w-1/5 py-2 rounded-lg text-white ${
@@ -47,7 +48,8 @@ const PhoneVerification: React.FC<PhoneVerificationProps> = ({
 
       {isAuthSent && (
         <div className="flex space-x-2 mb-3">
-          <input
+          <label htmlFor="register-auth-code" className="sr-only">인증번호</label>
+          <input id="register-auth-code"
             type="text"
             placeholder="인증번호"
             value={authCode}
@@ -55,7 +57,7 @@ const PhoneVerification: React.FC<PhoneVerificationProps> = ({
             className="w-4/5 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
             name="authCode"
           />
-          <button
+          <button type="button"
             onClick={() => verifyCode(phoneNum, authCode)}
             disabled={isLoading}
             className={`w-1/5 py-2 rounded-lg text-white ${

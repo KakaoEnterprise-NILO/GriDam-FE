@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
+import { useAuthStore } from '@/store/authStore';
 import { ChevronDownIcon } from '@heroicons/react/24/solid';
 import { useAuth } from '@/hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
@@ -6,22 +7,9 @@ import { useNavigate } from 'react-router-dom';
 export default function ProfileMenu() {
   const { logoutUser } = useAuth();
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const isLoggedIn = useAuthStore((state) => state.isAuthenticated);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
-
-  // 로그인 상태 감지 + storage 변화 감지
-  useEffect(() => {
-    const checkToken = () => {
-      const token = localStorage.getItem('accessToken');
-      setIsLoggedIn(!!token);
-    };
-
-    checkToken();
-    window.addEventListener('storage', checkToken);
-
-    return () => window.removeEventListener('storage', checkToken);
-  }, []);
 
   const handleLogout = async () => {
     try {
@@ -33,7 +21,6 @@ export default function ProfileMenu() {
     }
   };
 
-  // 드롭다운 외부 클릭 시 닫기
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
@@ -47,20 +34,27 @@ export default function ProfileMenu() {
   if (isLoggedIn) {
     return (
       <div className="relative" ref={dropdownRef}>
-        <div
+        <button
+          type="button"
           onClick={() => setDropdownOpen(!dropdownOpen)}
-          className="flex items-center space-x-2 cursor-pointer"
+          className="flex items-center space-x-2 cursor-pointer border-0 bg-transparent p-0"
+          aria-label="프로필 메뉴"
+          aria-expanded={dropdownOpen}
+          aria-controls="profile-menu"
+          aria-haspopup="menu"
         >
           <div className="w-10 h-10 rounded-full overflow-hidden border border-gray-300">
             <img src="/logo.png" alt="프로필" className="w-full h-full object-cover" />
           </div>
-          <ChevronDownIcon className="w-5 h-5 text-gray-600" />
-        </div>
+          <ChevronDownIcon className="w-5 h-5 text-gray-600" aria-hidden="true" />
+        </button>
         {dropdownOpen && (
-          <div className="absolute right-0 mt-2 w-36 bg-white border rounded-lg shadow-lg z-10">
+          <div id="profile-menu" role="menu" className="absolute right-0 mt-2 w-36 bg-white border rounded-lg shadow-lg z-10">
             <button
+              type="button"
               onClick={handleLogout}
               className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+              role="menuitem"
             >
               로그아웃
             </button>
@@ -72,6 +66,7 @@ export default function ProfileMenu() {
 
   return (
     <button
+      type="button"
       onClick={() => (window.location.href = '/login')}
       className="flex items-center space-x-2 px-3 py-2 border rounded-lg hover:bg-gray-100"
     >

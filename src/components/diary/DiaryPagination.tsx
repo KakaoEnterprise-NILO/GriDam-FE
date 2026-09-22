@@ -1,5 +1,4 @@
-// components/common/PaginationControls.tsx
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 interface PaginationControlsProps {
   page: number;
@@ -8,10 +7,15 @@ interface PaginationControlsProps {
   onNext: () => void;
 }
 
-export default function PaginationControls({ page, maxPage, onPrev, onNext }: PaginationControlsProps) {
+export default function PaginationControls({
+  page,
+  maxPage,
+  onPrev,
+  onNext,
+}: PaginationControlsProps) {
   return (
     <div className="flex items-center space-x-4">
-      <button
+      <button type="button"
         onClick={onPrev}
         disabled={page === 1}
         className="p-2 rounded-md hover:bg-gray-200 disabled:opacity-40 disabled:cursor-not-allowed"
@@ -24,7 +28,7 @@ export default function PaginationControls({ page, maxPage, onPrev, onNext }: Pa
         {page} / {maxPage}
       </span>
 
-      <button
+      <button type="button"
         onClick={onNext}
         disabled={page === maxPage}
         className="p-2 rounded-md hover:bg-gray-200 disabled:opacity-40 disabled:cursor-not-allowed"

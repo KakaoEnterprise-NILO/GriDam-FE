@@ -1,5 +1,3 @@
-"use client"
-
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { CalendarIcon } from "lucide-react"
@@ -43,8 +41,8 @@ export default function EmotionCard({ src, label, mood, date, hashtags = [] }: E
         </div>
         {hashtags && hashtags.length > 0 && (
           <div className="flex flex-wrap gap-1 mt-2">
-            {hashtags.slice(0, 3).map((tag, index) => (
-              <Badge key={index} variant="outline" className="text-xs bg-gray-50">
+            {hashtags.slice(0, 3).map((tag) => (
+              <Badge key={tag} variant="outline" className="text-xs bg-gray-50">
                 {tag}
               </Badge>
             ))}

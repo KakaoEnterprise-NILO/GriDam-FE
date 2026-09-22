@@ -1,9 +1,7 @@
-"use client"
-
 import type React from "react"
 
 import { useState } from "react"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import FollowUserRow from "./FollowUserRow"
 import { Button } from "@/components/ui/button"
 import { UserPlus, Loader2 } from "lucide-react"
 
@@ -22,7 +20,7 @@ export default function FollowerUserItem({
   username,
   onFollowBack,
   onUserSelect,
-  showFollowBackButton = false,
+  showFollowBackButton = false
 }: FollowerUserItemProps) {
   const [isFollowing, setIsFollowing] = useState(false)
 
@@ -40,30 +38,14 @@ export default function FollowerUserItem({
     }
   }
 
-  const handleUserClick = (e: React.MouseEvent) => {
-    e.preventDefault()
-    e.stopPropagation()
-    console.log("🖱️ 팔로워 클릭됨:", userId, username)
-    if (onUserSelect) {
-      onUserSelect(userId)
-    }
-  }
-
   return (
-    <div className="flex items-center justify-between p-4 rounded-lg border bg-card hover:bg-accent/50 transition-colors">
-      <div className="flex items-center space-x-3 flex-1 cursor-pointer" onClick={handleUserClick}>
-        <Avatar className="h-12 w-12 ring-2 ring-background">
-          <AvatarImage src={profileImage || "/placeholder.svg"} alt={username} />
-          <AvatarFallback className="bg-primary/10 text-primary font-semibold">
-            {username.charAt(0).toUpperCase()}
-          </AvatarFallback>
-        </Avatar>
-        <div className="flex flex-col">
-          <span className="font-medium text-foreground">{username}</span>
-          <span className="text-sm text-muted-foreground">팔로워</span>
-        </div>
-      </div>
-
+    <FollowUserRow
+      userId={userId}
+      profileImage={profileImage}
+      username={username}
+      description="팔로워"
+      onUserSelect={onUserSelect}
+    >
       {showFollowBackButton && onFollowBack && (
         <Button
           variant="outline"
@@ -82,6 +64,6 @@ export default function FollowerUserItem({
           )}
         </Button>
       )}
-    </div>
+    </FollowUserRow>
   )
 }

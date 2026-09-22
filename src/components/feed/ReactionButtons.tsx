@@ -1,6 +1,5 @@
-// components/feed/ReactionButtons.tsx
 import { useState } from "react";
-import { toggleReaction } from "@/services/reactionService";
+import { toggleReaction } from "@/api/reaction";
 
 interface ReactionButtonsProps {
   feedId: number;
@@ -20,13 +19,13 @@ export default function ReactionButtons({ feedId }: ReactionButtonsProps) {
 
   const handleEmojiClick = async (emoji: string) => {
     const reactionType = emojiToReaction[emoji];
-    if (!reactionType) return; // token 검사 제거
+    if (!reactionType) return;
 
     try {
-      await toggleReaction(feedId, reactionType); // ✅ token 제거
-      setSelectedEmoji(emoji); // UI 반영
+      await toggleReaction(feedId, reactionType);
+      setSelectedEmoji(emoji);
     } catch (err) {
-      console.error("❌ 피드 반응 처리 실패:", err);
+      console.error("피드 반응 처리 실패:", err);
     }
   };
 
@@ -36,12 +35,15 @@ export default function ReactionButtons({ feedId }: ReactionButtonsProps) {
       {emojiList.map((emoji) => (
         <button
           key={emoji}
+          type="button"
           onClick={() => handleEmojiClick(emoji)}
+          aria-label={`${emojiToReaction[emoji]} 반응 선택`}
+          aria-pressed={selectedEmoji === emoji}
           className={`w-6 h-6 flex items-center justify-center text-xl transition hover:scale-110 ${
             selectedEmoji === emoji ? "scale-110" : ""
           }`}
         >
-          {emoji}
+          <span aria-hidden="true">{emoji}</span>
         </button>
       ))}
     </div>
