@@ -1,4 +1,4 @@
-﻿import { Sparkles, Lock } from "lucide-react"
+import { Sparkles, Lock } from "lucide-react"
 export function EmotionCardGridEmpty({ userId }: { userId?: string }) {
   return (
     <div className="flex flex-col items-center justify-center py-12 text-center">

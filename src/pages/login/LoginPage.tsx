@@ -1,4 +1,4 @@
-﻿import Footer from "@/components/common/Footer";
+import Footer from "@/components/common/Footer";
 import LoginLogo from "@/components/login/LoginLogo";
 import LoginForm from "@/components/login/LoginForm";
 import { useLoginPage } from "@/components/login/useLoginPage";

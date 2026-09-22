@@ -1,4 +1,4 @@
-﻿import EmotionCard from "../EmotionCard";
+import EmotionCard from "../EmotionCard";
 import { getCardEmotionProps } from "./utils";
 import type { EmotionCardDataType } from "./types";
 export default function DiaryEmotionCardModal({

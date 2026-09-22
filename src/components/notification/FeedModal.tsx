@@ -1,5 +1,3 @@
-"use client"
-
 import { useState } from "react"
 import { X, Heart, Share, Bookmark, Send } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -56,17 +54,17 @@ const handleSubmitComment = () => {
 
         <div className="flex items-center justify-between p-4">
           <div className="flex items-center gap-4">
-            <button
+            <button type="button"
               onClick={() => setIsLiked(!isLiked)}
               className={`transition-colors ${isLiked ? "text-red-500" : "text-gray-600 hover:text-red-500"}`}
             >
               <Heart className={`w-6 h-6 ${isLiked ? "fill-current" : ""}`} />
             </button>
-            <button className="text-gray-600 hover:text-gray-800 transition-colors">
+            <button type="button" className="text-gray-600 hover:text-gray-800 transition-colors">
               <Share className="w-6 h-6" />
             </button>
           </div>
-          <button
+          <button type="button"
             onClick={() => setIsBookmarked(!isBookmarked)}
             className={`transition-colors ${isBookmarked ? "text-blue-600" : "text-gray-600 hover:text-blue-600"}`}
           >

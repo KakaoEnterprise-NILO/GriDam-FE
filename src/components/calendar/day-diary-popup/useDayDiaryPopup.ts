@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react"
 import { isAxiosError } from "axios"
 import api, { type ApiErrorResponse } from "@/api/axios"
-import type { EmotionCardApiResponse } from "@/services/emotionCardService"
+import type { EmotionCardApiResponse } from "@/api/emotionCard"
 import type { DiaryApiResponse, DiaryPopupProps } from "./types"
 
 export function useDayDiaryPopup({ open, date, diaryId }: Pick<DiaryPopupProps, "open" | "date" | "diaryId">) {
@@ -81,7 +81,7 @@ export function useDayDiaryPopup({ open, date, diaryId }: Pick<DiaryPopupProps, 
   useEffect(() => {
     if (open && date) {
       fetchDiaryData(date)
-      setShowCard(false) // Always start with diary view
+      setShowCard(false) // 팝업을 열 때는 항상 일기 화면부터 표시한다.
     }
   }, [open, date])
 

@@ -1,9 +1,7 @@
-"use client"
-
 import NotificationList from "@/components/notification/NotificationCardList"
 import RecentNotificationList from "@/components/notification/RecentNotificationList"
-
 import MainLayout from "@/components/common/MainLayout"
+
 export default function NotificationPage() {
 
   return (

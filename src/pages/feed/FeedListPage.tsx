@@ -1,11 +1,11 @@
-﻿import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import MainLayout from "@/components/common/MainLayout";
 import EmotionCardFeedItem from "@/components/feed/EmotionCardFeedItem";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { getMyUserId } from "@/services/userService";
-import { getUserFeedList, type Feed } from "@/services/feedService";
+import { getMyUserId } from "@/api/user";
+import { getUserFeedList, type Feed } from "@/api/feed";
 import type { EmotionCardByDateResponse } from "@/services/emotionCardService";
 import { getFeedEmotionCards } from "@/services/feedEmotionCardService";
 
@@ -19,7 +19,7 @@ export default function FeedList() {
   const [requestVersion, setRequestVersion] = useState(0);
   const loadingRef = useRef(true);
 
-  // Share requests across effect re-runs (including StrictMode), scoped to this page.
+  // StrictMode를 포함해 effect가 다시 실행되어도 이 페이지 안에서 요청을 공유한다.
   const feedRequestRef = useRef<Promise<Feed[]> | null>(null);
   const cardRequestRef = useRef<
     Promise<Map<string, EmotionCardByDateResponse | null>> | null
@@ -74,7 +74,7 @@ export default function FeedList() {
   return (
     <MainLayout>
       <div className="relative z-20">
-        <div className="flex flex-1 justify-center items-start overflow-y-auto px-6 py-6">
+        <div className="flex flex-1 justify-center min-w-0 items-start overflow-y-auto px-3 py-4 sm:px-6 sm:py-6">
           <div className="w-full max-w-2xl space-y-6">
             {loading ? (
               <div role="status" aria-live="polite" className="space-y-4">

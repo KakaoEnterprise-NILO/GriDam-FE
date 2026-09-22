@@ -7,7 +7,7 @@ function Card({ className, ...props }: React.ComponentProps<"div">) {
     <div
       data-slot="card"
       className={cn(
-        //여기서 py-6을 없애야 헤더가 깔끔하게 위로 들어감
+        // 여기서 py-6을 없애야 헤더가 깔끔하게 위로 배치된다.
         "bg-card text-card-foreground flex flex-col gap-6 rounded-xl border shadow-sm",
         className
       )}

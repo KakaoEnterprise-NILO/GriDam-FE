@@ -1,4 +1,4 @@
-﻿import type { ApiResponse } from "@/services/notificationService";
+import type { ApiResponse } from "@/api/types";
 import axios, { type InternalAxiosRequestConfig } from "axios";
 import { useAuthStore } from "@/store/authStore";
 
@@ -14,7 +14,7 @@ const clientConfig = {
 };
 
 const api = axios.create(clientConfig);
-// Refresh requests must not enter the authentication interceptors.
+// 토큰 갱신 요청은 인증 인터셉터를 거치지 않도록 별도 클라이언트를 사용한다.
 const refreshApi = axios.create(clientConfig);
 let refreshPromise: Promise<AuthTokens> | null = null;
 
@@ -26,7 +26,7 @@ function refreshTokens(refreshToken: string): Promise<AuthTokens> {
         headers: accessToken ? { Authorization: `Bearer ${accessToken}` } : {},
       })
       .then(({ data }) => {
-        // A completed logout or a different login must not be overwritten.
+        // 로그아웃이 완료되었거나 다른 로그인이 시작된 경우 기존 인증 상태를 덮어쓰지 않는다.
         if (useAuthStore.getState().refreshToken !== refreshToken) {
           throw new Error("Authentication changed during token refresh.");
         }
@@ -70,7 +70,7 @@ api.interceptors.response.use(
 
       originalRequest._retry = true;
 
-      // A late 401 for the previous token can reuse an already rotated token.
+      // 이전 토큰에 대한 늦은 401 응답은 이미 갱신된 토큰을 재사용할 수 있다.
       const tokens = refreshPromise
         ? await refreshPromise
         : accessToken && originalRequest.headers.Authorization !== `Bearer ${accessToken}`

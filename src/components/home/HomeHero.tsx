@@ -1,4 +1,4 @@
-﻿import logoUrl from "@/assets/picture/gridam.svg";
+import logoUrl from "@/assets/picture/gridam.svg";
 interface Props {
   isLoggedIn: boolean;
   onWrite: () => void;
@@ -35,7 +35,7 @@ export default function HomeHero({
         </div>
         <div className="flex flex-col sm:flex-row gap-4 mb-4">
           {isLoggedIn ? (
-            <button
+            <button type="button"
               onClick={onWrite}
               className="group relative px-8 py-4 bg-gradient-to-r from-blue-500 to-blue-600 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300"
             >
@@ -44,14 +44,14 @@ export default function HomeHero({
             </button>
           ) : (
             <>
-              <button
+              <button type="button"
                 onClick={onLogin}
                 className="group relative px-8 py-4 bg-gradient-to-r from-blue-500 to-blue-600 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300"
               >
                 <span className="relative z-10">로그인</span>
                 <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-blue-700 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               </button>
-              <button
+              <button type="button"
                 onClick={onRegister}
                 className="group relative px-8 py-4 bg-white text-blue-600 font-semibold border-2 border-blue-500 rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300 hover:bg-blue-50"
               >

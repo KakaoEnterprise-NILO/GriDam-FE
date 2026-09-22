@@ -1,4 +1,4 @@
-﻿import type { EmotionCardDataType } from "./types";
+import type { EmotionCardDataType } from "./types";
 export const emotionColorMap: Record<string, string> = {
   행복: "#FFD700",
   슬픔: "#4169E1",

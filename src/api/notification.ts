@@ -1,4 +1,5 @@
-import api from "@/api/axios"
+﻿import api from "@/api/axios"
+import type { ApiResponse } from "@/api/types"
 
 export interface NotificationItem {
   id: number
@@ -17,13 +18,6 @@ export interface NotificationResponse {
   hasNext: boolean
 }
 
-export interface ApiResponse<T> {
-  timestamp: string
-  success: boolean
-  code: string
-  result: T
-  message: string
-}
 
 interface NotificationParams {
   size: number

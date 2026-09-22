@@ -32,14 +32,14 @@ export default function PostDetailComments({
             </div>
           </div>
           <div className="flex items-center gap-2 text-[18px] text-gray-500 mt-2">
-            <button onClick={() => onLikeToggle(c.id, c.liked)}>
+            <button type="button" onClick={() => onLikeToggle(c.id, c.liked)}>
               {c.liked ? (
                 <AiFillHeart className="text-red-500" />
               ) : (
                 <AiOutlineHeart className="text-red-500" />
               )}
             </button>
-            <button
+            <button type="button"
               onClick={() => onReplyToggle(c.id)}
               className="hover:underline"
             >

@@ -1,4 +1,4 @@
-﻿export const formatStatisticsDate = (dateString: string) =>
+export const formatStatisticsDate = (dateString: string) =>
   dateString
     ? new Date(dateString).toLocaleDateString("ko-KR", {
         year: "numeric",

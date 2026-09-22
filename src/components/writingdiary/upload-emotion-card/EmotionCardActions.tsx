@@ -19,7 +19,7 @@ export function EmotionCardActions({
 }: EmotionCardActionsProps) {
   return (
     <div className="absolute top-4 right-4 flex flex-col space-y-2">
-      <button
+      <button type="button"
         className="icon-button"
         onClick={onRegenerate}
         disabled={loading}
@@ -32,7 +32,7 @@ export function EmotionCardActions({
         />
       </button>
 
-      <button
+      <button type="button"
         className="icon-button bg-blue-500 text-white rounded p-1"
         onClick={onRefresh}
         disabled={loading}
@@ -60,7 +60,7 @@ export function EmotionCardCompleteButton({
 }) {
   return (
     <div className="flex justify-center mt-4">
-      <button
+      <button type="button"
         className="bg-blue-500 text-white py-2 px-12 rounded-lg hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed"
         onClick={onPreview}
         disabled={loading}

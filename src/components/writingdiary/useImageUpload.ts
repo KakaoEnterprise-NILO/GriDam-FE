@@ -1,10 +1,8 @@
 import { useRef, useState } from "react"
 import {
-  ALLOWED_IMAGE_TYPES,
   IMAGE_ACCEPT,
-  MAX_IMAGE_SIZE_BYTES,
-  MAX_IMAGE_SIZE_MB,
-} from "@/components/writingdiary/imageUpload.constants"
+  validateImageFile,
+} from "@/lib/imageValidation"
 
 export function useImageUpload() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null)
@@ -18,18 +16,11 @@ export function useImageUpload() {
     event.target.value = ""
 
     if (!file) return
-
-    if (!ALLOWED_IMAGE_TYPES.includes(file.type as (typeof ALLOWED_IMAGE_TYPES)[number])) {
+    const validation = validateImageFile(file)
+    if (!validation.valid) {
       setSelectedFile(null)
       setPreviewImage(null)
-      setError("JPG, PNG, WEBP 형식의 이미지만 업로드할 수 있습니다.")
-      return
-    }
-
-    if (file.size > MAX_IMAGE_SIZE_BYTES) {
-      setSelectedFile(null)
-      setPreviewImage(null)
-      setError(`이미지 용량은 ${MAX_IMAGE_SIZE_MB}MB 이하만 업로드할 수 있습니다.`)
+      setError(validation.error)
       return
     }
 

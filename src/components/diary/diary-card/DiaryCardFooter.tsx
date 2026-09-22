@@ -1,4 +1,4 @@
-﻿export default function DiaryCardFooter({
+export default function DiaryCardFooter({
   hashtags,
   color,
   buttonText,
@@ -25,7 +25,7 @@
           ))}
         </div>
       )}
-      <button
+      <button type="button"
         className={`flex-shrink-0 ml-auto mr-[5%] text-sm font-semibold transition-all duration-200 ${disabled ? "opacity-50 cursor-not-allowed" : "hover:underline hover:scale-105"}`}
         onClick={onFetch}
         disabled={disabled}

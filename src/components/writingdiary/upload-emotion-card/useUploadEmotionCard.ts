@@ -1,8 +1,8 @@
 import type { MouseEvent } from "react"
 import { useCallback, useEffect, useState, useRef } from "react"
 import defaultImg from "@/assets/picture/default_img.jpg"
-import { regenerateDiaryCard } from "@/services/regenerateDiaryCard"
-import { getEmotionCardImage } from "@/services/emotionCardService"
+import { regenerateDiaryCard } from "@/api/diary"
+import { getEmotionCardImage } from "@/api/emotionCard"
 import { IMAGE_LOAD_ERROR, MAX_IMAGE_RETRIES } from "./constants"
 import type { UploadEmotionCardProps } from "./types"
 
@@ -40,7 +40,7 @@ export function useUploadEmotionCard(
       if (generation !== requestGeneration.current) return
       retryCount.current += 1
       console.warn(
-        `⚠️ 이미지 로딩 실패 (${retryCount.current}/${MAX_IMAGE_RETRIES}):`,
+        `이미지 로딩 실패 (${retryCount.current}/${MAX_IMAGE_RETRIES}):`,
         err
       )
 
@@ -54,7 +54,7 @@ export function useUploadEmotionCard(
         }, retryDelay)
         timeoutsRef.current.add(timeout)
       } else {
-        console.error("🛑 최대 재시도 도달. 기본 이미지로 대체:", err)
+        console.error("최대 재시도 도달. 기본 이미지로 대체:", err)
         setImageUrl(defaultImg)
         setLoading(false)
         setError(IMAGE_LOAD_ERROR)
@@ -107,7 +107,7 @@ export function useUploadEmotionCard(
       }
     } catch (err) {
       if (generation !== requestGeneration.current) return
-      console.error("❌ 재생성 실패:", err)
+      console.error("재생성 실패:", err)
       setImageUrl(previousImage || defaultImg)
       setError("카드 재생성에 실패했습니다. 다시 시도해주세요.")
     } finally {

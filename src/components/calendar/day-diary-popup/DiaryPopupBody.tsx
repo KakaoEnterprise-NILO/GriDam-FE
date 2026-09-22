@@ -15,13 +15,13 @@ export default function DiaryPopupBody({ diary, loading, error, onRetry, onClose
           <p className="text-gray-600 leading-relaxed">{error}</p>
         </div>
         <div className="space-y-3 w-full max-w-xs">
-          <button
+          <button type="button"
             onClick={onRetry}
             className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-xl font-medium transition-colors w-full"
           >
             다시 시도
           </button>
-          <button
+          <button type="button"
             onClick={onClose}
             className="bg-gray-200 hover:bg-gray-300 text-gray-700 px-6 py-3 rounded-xl font-medium transition-colors w-full"
           >

@@ -4,8 +4,8 @@ import { IoShareOutline, IoBookmarkOutline } from "react-icons/io5";
 import { FaUserCircle } from "react-icons/fa";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import cardImage from "../../assets/picture/default_img.jpg";
-import { postComment } from "@/services/commentService";
-import { deleteFeed } from "@/services/feedService";
+import { postComment } from "@/api/comment";
+import { deleteFeed } from "@/api/feed";
 
 import ReactionButtons from "./ReactionButtons";
 import ShareModal from "./ShareModal";
@@ -68,18 +68,18 @@ export default function EmotionCardFeedItem({
   };
 
   return (
-    <div className="bg-white rounded-2xl shadow p-6 w-[40em] space-y-4 relative">
+    <div className="w-full min-w-0 max-w-[40em] bg-white rounded-2xl shadow p-4 sm:p-6 space-y-4 relative">
       <div className="absolute top-4 right-4">
-        <button
+        <button type="button"
           onClick={() => setMenuOpen((prev) => !prev)}
           className="text-gray-600 hover:text-black"
         >
-          <BsThreeDotsVertical size={20} />
+          <BsThreeDotsVertical size={20} aria-hidden="true" />
         </button>
 
         {menuOpen && (
           <div className="absolute right-0 mt-2 w-24 bg-white border rounded shadow-md z-20">
-            <button
+            <button type="button"
               onClick={() => {
                 setMenuOpen(false);
               }}
@@ -87,7 +87,7 @@ export default function EmotionCardFeedItem({
             >
               수정
             </button>
-            <button
+            <button type="button"
               onClick={() => {
                 setMenuOpen(false);
                 setShowDeleteConfirm(true);
@@ -111,31 +111,31 @@ export default function EmotionCardFeedItem({
         <img
           src={emotionCard?.cardImageUrl || cardImage}
           alt="감정카드"
-          className="w-full rounded-lg"
+          className="h-auto max-w-full w-full object-contain rounded-lg"
         />
       </div>
 
-      <div className="flex justify-end items-center space-x-3 px-4 mb-4">
+      <div className="flex flex-wrap justify-end items-center gap-3 px-2 sm:px-4 mb-4">
         <ReactionButtons feedId={feedId} />
-        <div className="flex space-x-2">
-          <button
+        <div className="flex flex-wrap gap-2">
+          <button type="button"
             className="flex items-center justify-center h-[2.25rem] space-x-1 bg-gray-100 text-sm text-gray-700 px-3 rounded-full hover:bg-gray-200 transition"
             onClick={() => setShowShare(true)}
           >
-            <IoShareOutline size={16} />
+            <IoShareOutline size={16} aria-hidden="true" />
             <span>공유하기</span>
           </button>
 
-          <button
+          <button type="button"
             className="flex items-center justify-center h-[2.25rem] space-x-1 bg-gray-100 text-sm text-gray-700 px-3 rounded-full hover:bg-gray-200 transition"
           >
-            <IoBookmarkOutline size={16} />
+            <IoBookmarkOutline size={16} aria-hidden="true" />
             <span>저장하기</span>
           </button>
         </div>
       </div>
 
-      <p className="text-sm text-gray-700 leading-relaxed px-6 mt-6 mb-4">
+      <p className="min-w-0 break-words text-sm text-gray-700 leading-relaxed px-2 sm:px-6 mt-6 mb-4">
         {content}
       </p>
 
@@ -153,7 +153,7 @@ export default function EmotionCardFeedItem({
       </div>
 
       <div className="px-4">
-        <button
+        <button type="button"
           onClick={handleViewAllComments}
           className="text-sm text-gray-400 hover:underline"
         >
@@ -173,13 +173,13 @@ export default function EmotionCardFeedItem({
 
         {isFocused && (
           <div className="flex justify-end space-x-4 mt-3">
-            <button
+            <button type="button"
               onClick={handleCancel}
               className="text-sm text-gray-700 hover:underline"
             >
               취소
             </button>
-            <button
+            <button type="button"
               onClick={handleSubmit}
               disabled={comment.length < 10}
               className={`text-sm px-4 py-1 rounded-full transition ${

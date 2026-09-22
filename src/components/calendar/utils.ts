@@ -1,6 +1,6 @@
-﻿import { isAxiosError } from "axios";
+import { isAxiosError } from "axios";
 import type { ApiErrorResponse } from "@/api/axios";
-import type { EmotionCardApiResponse } from "@/services/emotionCardService";
+import type { EmotionCardApiResponse } from "@/api/emotionCard";
 import type { CalendarDiary, DiaryEntry } from "./types";
 
 export const getEmotionColor = (emotion: string) =>

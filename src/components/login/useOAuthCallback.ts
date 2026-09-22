@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom"
 import api from "@/api/axios"
 import { useAuthStore } from "@/store/authStore"
 
-type OAuthProvider = "kakao" | "naver"
+export type OAuthProvider = "kakao" | "naver"
 
 type OAuthResponse = {
   result: {

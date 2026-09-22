@@ -68,8 +68,6 @@ export default function WordCloudGrid({ wordClouds, generating, handleGenerateWo
           </p>
         </div>
       )}
-
-      {/* 빈 상태일 때 샘플 표시 */}
       {wordClouds.length === 0 && (
         <div className="text-center py-16 mt-8">
           <div className="max-w-md mx-auto">
@@ -82,7 +80,7 @@ export default function WordCloudGrid({ wordClouds, generating, handleGenerateWo
               <br />
               아름다운 워드클라우드가 생성됩니다
             </p>
-            <button
+            <button type="button"
               onClick={handleGenerateWordCloud}
               disabled={generating}
               className="flex items-center gap-2 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-6 py-3 rounded-xl font-medium shadow-md transition-all duration-200 transform hover:scale-105 mx-auto disabled:opacity-50 disabled:transform-none"

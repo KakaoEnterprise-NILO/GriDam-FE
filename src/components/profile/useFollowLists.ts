@@ -6,8 +6,8 @@ import {
   getFollowers,
   getFollowing,
   unfollowUser
-} from "@/services/followService"
-import type { FollowListResponse, FollowUser } from "@/services/followService"
+} from "@/api/follow"
+import type { FollowListResponse, FollowUser } from "@/api/follow"
 
 export interface FollowListProps {
   onUserSelect?: (userId: string) => void

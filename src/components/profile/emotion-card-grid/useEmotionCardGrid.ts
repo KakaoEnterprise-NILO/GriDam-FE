@@ -1,6 +1,6 @@
-﻿import { useCallback, useEffect, useRef, useState } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 import { isAxiosError } from "axios"
-import type { ApiResponse } from "@/services/notificationService"
+import type { ApiResponse } from "@/api/types"
 import type { ApiErrorResponse } from "@/api/axios"
 import api from "@/api/axios"
 import type { EmotionCardData, ProfileEmotionCardResult } from "./types"

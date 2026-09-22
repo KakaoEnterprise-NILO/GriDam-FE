@@ -1,4 +1,4 @@
-﻿export default function PasswordRequirements() {
+export default function PasswordRequirements() {
   return (
     <div className="bg-gray-50 p-4 rounded-xl">
       <h3 className="text-sm font-medium text-gray-700 mb-2">

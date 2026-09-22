@@ -33,7 +33,7 @@ export default function EmotionCardImage({
           ) : (
             <div className="w-64 h-64 bg-red-100 flex flex-col items-center justify-center text-sm text-red-500">
               <div>이미지 없음</div>
-              <button
+              <button type="button"
                 onClick={onRefresh}
                 className="mt-2 px-3 py-1 bg-red-500 text-white rounded text-xs hover:bg-red-600"
               >

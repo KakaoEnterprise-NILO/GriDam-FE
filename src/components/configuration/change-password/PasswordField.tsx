@@ -1,4 +1,4 @@
-﻿import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff } from "lucide-react";
 import type { PasswordFieldProps } from "./types";
 export default function PasswordField({
   id,

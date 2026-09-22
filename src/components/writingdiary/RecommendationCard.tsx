@@ -43,9 +43,9 @@ export default function RecommendedCardModal() {
   if (!isVisible) return null;
 
   return (
-    <div className="flex justify-center items-center w-[25rem] h-[30rem] bg-gray-100">
-      <div className="relative bg-white w-[25rem] h-[30rem] p-6 rounded-2xl shadow-lg flex flex-col items-center space-y-3">
-        <button
+    <div className="flex justify-center items-center w-full max-w-[25rem] min-h-[30rem] bg-gray-100">
+      <div className="relative bg-white w-full max-w-[25rem] min-h-[30rem] p-4 sm:p-6 rounded-2xl shadow-lg flex flex-col items-center space-y-3">
+        <button type="button"
           onClick={() => setIsVisible(false)}
           className="absolute top-3 right-3 z-10 text-gray-400 hover:text-black"
         >
@@ -53,7 +53,7 @@ export default function RecommendedCardModal() {
         </button>
 
         {currentIndex > 0 && (
-          <button
+          <button type="button"
             onClick={handlePrev}
             className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-black"
           >
@@ -62,7 +62,7 @@ export default function RecommendedCardModal() {
         )}
 
         {currentIndex < cards.length - 1 && (
-          <button
+          <button type="button"
             onClick={handleNext}
             className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-black"
           >

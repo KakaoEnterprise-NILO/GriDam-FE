@@ -1,4 +1,4 @@
-﻿import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { isAxiosError } from "axios";
 import api from "@/api/axios";
 import type { ApiErrorResponse } from "@/api/axios";
@@ -8,7 +8,7 @@ import { emotionColorMap } from "./utils";
 export function useDiaryCard(
   id: string,
   date: string,
-  onDelete: (diaryId: string) => void,
+  onDeleted: (diaryId: string) => void,
 ) {
   const [showModal, setShowModal] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
@@ -16,6 +16,7 @@ export function useDiaryCard(
   const [emotionCardData, setEmotionCardData] =
     useState<EmotionCardDataType | null>(null);
   const [loadingCard, setLoadingCard] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
   const [emotion, setEmotion] = useState("");
   const [loadingEmotion, setLoadingEmotion] = useState(true);
   const [imageError, setImageError] = useState(false);
@@ -24,6 +25,7 @@ export function useDiaryCard(
     null,
   );
   const menuRef = useRef<HTMLDivElement>(null);
+  const deleteInFlightRef = useRef(false);
 
   useEffect(() => {
     const fetchEmotionInfo = async () => {
@@ -137,13 +139,17 @@ export function useDiaryCard(
   };
 
   const handleDelete = async () => {
+    if (deleteInFlightRef.current) return;
     if (!window.confirm("정말로 이 일기를 삭제하시겠습니까?")) return;
+
+    deleteInFlightRef.current = true;
+    setIsDeleting(true);
     setShowMenu(false);
     try {
       const response = await api.delete(`/diary/${id}`);
       if (response.data.success) {
         alert("일기가 성공적으로 삭제되었습니다.");
-        await onDelete(id);
+        onDeleted(id);
       } else
         throw new Error(response.data.message || "일기 삭제에 실패했습니다.");
     } catch (err: unknown) {
@@ -162,6 +168,9 @@ export function useDiaryCard(
           console.error("서버 오류 상세:", response.data.result);
         } else alert("서버 오류가 발생했습니다. 관리자에게 문의해주세요.");
       } else alert(response?.data?.message || "일기 삭제에 실패했습니다.");
+    } finally {
+      deleteInFlightRef.current = false;
+      setIsDeleting(false);
     }
   };
 
@@ -188,6 +197,7 @@ export function useDiaryCard(
     setIsExpanded,
     emotionCardData,
     loadingCard,
+    isDeleting,
     emotion,
     loadingEmotion,
     imageError,

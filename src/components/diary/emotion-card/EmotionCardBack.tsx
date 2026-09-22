@@ -1,4 +1,4 @@
-﻿import { BarChart3, X } from "lucide-react";
+import { BarChart3, X } from "lucide-react";
 import {
   PieChart,
   Pie,
@@ -36,12 +36,13 @@ export default function EmotionCardBack({
         <div className="absolute top-32 right-16 w-16 h-16 border-2 border-blue-300 rounded-full"></div>
         <div className="absolute bottom-20 left-20 w-12 h-12 border-2 border-pink-300 rounded-full"></div>
       </div>
-      <button
+      <button type="button"
         onClick={(e) => {
           e.stopPropagation();
           onClose?.();
         }}
         className="absolute top-4 right-4 p-2 rounded-full bg-white/80 backdrop-blur-sm text-gray-600 hover:text-gray-800 hover:bg-white transition-all duration-200 shadow-lg z-10"
+        aria-label="Close emotion card"
       >
         <X size={20} />
       </button>

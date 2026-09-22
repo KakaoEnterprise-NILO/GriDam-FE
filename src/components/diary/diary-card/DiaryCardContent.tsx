@@ -1,4 +1,4 @@
-﻿import { Clock, ImageIcon } from "lucide-react";
+import { Clock, ImageIcon } from "lucide-react";
 export default function DiaryCardContent({
   title,
   content,

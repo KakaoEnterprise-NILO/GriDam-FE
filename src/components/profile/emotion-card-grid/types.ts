@@ -1,4 +1,4 @@
-﻿import type { EmotionCardApiResponse } from "@/services/emotionCardService"
+import type { EmotionCardApiResponse } from "@/api/emotionCard"
 export type ProfileEmotionCard = Partial<EmotionCardApiResponse["result"]>
 export type ProfileEmotionCardResult = ProfileEmotionCard & {
   cardInfoList?: ProfileEmotionCard[]

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { toggleReaction } from "@/services/reactionService";
+import { toggleReaction } from "@/api/reaction";
 
 interface ReactionButtonsProps {
   feedId: number;
@@ -35,12 +35,15 @@ export default function ReactionButtons({ feedId }: ReactionButtonsProps) {
       {emojiList.map((emoji) => (
         <button
           key={emoji}
+          type="button"
           onClick={() => handleEmojiClick(emoji)}
+          aria-label={`${emojiToReaction[emoji]} 반응 선택`}
+          aria-pressed={selectedEmoji === emoji}
           className={`w-6 h-6 flex items-center justify-center text-xl transition hover:scale-110 ${
             selectedEmoji === emoji ? "scale-110" : ""
           }`}
         >
-          {emoji}
+          <span aria-hidden="true">{emoji}</span>
         </button>
       ))}
     </div>

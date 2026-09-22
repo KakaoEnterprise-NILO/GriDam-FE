@@ -1,4 +1,4 @@
-﻿export type EmotionApiData = Array<{ [key: string]: number }>;
+export type EmotionApiData = Array<{ [key: string]: number }>;
 export interface EmotionCardProps {
   front: { color: string; emotion: string; image: string };
   back: {

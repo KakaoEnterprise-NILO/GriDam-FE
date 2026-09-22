@@ -1,4 +1,4 @@
-﻿import { Calendar } from "lucide-react";
+import { Calendar } from "lucide-react";
 export default function StatisticsGenerationInfo({
   generatedAt,
   nextGeneration,

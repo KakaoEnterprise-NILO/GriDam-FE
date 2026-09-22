@@ -1,5 +1,5 @@
 import type { FeedComment } from "@/types/feed";
-import type { ApiResponse } from "@/services/notificationService";
+import type { ApiResponse } from "@/api/types";
 import api from "@/api/axios";
 
 export const postComment = async (

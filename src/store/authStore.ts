@@ -1,6 +1,6 @@
 import { create } from "zustand"
 import api from "@/api/axios"
-import { getMyUserId } from "@/services/userService"
+import { getMyUserId } from "@/api/user"
 
 interface AuthTokens {
   accessToken: string
@@ -10,9 +10,12 @@ interface AuthTokens {
 type LoginInput = { loginId: string; password: string }
 type LoginResponse = { result: AuthTokens }
 
+export type AuthStatus = "checking" | "authenticated" | "unauthenticated"
+
 interface AuthState {
   accessToken: string | null
   refreshToken: string | null
+  authStatus: AuthStatus
   userId: string | null
   userError: string | null
   loadCurrentUser: () => Promise<string | null>
@@ -37,27 +40,35 @@ let logoutRequest: Promise<unknown> | null = null
 
 const initialAccessToken = getStoredToken("accessToken")
 const initialRefreshToken = getStoredToken("refreshToken")
+const initialAuthStatus: AuthStatus = initialAccessToken ? "checking" : "unauthenticated"
 
 export const useAuthStore = create<AuthState>((set, get) => ({
   userId: null,
   userError: null,
   accessToken: initialAccessToken,
   refreshToken: initialRefreshToken,
+  authStatus: initialAuthStatus,
   isAuthenticated: Boolean(initialAccessToken),
   loadCurrentUser: () => {
-    if (!get().accessToken) return Promise.resolve(null)
-    if (get().userId) return Promise.resolve(get().userId)
+    if (!get().accessToken) {
+      set({ authStatus: "unauthenticated", isAuthenticated: false })
+      return Promise.resolve(null)
+    }
+    if (get().userId) {
+      set({ authStatus: "authenticated", isAuthenticated: true })
+      return Promise.resolve(get().userId)
+    }
     if (userRequest) return userRequest
     const version = sessionVersion
     const request = Promise.resolve().then(async () => {
       try {
         const userId = await getMyUserId()
         if (version !== sessionVersion) return null
-        set({ userId, userError: null })
+        set({ userId, userError: null, authStatus: "authenticated", isAuthenticated: true })
         return userId
       } catch {
         if (version === sessionVersion) {
-          set({ userId: null, userError: "\uC0AC\uC6A9\uC790 \uC815\uBCF4\uB97C \uBD88\uB7EC\uC624\uC9C0 \uBABB\uD588\uC2B5\uB2C8\uB2E4." })
+          set({ userId: null, userError: "\uC0AC\uC6A9\uC790 \uC815\uBCF4\uB97C \uBD88\uB7EC\uC624\uC9C0 \uBABB\uD588\uC2B5\uB2C8\uB2E4.", authStatus: "unauthenticated", isAuthenticated: false })
         }
         return null
       } finally {
@@ -70,7 +81,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   startSession: async (tokens) => {
     sessionVersion += 1
     userRequest = null
-    set({ userId: null, userError: null })
+    set({ userId: null, userError: null, authStatus: "checking" })
     get().setTokens(tokens)
     await get().loadCurrentUser()
   },
@@ -89,7 +100,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         console.error("Failed to remove local auth data:", key)
       }
     }
-    set({ accessToken: null, refreshToken: null, isAuthenticated: false, userId: null, userError: null })
+    set({ accessToken: null, refreshToken: null, isAuthenticated: false, authStatus: "unauthenticated", userId: null, userError: null })
   },
   login: async (data) => {
     const response = await api.post<LoginResponse>("/auth/login", data)
@@ -125,7 +136,7 @@ if (typeof window !== "undefined") {
       const refreshToken = getStoredToken("refreshToken")
       sessionVersion += 1
       userRequest = null
-      useAuthStore.setState({ accessToken, refreshToken, isAuthenticated: Boolean(accessToken), userId: null, userError: null })
+      useAuthStore.setState({ accessToken, refreshToken, isAuthenticated: Boolean(accessToken), authStatus: accessToken ? "checking" : "unauthenticated", userId: null, userError: null })
       void useAuthStore.getState().loadCurrentUser()
     }
   })

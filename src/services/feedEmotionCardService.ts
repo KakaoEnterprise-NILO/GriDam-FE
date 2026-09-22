@@ -2,7 +2,7 @@ import {
   getEmotionCardByDate,
   type EmotionCardByDateResponse,
 } from "@/services/emotionCardService";
-import type { Feed } from "@/services/feedService";
+import type { Feed } from "@/api/feed";
 
 const MAX_CONCURRENT_CARD_REQUESTS = 4;
 
@@ -25,7 +25,7 @@ export async function getFeedEmotionCards(
     }
   };
 
-  // Only the workers run in parallel, never the entire list of dates.
+  // 모든 날짜를 한꺼번에 요청하지 않고 worker 수만큼만 병렬로 처리한다.
   await Promise.all(
     Array.from(
       { length: Math.min(MAX_CONCURRENT_CARD_REQUESTS, dates.length) },

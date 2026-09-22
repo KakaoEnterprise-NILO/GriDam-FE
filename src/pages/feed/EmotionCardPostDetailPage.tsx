@@ -34,17 +34,17 @@ export default function EmotionCardPostDetailPage() {
   }
 
   return (
-    <div className="flex w-[60em] h-[40em] bg-white rounded-2xl shadow overflow-hidden relative">
+    <div className="flex h-[calc(100vh-2rem)] max-h-[40em] w-full max-w-[60em] min-w-0 flex-col overflow-hidden rounded-2xl bg-white shadow relative md:flex-row">
       <PostDetailActions onClose={() => navigate("/friends/feed")} />
       <PostDetailImage />
-      <div className="flex-1 relative flex flex-col">
-        <div className="flex-1 overflow-y-auto p-6 pb-28 space-y-4">
+      <div className="flex min-h-0 min-w-0 flex-1 flex-col relative">
+        <div className="min-h-0 flex-1 overflow-y-auto p-3 pb-24 sm:p-4 md:p-6 md:pb-28 space-y-4">
           {loadError ? (
             <p role="alert" className="text-red-500">{loadError}</p>
           ) : userError ? (
             <div role="alert">
               <p>{userError}</p>
-              <button onClick={() => void retryUser()} className="text-blue-600 hover:underline">
+              <button type="button" onClick={() => void retryUser()} className="text-blue-600 hover:underline">
                 {"\uB2E4\uC2DC \uC2DC\uB3C4"}
               </button>
             </div>

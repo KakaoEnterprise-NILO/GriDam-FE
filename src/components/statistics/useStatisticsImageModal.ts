@@ -1,4 +1,4 @@
-﻿import { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 export function useStatisticsImageModal() {
   const [selectedImage, setSelectedImage] = useState<{
     url: string;

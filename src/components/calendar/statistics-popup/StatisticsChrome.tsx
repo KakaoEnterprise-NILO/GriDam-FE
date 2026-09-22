@@ -11,9 +11,10 @@ export function StatisticsHeader({ year, month, onClose }: StatisticsHeaderProps
           {year}년 {monthNames[month - 1]} 감정 통계
         </h2>
       </div>
-      <button
+      <button type="button"
         className="absolute top-5 right-5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 p-2 rounded-full transition-all duration-200"
         onClick={onClose}
+        aria-label="Close statistics popup"
       >
         <X className="w-5 h-5" />
       </button>

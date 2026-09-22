@@ -1,4 +1,4 @@
-﻿import { Alert, AlertDescription } from "@/components/ui/alert"
+import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Button } from "@/components/ui/button"
 import { RefreshCw } from "lucide-react"
 export function EmotionCardGridError({

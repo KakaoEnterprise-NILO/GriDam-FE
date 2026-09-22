@@ -1,13 +1,10 @@
-"use client"
-
 import { useEffect, useState } from "react"
-import MainLayout from "../../components/common/MainLayout"
-import DiaryCard from "../../components/diary/DiaryCard"
-import DiaryPagination from "../../components/diary/DiaryPagination"
-import api from "../../api/axios"
+import MainLayout from "@/components/common/MainLayout"
+import DiaryCard from "@/components/diary/DiaryCard"
+import DiaryPagination from "@/components/diary/DiaryPagination"
+import api from "@/api/axios"
 import { isAxiosError } from "axios";
 import type { ApiErrorResponse } from "@/api/axios";
-import { useAuthStore } from "@/store/authStore";
 
 type DiaryItem = {
   diaryId: string
@@ -30,7 +27,6 @@ export default function HomeMyDiary() {
   const [diaries, setDiaries] = useState<DiaryItem[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const isAuthenticated = useAuthStore((state) => state.isAuthenticated)
   const [page, setPage] = useState(1)
   const ITEMS_PER_PAGE = 3
 
@@ -53,7 +49,6 @@ export default function HomeMyDiary() {
       console.error("데이터 조회 실패:", err)
 
       if (errorResponse?.status === 401) {
-        useAuthStore.getState().clearAuth()
         setError("로그인이 필요합니다.")
       } else {
         setError(errorResponse?.data?.message || "데이터를 불러오는데 실패했습니다.")
@@ -64,14 +59,8 @@ export default function HomeMyDiary() {
   }
 
   useEffect(() => {
-    if (!isAuthenticated) {
-      setError("로그인이 필요합니다.")
-      setLoading(false)
-      return
-    }
-
     void fetchDiaries()
-  }, [isAuthenticated])
+  }, [])
 
   const startIndex = (page - 1) * ITEMS_PER_PAGE
   const currentDiaries = diaries.slice(startIndex, startIndex + ITEMS_PER_PAGE)
@@ -80,28 +69,19 @@ export default function HomeMyDiary() {
   const handlePrev = () => page > 1 && setPage(page - 1)
   const handleNext = () => page < maxPage && setPage(page + 1)
 
-  const handleDeleteDiary = async (diaryId: string) => {
-    try {
-      await api.delete(`/diary/${diaryId}`)
+  const handleDiaryDeleted = (diaryId: string) => {
+    setDiaries((currentDiaries) => {
+      const nextDiaries = currentDiaries.filter((diary) => diary.diaryId !== diaryId)
+      const newMaxPage = Math.ceil(nextDiaries.length / ITEMS_PER_PAGE)
 
-      await fetchDiaries()
+      setPage((currentPage) => {
+        if (newMaxPage === 0) return 1
+        return Math.min(currentPage, newMaxPage)
+      })
 
-      // 현재 페이지에 일기가 없으면 이전 페이지로 이동
-      const newMaxPage = Math.ceil((diaries.length - 1) / ITEMS_PER_PAGE)
-      if (page > newMaxPage && newMaxPage > 0) {
-        setPage(newMaxPage)
-      }
-    } catch (err: unknown) {
-      const errorResponse = isAxiosError<ApiErrorResponse>(err) ? err.response : undefined
-      console.error("일기 삭제 실패:", err)
-      alert(errorResponse?.data?.message || "일기 삭제에 실패했습니다.")
-    }
+      return nextDiaries
+    })
   }
-
-  const handleLogin = () => {
-    window.location.href = "/login"
-  }
-
   return (
     <MainLayout>
       <div className="mr-30 p-6 space-y-6">
@@ -115,21 +95,10 @@ export default function HomeMyDiary() {
 
         {loading && <p>불러오는 중...</p>}
 
-        {!isAuthenticated && (
-          <div className="text-center py-12">
-            <p className="text-red-500 text-lg mb-4">로그인이 필요한 서비스입니다.</p>
-            <button
-              onClick={handleLogin}
-              className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
-            >
-              로그인하기
-            </button>
-          </div>
-        )}
 
-        {error && isAuthenticated && <p className="text-red-500">{error}</p>}
+        {error && <p className="text-red-500">{error}</p>}
 
-        {!loading && !error && isAuthenticated && diaries.length === 0 && (
+        {!loading && !error && diaries.length === 0 && (
           <div className="text-center py-12">
             <p className="text-gray-500 text-lg">아직 작성한 일기가 없습니다.</p>
             <p className="text-gray-400 text-sm mt-2">첫 번째 일기를 작성해보세요!</p>
@@ -146,7 +115,7 @@ export default function HomeMyDiary() {
               date={diary.date}
               imageUrl={diary.imageUrl}
               hashtags={diary.hashtags}
-              onDelete={handleDeleteDiary}
+              onDeleted={handleDiaryDeleted}
             />
           ))}
         </div>

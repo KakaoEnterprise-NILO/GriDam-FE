@@ -1,5 +1,3 @@
-"use client"
-
 import { Users } from "lucide-react"
 import FollowingUserItem from "./FollowingUserItem"
 import FollowList from "./FollowList"

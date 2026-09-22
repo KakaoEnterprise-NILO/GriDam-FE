@@ -1,4 +1,4 @@
-﻿import GridamLogo from "@/assets/picture/gridam.svg";
+import GridamLogo from "@/assets/picture/gridam.svg";
 export default function LoginLogo() {
   return (
     <div className="mb-2">

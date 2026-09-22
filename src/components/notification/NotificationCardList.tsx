@@ -1,8 +1,6 @@
-"use client"
-
 import { useEffect, useRef, useState, useCallback } from "react"
 import NotificationCard from "./NotificationCard"
-import { getUnreadNotifications, type NotificationItem } from "@/services/notificationService"
+import { getUnreadNotifications, type NotificationItem } from "@/api/notification"
 import { Loader2, Bell } from "lucide-react"
 
 export default function NotificationList() {
@@ -147,7 +145,6 @@ export default function NotificationList() {
           </div>
         )}
 
-        {/* 무한스크롤 트리거 */}
         {hasNext && !loading && notifications.length > 0 && <div ref={observerRef} className="h-4" />}
       </div>
     </div>

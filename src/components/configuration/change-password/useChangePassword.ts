@@ -1,4 +1,4 @@
-﻿import { useState } from "react";
+import { useState } from "react";
 import { isAxiosError } from "axios";
 import { changePassword, type ChangePasswordRequest } from "@/api/user";
 import type { ApiErrorResponse } from "@/api/axios";

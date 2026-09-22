@@ -1,5 +1,3 @@
-﻿"use client";
-
 import DiaryCardMenu from "./diary-card/DiaryCardMenu";
 import DiaryCardContent from "./diary-card/DiaryCardContent";
 import DiaryCardFooter from "./diary-card/DiaryCardFooter";
@@ -14,9 +12,9 @@ export default function DiaryCard({
   date,
   imageUrl,
   hashtags,
-  onDelete,
+  onDeleted,
 }: DiaryCardProps) {
-  const card = useDiaryCard(id, date, onDelete);
+  const card = useDiaryCard(id, date, onDeleted);
   return (
     <>
       <div className="bg-white rounded-xl shadow overflow-hidden relative">
@@ -25,6 +23,7 @@ export default function DiaryCard({
           showMenu={card.showMenu}
           onToggle={() => card.setShowMenu(!card.showMenu)}
           onDelete={card.handleDelete}
+          isDeleting={card.isDeleting}
         />
         <DiaryCardContent
           title={title}

@@ -1,4 +1,4 @@
-﻿export const EMOTION_CHART_COLORS: Record<string, string> = {
+export const EMOTION_CHART_COLORS: Record<string, string> = {
   행복: "#FFD700",
   기쁨: "#FFA500",
   슬픔: "#4169E1",

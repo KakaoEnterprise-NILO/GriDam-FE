@@ -1,8 +1,8 @@
 import { isAxiosError } from "axios";
 import { useAuthStore } from "@/store/authStore";
 import { useEffect, useState } from "react";
-import { postComment, getCommentsByFeedId, likeComment, unlikeComment } from "@/services/commentService";
-import { getFeedDetail } from "@/services/feedService";
+import { postComment, getCommentsByFeedId, likeComment, unlikeComment } from "@/api/comment";
+import { getFeedDetail } from "@/api/feed";
 import type { FeedComment, FeedDetail } from "@/types/feed";
 import { MIN_COMMENT_LENGTH } from "./constants";
 import { updateCommentLike } from "./utils";

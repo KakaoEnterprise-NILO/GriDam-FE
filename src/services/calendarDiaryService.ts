@@ -1,5 +1,5 @@
 ﻿import api from "@/api/axios"
-import type { EmotionCardApiResponse } from "./emotionCardService"
+import type { EmotionCardApiResponse } from "@/api/emotionCard"
 import type { CalendarDiary, DiaryListApiResponse } from "@/components/calendar/types"
 import { calendarSampleDiaries } from "@/components/calendar/constants"
 import {

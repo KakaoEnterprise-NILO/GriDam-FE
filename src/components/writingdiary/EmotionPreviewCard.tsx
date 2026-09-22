@@ -1,12 +1,11 @@
-"use client";
 
-
-import type { EmotionCardApiResponse } from "@/services/emotionCardService";
+import type { EmotionCardApiResponse } from "@/api/emotionCard";
 import { useEffect, useRef, useState } from "react";
 import StatusCard from "./StatusCard";
 import RecommendedCard from "../writingdiary/RecommendationCard";
 import "./EmotionPreviewCard.css";
 import api from "@/api/axios";
+import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog";
 
 
 interface EmotionPreviewCardProps {
@@ -145,12 +144,15 @@ export default function EmotionPreviewCard({ diaryId, onClose }: EmotionPreviewC
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex justify-center items-center bg-black bg-opacity-50 transition-opacity duration-300">
-      <div className="bg-white w-[600px] min-h-[500px] p-8 rounded-2xl shadow-lg space-y-4 relative transition-transform duration-300 transform scale-95">
+    <Dialog open onOpenChange={(open) => !open && handleClose()}>
+      <DialogContent showClose={false} className="bg-white w-[calc(100vw-2rem)] max-w-[600px] max-h-[90vh] overflow-y-auto min-h-[500px] p-4 sm:p-6 md:p-8 rounded-2xl shadow-lg space-y-4 relative transition-transform duration-300 transform scale-95">
+        <DialogTitle className="sr-only">Emotion card preview</DialogTitle>
+        <DialogDescription className="sr-only">Review the generated emotion card and upload it.</DialogDescription>
 
-        <button
+        <button type="button"
           className="absolute top-4 right-4 text-gray-500 text-lg"
           onClick={handleClose}
+          aria-label="Close emotion card preview"
         >
           ×
         </button>
@@ -209,7 +211,7 @@ export default function EmotionPreviewCard({ diaryId, onClose }: EmotionPreviewC
             업로드
           </button>
         </div>
-      </div>
-    </div>
+      </DialogContent>
+    </Dialog>
   );
 }

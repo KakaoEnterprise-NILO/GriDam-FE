@@ -1,8 +1,8 @@
-﻿"use client";
 import MainLayout from "../../components/common/MainLayout";
 import HomeHero from "../../components/home/HomeHero";
 import HomeFeatures from "../../components/home/HomeFeatures";
 import { useHomePage } from "../../components/home/useHomePage";
+
 export default function HomePage() {
   const { isLoggedIn, isLoading, navigate } = useHomePage();
   if (isLoading)

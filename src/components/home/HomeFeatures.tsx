@@ -1,4 +1,4 @@
-﻿const features = [
+const features = [
   {
     icon: "📝",
     title: "감정을 기록하고 싶은 분",

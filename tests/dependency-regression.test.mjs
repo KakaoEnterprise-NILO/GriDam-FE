@@ -84,7 +84,7 @@ test('Vite, SWC and Tailwind transform the entry and lazy route modules', async 
   try {
     const modules = ['/src/main.tsx', '/src/App.tsx', '/src/index.css',
       ...[...app.matchAll(/import\("(\.\/pages\/[^"]+)"\)/g)].map((match) => '/src/' + match[1].slice(2) + '.tsx')];
-    assert.equal(modules.length, 17);
+    assert.equal(modules.length, 16);
     for (const module of modules) {
       const result = await server.transformRequest(module);
       assert.ok(result?.code, module + ' should transform');

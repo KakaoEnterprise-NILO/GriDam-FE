@@ -1,5 +1,3 @@
-"use client"
-
 import { Heart } from "lucide-react"
 import FollowerUserItem from "./FollowerUserItem"
 import FollowList from "./FollowList"

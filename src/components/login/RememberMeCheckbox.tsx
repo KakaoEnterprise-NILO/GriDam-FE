@@ -1,4 +1,4 @@
-﻿export default function RememberMeCheckbox({
+export default function RememberMeCheckbox({
   isRemembered,
   onToggle,
 }: {

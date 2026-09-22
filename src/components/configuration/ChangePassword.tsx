@@ -1,5 +1,3 @@
-﻿"use client";
-
 import { ArrowLeft } from "lucide-react";
 import { useChangePassword } from "./change-password/useChangePassword";
 import PasswordField from "./change-password/PasswordField";
@@ -20,7 +18,7 @@ export default function ChangePasswordForm({
   return (
     <div className="w-full bg-white rounded-2xl shadow max-w-3xl mx-auto px-4 md:px-8 py-6">
       <div className="flex items-center mb-6">
-        <button
+        <button type="button"
           onClick={onBack}
           className="flex items-center text-gray-600 hover:text-gray-800 transition-colors"
           disabled={isLoading}

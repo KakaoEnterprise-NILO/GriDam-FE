@@ -1,5 +1,5 @@
 import type { FeedDetail } from "@/types/feed";
-import type { ApiResponse } from "@/services/notificationService";
+import type { ApiResponse } from "@/api/types";
 import api from "@/api/axios";
 
 export interface Feed {
@@ -11,7 +11,6 @@ export interface Feed {
 
 export async function getUserFeedList(userId: string) {
   const res = await api.get<ApiResponse<{ feedList: Feed[] }>>(`/feed/user/${userId}`);
-
 
   return res.data.result.feedList;
 }
@@ -32,5 +31,5 @@ export const getFeedDetail = async (feedId: number, userId: string) => {
     params: { userId },
   });
 
-  return res.data.result; // { id, content, emotionCardId, createdAt, ... }
+  return res.data.result
 };

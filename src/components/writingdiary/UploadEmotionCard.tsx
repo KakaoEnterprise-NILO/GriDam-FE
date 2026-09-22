@@ -1,5 +1,3 @@
-"use client"
-
 import "./UploadEmotionCard.css"
 import {
   EmotionCardActions,
@@ -18,8 +16,8 @@ export default function UploadEmotionCard({
   const card = useUploadEmotionCard(diaryId, diaryInfo)
 
   return (
-    <div className="flex justify-center items-start min-h-screen p-0">
-      <div className="bg-white w-[600px] p-8 rounded-2xl shadow-lg flex flex-col space-y-4 transition-all duration-500 relative">
+    <div className="flex w-full min-w-0 justify-center items-start p-0">
+      <div className="bg-white w-full max-w-[600px] p-4 sm:p-6 md:p-8 rounded-2xl shadow-lg flex flex-col space-y-4 transition-all duration-500 relative">
         <EmotionCardActions
           imageUrl={card.imageUrl}
           diaryId={diaryId}

@@ -1,4 +1,4 @@
-﻿import { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import type React from "react";
 import type { EmotionCardProps } from "./types";
 import { EMOTION_CHART_COLORS, EMOTION_NAME_MAP } from "./constants";

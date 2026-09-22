@@ -4,7 +4,7 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Button } from "@/components/ui/button"
 import { UserX, RefreshCw, Lock } from "lucide-react"
-import type { FollowUser } from "@/services/followService"
+import type { FollowUser } from "@/api/follow"
 
 interface FollowListProps {
   title: string

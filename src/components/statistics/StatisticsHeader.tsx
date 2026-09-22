@@ -1,4 +1,4 @@
-﻿import type { UserInfo } from "@/components/statistics/types";
+import type { UserInfo } from "@/components/statistics/types";
 import { BarChart3, RefreshCw, Sparkles } from "lucide-react";
 interface Props {
   userInfo: UserInfo | null;
@@ -37,7 +37,7 @@ export default function StatisticsHeader({
         )}
       </div>
       <div className="flex gap-3">
-        <button
+        <button type="button"
           onClick={onRefresh}
           disabled={loading}
           className="flex items-center gap-2 bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-xl transition-colors font-medium disabled:opacity-50"
@@ -45,7 +45,7 @@ export default function StatisticsHeader({
           <RefreshCw className={`h-4 w-4 ${loading ? "animate-spin" : ""}`} />
           새로고침
         </button>
-        <button
+        <button type="button"
           onClick={onGenerate}
           disabled={generating}
           className="flex items-center gap-2 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-6 py-2 rounded-xl font-medium shadow-md transition-all duration-200 transform hover:scale-105 disabled:opacity-50 disabled:transform-none"

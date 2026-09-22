@@ -1,4 +1,4 @@
-﻿import SocialLoginButtons from "./SocialLoginButtons";
+import SocialLoginButtons from "./SocialLoginButtons";
 import RememberMeCheckbox from "./RememberMeCheckbox";
 interface Props {
   loginId: string;
@@ -25,18 +25,20 @@ export default function LoginForm({
   onRememberToggle,
 }: Props) {
   return (
-    <section className="bg-white w-[480px] h-[580px] px-20 py-6 rounded-2xl shadow-lg mb-4">
+    <section className="bg-white w-full max-w-[480px] min-h-[580px] px-5 sm:px-10 md:px-20 py-6 rounded-2xl shadow-lg mb-4">
       <h2 className="text-center text-2xl font-bold mb-4">로그인</h2>
       <SocialLoginButtons onSocialClick={onSocialLogin} />
       <p className="text-center text-gray-500 mb-4">or</p>
-      <input
+      <label htmlFor="login-id" className="sr-only">아이디 또는 이메일</label>
+      <input id="login-id"
         type="text"
         placeholder="아이디 혹은 이메일"
         value={loginId}
         onChange={(e) => onLoginIdChange(e.target.value)}
         className="w-full px-3 mb-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
       />
-      <input
+      <label htmlFor="login-password" className="sr-only">비밀번호</label>
+      <input id="login-password"
         type="password"
         placeholder="비밀번호"
         value={password}
@@ -50,7 +52,7 @@ export default function LoginForm({
       {errorMsg && (
         <p className="text-red-500 text-sm mb-2 font-semibold">{errorMsg}</p>
       )}
-      <button
+      <button type="button"
         onClick={onLogin}
         className="w-full py-2 my-8 bg-[#333333] text-white rounded-lg hover:bg-[#444444]"
       >

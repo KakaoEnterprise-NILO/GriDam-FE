@@ -74,7 +74,7 @@ export default function EmotionCard({ front, back, onClose }: EmotionCardProps) 
           }}
         >
           {onClose && (
-            <button
+            <button type="button"
               onClick={(e) => {
                 e.stopPropagation()
                 onClose()

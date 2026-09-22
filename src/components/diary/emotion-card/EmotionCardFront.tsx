@@ -1,4 +1,4 @@
-﻿import type React from "react";
+import type React from "react";
 import { ImageIcon, Expand, Sparkles, X } from "lucide-react";
 import type { EmotionCardProps } from "./types";
 export default function EmotionCardFront({
@@ -27,12 +27,13 @@ export default function EmotionCardFront({
     >
       <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-purple-100/50 to-transparent rounded-bl-full"></div>
       <div className="absolute bottom-0 left-0 w-24 h-24 bg-gradient-to-tr from-blue-100/50 to-transparent rounded-tr-full"></div>
-      <button
+      <button type="button"
         onClick={(e) => {
           e.stopPropagation();
           onClose?.();
         }}
         className="absolute top-4 right-4 p-2 rounded-full bg-white/80 backdrop-blur-sm text-gray-600 hover:text-gray-800 hover:bg-white transition-all duration-200 shadow-lg z-10"
+        aria-label="Close emotion card"
       >
         <X size={20} />
       </button>
@@ -83,10 +84,11 @@ export default function EmotionCardFront({
               </>
             )}
             {imageLoaded && !imageError && front.image && (
-              <button
+              <button type="button"
                 onClick={onExpand}
                 className="absolute bottom-3 right-3 p-2 rounded-full bg-black/50 backdrop-blur-sm text-white hover:bg-black/70 transition-all duration-200 shadow-lg group"
                 title="이미지 확대"
+                aria-label="Expand emotion card image"
               >
                 <Expand
                   size={16}

@@ -23,18 +23,18 @@ export default function DownloadEmotionCard({
       link.click();
       document.body.removeChild(link);
 
-      window.URL.revokeObjectURL(blobUrl); // 메모리 해제
+      // 생성한 임시 URL을 해제해 메모리를 반환한다.
+      window.URL.revokeObjectURL(blobUrl);
     } catch (err) {
       console.error("다운로드 실패", err);
     }
   };
 
   useEffect(() => {
-    // 이미지 미리 로딩 등 필요한 경우 사용할 수 있음
   }, [imageUrl]);
 
   return (
-    <button
+    <button type="button"
       className="icon-button"
       onClick={handleDownload}
       title="감정 카드 다운로드"

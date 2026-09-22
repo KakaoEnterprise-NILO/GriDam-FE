@@ -1,4 +1,4 @@
-import type { EmotionCardApiResponse } from "@/services/emotionCardService"
+import type { EmotionCardApiResponse } from "@/api/emotionCard"
 
 export interface DiaryApiResponse {
   timestamp: string
@@ -15,7 +15,7 @@ export interface DiaryApiResponse {
 export interface DiaryPopupProps {
   open: boolean
   onClose: () => void
-  date: string // YYYY-MM-DD 형태
+  date: string // YYYY-MM-DD 형식
   diaryId?: string
 }
 

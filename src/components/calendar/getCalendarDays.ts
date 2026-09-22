@@ -5,12 +5,12 @@ export function getCalendarDays(year: number, month: number): string[][] {
 
   let week: string[] = []
 
-  // 1일 이전 공백 채우기
+
   for (let i = 0; i < firstDay.getDay(); i++) {
     week.push('')
   }
 
-  // 날짜 채우기
+
   for (let d = 1; d <= lastDay.getDate(); d++) {
     week.push(String(d))
     if (week.length === 7) {
@@ -19,7 +19,7 @@ export function getCalendarDays(year: number, month: number): string[][] {
     }
   }
 
-  // 마지막 줄 공백 채우기
+
   if (week.length > 0) {
     while (week.length < 7) week.push('')
     result.push(week)

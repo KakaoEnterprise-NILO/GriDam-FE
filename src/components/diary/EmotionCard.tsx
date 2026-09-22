@@ -1,11 +1,10 @@
-﻿"use client";
-
 import { createPortal } from "react-dom";
 import FullscreenImageViewer from "./FullscreenImageViewer";
 import EmotionCardFront from "./emotion-card/EmotionCardFront";
 import EmotionCardBack from "./emotion-card/EmotionCardBack";
 import { useEmotionCard } from "./emotion-card/useEmotionCard";
 import type { EmotionCardProps } from "./emotion-card/types";
+import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog";
 
 export default function EmotionCard({
   front,
@@ -14,10 +13,12 @@ export default function EmotionCard({
 }: EmotionCardProps) {
   const card = useEmotionCard(back.emotions, back.chartData);
   const modalContent = (
-    <>
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm">
+    <Dialog open onOpenChange={(open) => !open && onClose?.()}>
+      <DialogContent showClose={false} className="z-50 w-auto max-w-none border-0 bg-transparent p-0 shadow-none">
+        <DialogTitle className="sr-only">{front.emotion} emotion card</DialogTitle>
+        <DialogDescription className="sr-only">View the emotion card and its analysis.</DialogDescription>
         <div
-          className="w-[380px] h-[620px] relative cursor-pointer"
+          className="w-full max-w-[380px] aspect-[380/620] max-h-[620px] relative cursor-pointer"
           onClick={() => card.setFlipped(!card.flipped)}
           style={{ perspective: "1500px" }}
         >
@@ -46,16 +47,16 @@ export default function EmotionCard({
             />
           </div>
         </div>
-      </div>
-      {card.showFullscreenImage && (
-        <FullscreenImageViewer
-          front={front}
-          imageError={card.imageError}
-          onImageError={card.handleImageError}
-          onClose={() => card.setShowFullscreenImage(false)}
-        />
-      )}
-    </>
+        {card.showFullscreenImage && (
+          <FullscreenImageViewer
+            front={front}
+            imageError={card.imageError}
+            onImageError={card.handleImageError}
+            onClose={() => card.setShowFullscreenImage(false)}
+          />
+        )}
+      </DialogContent>
+    </Dialog>
   );
   return createPortal(modalContent, document.body);
 }

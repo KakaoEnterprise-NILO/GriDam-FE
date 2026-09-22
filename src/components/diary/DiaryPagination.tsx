@@ -15,7 +15,7 @@ export default function PaginationControls({
 }: PaginationControlsProps) {
   return (
     <div className="flex items-center space-x-4">
-      <button
+      <button type="button"
         onClick={onPrev}
         disabled={page === 1}
         className="p-2 rounded-md hover:bg-gray-200 disabled:opacity-40 disabled:cursor-not-allowed"
@@ -28,7 +28,7 @@ export default function PaginationControls({
         {page} / {maxPage}
       </span>
 
-      <button
+      <button type="button"
         onClick={onNext}
         disabled={page === maxPage}
         className="p-2 rounded-md hover:bg-gray-200 disabled:opacity-40 disabled:cursor-not-allowed"

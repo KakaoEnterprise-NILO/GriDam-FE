@@ -1,4 +1,3 @@
-﻿"use client";
 import MainLayout from "@/components/common/MainLayout";
 import WordCloudGrid from "@/components/statistics/WordCloudGrid";
 import WordCloudModal from "@/components/statistics/WordCloudModal";

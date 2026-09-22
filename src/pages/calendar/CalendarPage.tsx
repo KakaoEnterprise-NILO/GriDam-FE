@@ -1,13 +1,11 @@
-﻿"use client";
-
 import { useState } from "react";
-import MainLayout from "../../components/common/MainLayout";
-import YearMonthPopup from "../../components/calendar/YearMonthPopup";
-import StatisticsPopup from "../../components/calendar/StatisticsPopup";
-import DiaryPopup from "../../components/calendar/DayDiaryPopup";
-import CalendarHeader from "../../components/calendar/CalendarHeader";
-import CalendarGrid from "../../components/calendar/CalendarGrid";
-import CalendarErrorState from "../../components/calendar/CalendarErrorState";
+import MainLayout from "@/components/common/MainLayout";
+import YearMonthPopup from "@/components/calendar/YearMonthPopup";
+import StatisticsPopup from "@/components/calendar/StatisticsPopup";
+import DiaryPopup from "@/components/calendar/DayDiaryPopup";
+import CalendarHeader from "@/components/calendar/CalendarHeader";
+import CalendarGrid from "@/components/calendar/CalendarGrid";
+import CalendarErrorState from "@/components/calendar/CalendarErrorState";
 import { getCalendarDays } from "@/components/calendar/getCalendarDays";
 import {
   getEmotionColor,

@@ -1,4 +1,4 @@
-﻿import MainLayout from "../common/MainLayout";
+import MainLayout from "../common/MainLayout";
 interface Props {
   error: string;
   onRetry: () => void;
@@ -14,7 +14,7 @@ export default function CalendarErrorState({ error, onRetry }: Props) {
             {error}
           </p>
           <div className="flex gap-3 justify-center">
-            <button
+            <button type="button"
               onClick={onRetry}
               className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-xl transition-colors font-medium"
             >

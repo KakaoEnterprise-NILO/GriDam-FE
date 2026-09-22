@@ -1,4 +1,4 @@
-﻿import KakaoLogo from "@/assets/picture/login/kakao_login_logo.svg";
+import KakaoLogo from "@/assets/picture/login/kakao_login_logo.svg";
 import NaverLogo from "@/assets/picture/login/naver_login.logo.svg";
 export default function SocialLoginButtons({
   onSocialClick,
@@ -7,7 +7,7 @@ export default function SocialLoginButtons({
 }) {
   return (
     <div className="flex justify-center space-x-5 mb-4">
-      <button
+      <button type="button"
         onClick={() => onSocialClick("kakao")}
         className="bg-yellow-400 w-16 h-16 rounded-full flex items-center justify-center overflow-hidden"
       >
@@ -17,7 +17,7 @@ export default function SocialLoginButtons({
           className="w-full h-full object-cover"
         />
       </button>
-      <button
+      <button type="button"
         onClick={() => onSocialClick("naver")}
         className="bg-green-500 w-16 h-16 rounded-full flex items-center justify-center overflow-hidden"
       >

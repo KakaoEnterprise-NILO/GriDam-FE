@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react"
-import { getMyProfile, getUserProfile } from "@/services/userService"
+import { getMyProfile, getUserProfile } from "@/api/user"
 import type { UserInfo } from "@/types/profile"
 import type { ActiveTab } from "./types"
 
@@ -53,15 +53,15 @@ export function useProfilePage() {
 
   const handleUserSelect = (userId: string) => {
     fetchSelectedUserInfo(userId)
-    setActiveTab("emotion") // 사용자 선택 시 감정 탭으로 전환
+    setActiveTab("emotion")
   }
 
   const handleBackToMyProfile = () => {
     setSelectedUserInfo(null)
-    setActiveTab("emotion") // 내 프로필로 돌아갈 때도 감정 탭으로 전환
+    setActiveTab("emotion")
   }
 
-  // 현재 보고 있는 사용자 정보 (본인 또는 선택된 사용자)
+
   const currentViewingUser = selectedUserInfo || userInfo
   const isViewingMyProfile = !selectedUserInfo
 

@@ -1,4 +1,4 @@
-﻿export interface EmotionCardDataType {
+export interface EmotionCardDataType {
   color: string;
   emotion: string;
   image: string;
@@ -14,5 +14,5 @@ export interface DiaryCardProps {
   date: string;
   imageUrl: string;
   hashtags: string[];
-  onDelete: (diaryId: string) => void;
+  onDeleted: (diaryId: string) => void;
 }

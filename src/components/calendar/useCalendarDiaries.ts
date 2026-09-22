@@ -1,4 +1,4 @@
-﻿import { useRef, useCallback, useState, useEffect } from "react"
+import { useRef, useCallback, useState, useEffect } from "react"
 import { getCalendarDiaries } from "@/services/calendarDiaryService"
 import type { CalendarDiary } from "./types"
 import { getCalendarDiaryError } from "./utils"

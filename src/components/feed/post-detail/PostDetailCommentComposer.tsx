@@ -21,14 +21,15 @@ export default function PostDetailCommentComposer({
         </div>
       )}
       <div className="flex justify-between items-center">
-        <input
+        <label htmlFor="post-detail-comment" className="sr-only">댓글 작성</label>
+        <input id="post-detail-comment"
           type="text"
           placeholder="댓글 작성..."
           value={comment}
           onChange={(e) => onCommentChange(e.target.value)}
           className="flex-1 px-4 py-2 text-[16px] placeholder-gray-400 focus:outline-none border-none"
         />
-        <button
+        <button type="button"
           onClick={onSubmit}
           disabled={comment.length < MIN_COMMENT_LENGTH}
           className={`ml-3 px-4 py-2 text-[16px] rounded-full transition ${
